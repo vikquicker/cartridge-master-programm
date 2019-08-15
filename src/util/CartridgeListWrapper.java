@@ -6,5 +6,5 @@ import java.io.Serializable;
 import java.util.List;
 
 public class CartridgeListWrapper implements Serializable {
-    List<Cartridge> cartridgeList;
+    List<Cartridge> wrapper;
 }

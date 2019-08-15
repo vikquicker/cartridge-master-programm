@@ -7,25 +7,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContentStore implements Serializable {
-    public void Serializable() throws FileNotFoundException {
-        FileOutputStream writeInFile = new FileOutputStream("F:\\Учёба\\tabs\\tabs.res");
-
+    public void save(List<String> list) throws IOException {
+        FileOutputStream writeInFile = new FileOutputStream("F:\\Учёба\\tabs\\table.res");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(writeInFile);
+        for (String x : list) {
+            objectOutputStream.writeObject(x);
+        }
+        objectOutputStream.close();
     }
 
-    public List<Cartridge> deSerializable() throws IOException, ClassNotFoundException {
-        ArrayList<Cartridge> list = new ArrayList<>();
-        FileInputStream readFileTabs = new FileInputStream("F:\\Учёба\\tabs\\tabs.txt");
+    public List<String> readTable() throws IOException, ClassNotFoundException {
+        FileInputStream readFileTabs = new FileInputStream("F:\\Учёба\\tabs\\table.res");
         ObjectInputStream inputStream = new ObjectInputStream(readFileTabs);
-        Cartridge cartridge = (Cartridge) inputStream.readObject();
+        List<String> List = (List<String>) inputStream.readObject();
+        inputStream.close();
+        return List;
+    }
 
-        String str = inputStream.toString();
-        String[] massive = str.split(",");
-
-        for (int i = 0; i < massive.length; i++) {
-            Cartridge cartridge1 = new Cartridge(massive[i]);
-            list.add(cartridge);
-
-        }
-        return list;
+    public List<String> readTabs() throws IOException, ClassNotFoundException {
+        BufferedReader reader = new BufferedReader(new FileReader("F:\\Учёба\\tabs\\tabs.txt"));
+//        FileReader fileReader = new FileReader("F:\\Учёба\\tabs\\tabs.txt");
+//        FileInputStream readFileTabs = new FileInputStream("F:\\Учёба\\tabs\\tabs.txt");
+//        ObjectInputStream inputStream = new ObjectInputStream(readFileTabs);
+//        List<String> cartridgeList = (List<String>) inputStream.readObject();
+//        inputStream.close();
+        List<String> cartridgeList = new ArrayList<>();
+//        while (fileReader.ready()){
+//            cartridgeList.add(String.valueOf(fileReader.read()));
+//        }
+        return cartridgeList;
     }
 }

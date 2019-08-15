@@ -20,16 +20,12 @@ import java.util.Date;
 import java.util.List;
 
 public class Main extends Application {
-
+    ContentStore contentStore = null;
     @Override
     public void start(Stage primaryStage) throws Exception {
         VBox root = new VBox();
 
-
-        List<String> list = new ArrayList();
-        list.add("111");
-        list.add("222");
-        //TODO change
+        List<String> list = contentStore.readTabs();
         primaryStage.setTitle("Cartridge Master 4000");
         Scene scene = new Scene(initialTabPane(list));
         primaryStage.setScene(scene);
@@ -58,7 +54,7 @@ public class Main extends Application {
     private TableView<Cartridge> initiateTable() throws IOException {
         ContentStore contentStore = new ContentStore();
         List<Cartridge> list = new ArrayList<>();
-//        for (Cartridge x : contentStore.deSerializable()) {
+//        for (Cartridge x : contentStore.deSerializableTabs()) {
 //            list.add(x);
 //        }
         list.add(new Cartridge());
@@ -95,7 +91,11 @@ public class Main extends Application {
         return table;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        List<String> list = new ArrayList();
+        list.add("rgrth");
+        ContentStore contentStore = new ContentStore();
+        contentStore.save(list);
         launch(args);
     }
 }
