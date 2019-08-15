@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ContentStore implements Serializable {
     public void save(List<String> list) throws IOException {
-        FileOutputStream writeInFile = new FileOutputStream("F:\\Учёба\\tabs\\table.res");
+        FileOutputStream writeInFile = new FileOutputStream("F:\\study\\tabs\\table.res");
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(writeInFile);
         for (String x : list) {
             objectOutputStream.writeObject(x);
@@ -17,7 +17,7 @@ public class ContentStore implements Serializable {
     }
 
     public List<String> readTable() throws IOException, ClassNotFoundException {
-        FileInputStream readFileTabs = new FileInputStream("F:\\Учёба\\tabs\\table.res");
+        FileInputStream readFileTabs = new FileInputStream("F:\\study\\tabs\\table.res");
         ObjectInputStream inputStream = new ObjectInputStream(readFileTabs);
         List<String> List = (List<String>) inputStream.readObject();
         inputStream.close();
@@ -25,7 +25,7 @@ public class ContentStore implements Serializable {
     }
 
     public List<String> readTabs() throws IOException, ClassNotFoundException {
-        BufferedReader reader = new BufferedReader(new FileReader("F:\\Учёба\\tabs\\tabs.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader("F:\\study\\tabs\\tabs.txt"));
 //        FileReader fileReader = new FileReader("F:\\Учёба\\tabs\\tabs.txt");
 //        FileInputStream readFileTabs = new FileInputStream("F:\\Учёба\\tabs\\tabs.txt");
 //        ObjectInputStream inputStream = new ObjectInputStream(readFileTabs);
