@@ -4,37 +4,74 @@ import models.Cartridge;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ContentStore implements Serializable {
-    public void save(List<String> list) throws IOException {
-        FileOutputStream writeInFile = new FileOutputStream("F:\\study\\tabs\\table.res");
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(writeInFile);
-        for (String x : list) {
-            objectOutputStream.writeObject(x);
+    Map<String, ArrayList<Cartridge>> cartridgesMap = new HashMap<>();
+    ArrayList<Cartridge> cartridges;
+    ArrayList<String> tabList;
+
+    public ArrayList<Cartridge> getCartridges() {
+        return cartridges;
+    }
+
+    public void setCartridges(ArrayList<Cartridge> cartridges) {
+        this.cartridges = cartridges;
+    }
+
+    public ArrayList<String> getTabList() {
+        return tabList;
+    }
+
+    public void setTabList(ArrayList<String> tabList) {
+        this.tabList = tabList;
+    }
+
+    public ContentStore() {
+        try {
+            tabList = readTabs();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        for (String tab : tabList) {
+            try {
+                if (tab.startsWith("q_")) {
+                    cartridgesMap.put(tab, readCartidges(tab));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void save(ArrayList<Cartridge> list, String fileName) throws IOException {
+        FileOutputStream writeInFile = new FileOutputStream("F:\\study\\tabs\\" + fileName + ".res");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(writeInFile);
+        objectOutputStream.writeObject(list);
         objectOutputStream.close();
     }
 
-    public List<String> readTable() throws IOException, ClassNotFoundException {
-        FileInputStream readFileTabs = new FileInputStream("F:\\study\\tabs\\table.res");
+    public ArrayList<Cartridge> readCartidges(String listName) throws IOException, ClassNotFoundException {
+        FileInputStream readFileTabs = new FileInputStream("F:\\study\\tabs\\" + listName + ".res");
         ObjectInputStream inputStream = new ObjectInputStream(readFileTabs);
-        List<String> List = (List<String>) inputStream.readObject();
+        ArrayList<Cartridge> list = (ArrayList<Cartridge>) inputStream.readObject();
         inputStream.close();
-        return List;
+        return list;
     }
 
-    public List<String> readTabs() throws IOException, ClassNotFoundException {
-        BufferedReader reader = new BufferedReader(new FileReader("F:\\study\\tabs\\tabs.txt"));
-//        FileReader fileReader = new FileReader("F:\\Учёба\\tabs\\tabs.txt");
-//        FileInputStream readFileTabs = new FileInputStream("F:\\Учёба\\tabs\\tabs.txt");
-//        ObjectInputStream inputStream = new ObjectInputStream(readFileTabs);
-//        List<String> cartridgeList = (List<String>) inputStream.readObject();
-//        inputStream.close();
-        List<String> cartridgeList = new ArrayList<>();
-//        while (fileReader.ready()){
-//            cartridgeList.add(String.valueOf(fileReader.read()));
-//        }
-        return cartridgeList;
+    public ArrayList<String> readTabs() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("F:\\study\\tabs\\tabs.txt"), "windows-1251"));
+        ArrayList<String> cartridgeTabs = new ArrayList<>();
+        String str = reader.readLine();
+        while (str != null) {
+            cartridgeTabs.add(str);
+            str = reader.readLine();
+        }
+        reader.close();
+        return cartridgeTabs;
     }
 }

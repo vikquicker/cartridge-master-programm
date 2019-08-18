@@ -1,14 +1,15 @@
 package models;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Cartridge {
-    String number = "ercf";
-    String status = "wdc";
-    Date date = new Date(10000);
-    String location = "rhygef";
-    String notice = "wdfcvef";
-    String history = "rfger";
+public class Cartridge implements Serializable {
+    String number ;// = "ercf";
+    String status;// = "wdc";
+    Date date;// = new Date(10000);
+    String location;// = "rhygef";
+    String notice;// = "wdfcvef";
+    String history;// = "rfger";
 
     public Cartridge() {
 

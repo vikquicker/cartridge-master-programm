@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Main extends Application {
-    ContentStore contentStore = null;
+    ContentStore contentStore = new ContentStore();
     @Override
     public void start(Stage primaryStage) throws Exception {
         VBox root = new VBox();
@@ -44,21 +44,14 @@ public class Main extends Application {
 
         for (int i = 0; i < list.size(); i++) {
             tableTab = new Tab(list.get(i));
-            scrollPaneTable = new ScrollPane(initiateTable());
+            scrollPaneTable = new ScrollPane(initiateTable(contentStore.getCartridges()));
             tableTab.setContent(scrollPaneTable);
             tabPane.getTabs().add(tableTab);
         }
         return tabPane;
     }
 
-    private TableView<Cartridge> initiateTable() throws IOException {
-        ContentStore contentStore = new ContentStore();
-        List<Cartridge> list = new ArrayList<>();
-//        for (Cartridge x : contentStore.deSerializableTabs()) {
-//            list.add(x);
-//        }
-        list.add(new Cartridge());
-        list.add(new Cartridge());
+    private TableView<Cartridge> initiateTable(ArrayList<Cartridge> list) throws IOException {
         ObservableList<Cartridge> cartridges = FXCollections.observableArrayList(list);
         TableView<Cartridge> table = new TableView<Cartridge>(cartridges);
         table.setPrefWidth(1200);
@@ -91,11 +84,7 @@ public class Main extends Application {
         return table;
     }
 
-    public static void main(String[] args) throws IOException {
-        List<String> list = new ArrayList();
-        list.add("rgrth");
-        ContentStore contentStore = new ContentStore();
-        contentStore.save(list);
+    public static void main(String[] args) throws IOException{
         launch(args);
     }
 }
