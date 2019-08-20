@@ -8,6 +8,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ContentStore implements Serializable {
+    private static ContentStore contentStore;
+
+    public static ContentStore getInstance() {
+        if (contentStore == null) {
+            contentStore = new ContentStore();
+        }
+        return contentStore;
+    }
+
     Map<String, ArrayList<Cartridge>> cartridgesMap = new HashMap<>();
     ArrayList<Cartridge> cartridges;
     ArrayList<String> tabList;
