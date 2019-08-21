@@ -3,7 +3,6 @@ package sample;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -12,20 +11,17 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import models.Cartridge;
 import util.ContentStore;
-
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class Main extends Application {
-    ContentStore contentStore = new ContentStore();
     @Override
     public void start(Stage primaryStage) throws Exception {
         VBox root = new VBox();
 
-        List<String> list = contentStore.readTabs();
+        List<String> list = ContentStore.getContentStore().readTabs();
         primaryStage.setTitle("Cartridge Master 4000");
         Scene scene = new Scene(initialTabPane(list));
         primaryStage.setScene(scene);
@@ -44,7 +40,7 @@ public class Main extends Application {
 
         for (int i = 0; i < list.size(); i++) {
             tableTab = new Tab(list.get(i));
-            scrollPaneTable = new ScrollPane(initiateTable(contentStore.getCartridges()));
+            scrollPaneTable = new ScrollPane(initiateTable(ContentStore.getContentStore().getCartridges()));
             tableTab.setContent(scrollPaneTable);
             tabPane.getTabs().add(tableTab);
         }

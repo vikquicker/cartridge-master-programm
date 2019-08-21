@@ -10,7 +10,7 @@ import java.util.Map;
 public class ContentStore implements Serializable {
     private static ContentStore contentStore;
 
-    public static ContentStore getInstance() {
+    public static ContentStore getContentStore() {
         if (contentStore == null) {
             contentStore = new ContentStore();
         }
@@ -18,7 +18,7 @@ public class ContentStore implements Serializable {
     }
 
     Map<String, ArrayList<Cartridge>> cartridgesMap = new HashMap<>();
-    ArrayList<Cartridge> cartridges;
+    ArrayList<Cartridge> cartridges = new ArrayList<>();
     ArrayList<String> tabList;
 
     public ArrayList<Cartridge> getCartridges() {
@@ -44,10 +44,12 @@ public class ContentStore implements Serializable {
             e.printStackTrace();
         }
 
-        for (String tab : tabList) {
+        cartridges.add(new Cartridge());
+
+        for (String tab2 : tabList) {
             try {
-                if (tab.startsWith("q_")) {
-                    cartridgesMap.put(tab, readCartidges(tab));
+                if (tab2.startsWith("q_")) {
+                    cartridgesMap.put(tab2, readCartidges(tab2));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
