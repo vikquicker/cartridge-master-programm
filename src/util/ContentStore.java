@@ -18,17 +18,11 @@ public class ContentStore implements Serializable {
     }
 
     Map<String, ArrayList<Cartridge>> cartridgesMap = new HashMap<>();
-    ArrayList<Cartridge> cartridges = new ArrayList<>();
     ArrayList<String> tabList;
 
-    public ArrayList<Cartridge> getCartridges() {
-        return cartridges;
+    public Map<String, ArrayList<Cartridge>> getCartridgesMap() {
+        return cartridgesMap;
     }
-
-    public void setCartridges(ArrayList<Cartridge> cartridges) {
-        this.cartridges = cartridges;
-    }
-
     public ArrayList<String> getTabList() {
         return tabList;
     }
@@ -43,9 +37,6 @@ public class ContentStore implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        cartridges.add(new Cartridge());
-
         for (String tab2 : tabList) {
             try {
                 if (tab2.startsWith("q_")) {

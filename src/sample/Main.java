@@ -17,11 +17,12 @@ import java.util.Date;
 import java.util.List;
 
 public class Main extends Application {
+    ContentStore contentStore = ContentStore.getContentStore();
     @Override
     public void start(Stage primaryStage) throws Exception {
         VBox root = new VBox();
 
-        List<String> list = ContentStore.getContentStore().readTabs();
+        List<String> list = contentStore.readTabs();
         primaryStage.setTitle("Cartridge Master 4000");
         Scene scene = new Scene(initialTabPane(list));
         primaryStage.setScene(scene);
@@ -31,18 +32,21 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private TabPane initialTabPane(List<String> list) throws IOException {
+    private TabPane initialTabPane(List<String> listTabs) throws IOException {
         ScrollPane scrollPaneLog = new ScrollPane(new Text("log...."));
         TabPane tabPane = new TabPane();
 
         Tab tableTab;
         ScrollPane scrollPaneTable;
 
-        for (int i = 0; i < list.size(); i++) {
-            tableTab = new Tab(list.get(i));
-            scrollPaneTable = new ScrollPane(initiateTable(ContentStore.getContentStore().getCartridges()));
-            tableTab.setContent(scrollPaneTable);
-            tabPane.getTabs().add(tableTab);
+        for (int i = 0; i < listTabs.size(); i++) {
+            tableTab = new Tab(listTabs.get(i));
+            if (listTabs.get(i).startsWith("q_")){
+                ArrayList<Cartridge> arrayList = contentStore.getCartridgesMap().get(listTabs.get(i));
+                scrollPaneTable = new ScrollPane(initiateTable(arrayList));
+                tableTab.setContent(scrollPaneTable);
+                tabPane.getTabs().add(tableTab);
+            }
         }
         return tabPane;
     }
