@@ -1,8 +1,13 @@
 package util;
 
+import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
 import models.Cartridge;
+import models.Summary;
+import models.Utilized;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,11 +23,22 @@ public class ContentStore implements Serializable {
     }
 
     Map<String, ArrayList<Cartridge>> cartridgesMap = new HashMap<>();
+    private ArrayList<Summary> summaryArrayList = new ArrayList<>();
+    private ArrayList<Utilized> utilizedArrayList = new ArrayList<>();
     ArrayList<String> tabList;
 
     public Map<String, ArrayList<Cartridge>> getCartridgesMap() {
         return cartridgesMap;
     }
+
+    public ArrayList<Summary> getSummaryArrayList() {
+        return summaryArrayList;
+    }
+
+    public ArrayList<Utilized> getUtilizedArrayList() {
+        return utilizedArrayList;
+    }
+
     public ArrayList<String> getTabList() {
         return tabList;
     }
@@ -40,7 +56,21 @@ public class ContentStore implements Serializable {
         for (String tab2 : tabList) {
             try {
                 if (tab2.startsWith("q_")) {
-                    cartridgesMap.put(tab2, readCartidges(tab2));
+                    cartridgesMap.put(tab2, (ArrayList<Cartridge>) readObjects(tab2));
+                } else if (tab2.equals("Сводная")) {
+                    ArrayList<Summary> summaries = (ArrayList<Summary>) readObjects(tab2);
+                    if (summaries == null) {
+                        summaryArrayList.addAll(new ArrayList<Summary>());
+                    } else {
+                        summaryArrayList.addAll(summaries);
+                    }
+                } else if (tab2.equals("Списанные")) {
+                    ArrayList<Utilized> utilizeds = (ArrayList<Utilized>) readObjects(tab2);
+                    if (utilizeds == null) {
+                        utilizedArrayList.addAll(new ArrayList<Utilized>());
+                    } else {
+                        utilizedArrayList.addAll((utilizeds));
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -57,10 +87,13 @@ public class ContentStore implements Serializable {
         objectOutputStream.close();
     }
 
-    public ArrayList<Cartridge> readCartidges(String listName) throws IOException, ClassNotFoundException {
+    public Object readObjects(String listName) throws IOException, ClassNotFoundException {
+        if (!Files.exists(Paths.get("F:\\study\\tabs\\" + listName + ".res"))) {
+            return null;
+        }
         FileInputStream readFileTabs = new FileInputStream("F:\\study\\tabs\\" + listName + ".res");
         ObjectInputStream inputStream = new ObjectInputStream(readFileTabs);
-        ArrayList<Cartridge> list = (ArrayList<Cartridge>) inputStream.readObject();
+        Object list = inputStream.readObject();
         inputStream.close();
         return list;
     }

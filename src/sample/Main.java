@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import models.Cartridge;
+import models.Summary;
 import util.ContentStore;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,8 +47,15 @@ public class Main extends Application {
                 scrollPaneTable = new ScrollPane(initiateTable(arrayList));
                 tableTab.setContent(scrollPaneTable);
                 tabPane.getTabs().add(tableTab);
+            }else if(listTabs.get(i).equals("Сводная")){
+                ArrayList<Summary> summaryArrayListList = contentStore.getSummaryArrayList();
+                scrollPaneTable = new ScrollPane(initiateTable(summaryArrayListList));
+                tableTab.setContent(scrollPaneTable);
+                tabPane.getTabs().add(tableTab);
             }
+
         }
+
         return tabPane;
     }
 
