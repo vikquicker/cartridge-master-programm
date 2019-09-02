@@ -80,7 +80,7 @@ public class ContentStore implements Serializable {
         }
     }
 
-    public void save(ArrayList<Cartridge> list, String fileName) throws IOException {
+    public void save(Object list, String fileName) throws IOException {
         FileOutputStream writeInFile = new FileOutputStream("F:\\study\\tabs\\" + fileName + ".res");
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(writeInFile);
         objectOutputStream.writeObject(list);
