@@ -98,6 +98,16 @@ public class ContentStore implements Serializable {
         return list;
     }
 
+    public void writeTabs() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("F:\\study\\tabs\\tabs.txt"), "windows-1251"));
+        writer.write(tabList.get(0));
+        for (int i = 0; i < tabList.size(); i++) {
+            writer.newLine();
+            writer.write(tabList.get(i));
+        }
+        writer.close();
+    }
+
     public ArrayList<String> readTabs() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("F:\\study\\tabs\\tabs.txt"), "windows-1251"));
         ArrayList<String> cartridgeTabs = new ArrayList<>();

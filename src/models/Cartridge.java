@@ -9,7 +9,6 @@ public class Cartridge implements Serializable {
     Date date;// = new Date(10000);
     String location;// = "rhygef";
     String notice;// = "wdfcvef";
-    String history;// = "rfger";
 
     public Cartridge() {
 
@@ -17,14 +16,6 @@ public class Cartridge implements Serializable {
 
     public Cartridge(String str) {
 
-    }
-
-    public String getHistory() {
-        return history;
-    }
-
-    public void setHistory(String history) {
-        this.history = history;
     }
 
     public String getNumber() {

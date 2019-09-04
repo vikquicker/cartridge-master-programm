@@ -29,7 +29,7 @@ public class Main extends Application {
         List<String> list = contentStore.readTabs();
         Text logText = new Text("log....");
         ScrollPane scrollPaneLog = new ScrollPane();
-        root.getChildren().addAll(initialTabPane(list),scrollPaneLog);
+        root.getChildren().addAll(initialTabPane(list), scrollPaneLog);
         primaryStage.setTitle("Cartridge Master 4000");
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -48,18 +48,30 @@ public class Main extends Application {
         for (int i = 0; i < listTabs.size(); i++) {
             tableTab = new Tab(listTabs.get(i));
             if (listTabs.get(i).startsWith("q_")) {
-                ArrayList<Cartridge> arrayList = contentStore.getCartridgesMap().get(listTabs.get(i));
-                scrollPaneTable = new ScrollPane(initiateTable(arrayList,arrayList.getClass()));
+                ArrayList<Cartridge> arrayList = new ArrayList<>();
+                ArrayList<Cartridge> listFromMap = contentStore.getCartridgesMap().get(listTabs.get(i));
+                if (listFromMap != null) {
+                    arrayList.addAll(listFromMap);
+                }
+                scrollPaneTable = new ScrollPane(initiateTable(arrayList, arrayList.getClass()));
                 tableTab.setContent(scrollPaneTable);
                 tabPane.getTabs().add(tableTab);
             } else if (listTabs.get(i).equals("Сводная")) {
-                ArrayList<Summary> summaryArrayList = contentStore.getSummaryArrayList();
-                scrollPaneTable = new ScrollPane(initiateTable(summaryArrayList,summaryArrayList.getClass()));
+                ArrayList<Summary> summaryArrayList = new ArrayList<>();
+                ArrayList<Summary> secondListFromMap = contentStore.getSummaryArrayList();
+                if (secondListFromMap != null) {
+                    summaryArrayList.addAll(secondListFromMap);
+                }
+                scrollPaneTable = new ScrollPane(initiateTable(summaryArrayList, summaryArrayList.getClass()));
                 tableTab.setContent(scrollPaneTable);
                 tabPane.getTabs().add(tableTab);
-            }else if (listTabs.get(i).equals("Списанные")){
-                ArrayList<Summary> summaryArrayList = contentStore.getSummaryArrayList();
-                scrollPaneTable = new ScrollPane(initiateTable(summaryArrayList,summaryArrayList.getClass()));
+            } else if (listTabs.get(i).equals("Списанные")) {
+                ArrayList<Utilized> utilizedArrayList = new ArrayList<>();
+                ArrayList<Utilized> thirdListFromMap = contentStore.getUtilizedArrayList();
+                if (thirdListFromMap != null) {
+                    utilizedArrayList.addAll(thirdListFromMap);
+                }
+                scrollPaneTable = new ScrollPane(initiateTable(utilizedArrayList, utilizedArrayList.getClass()));
                 tableTab.setContent(scrollPaneTable);
                 tabPane.getTabs().add(tableTab);
             }
@@ -70,7 +82,7 @@ public class Main extends Application {
 
     private TableView initiateTable(Object list, Class className) throws IOException {
         if (className.getName().equals(new ArrayList<Cartridge>().getClass().getName())) {
-            ObservableList<Cartridge> cartridges = FXCollections.observableArrayList((ArrayList<Cartridge>)list);
+            ObservableList<Cartridge> cartridges = FXCollections.observableArrayList((ArrayList<Cartridge>) list);
             TableView<Cartridge> table = new TableView<Cartridge>(cartridges);
             table.setPrefWidth(1200);
             table.setPrefHeight(700);
@@ -96,12 +108,12 @@ public class Main extends Application {
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("status"));
             table.getColumns().add(noticeColumn);
 
-            TableColumn<Cartridge, String> historyColumn = new TableColumn<Cartridge, String>("История");
-            historyColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("history"));
-            table.getColumns().add(historyColumn);
+//            TableColumn<Cartridge, String> historyColumn = new TableColumn<Cartridge, String>("История");
+//            historyColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("history"));
+//            table.getColumns().add(historyColumn);
             return table;
-        }else if (className.getName().equals(new ArrayList<Summary>().getClass().getName())) {
-            ObservableList<Summary> cartridges = FXCollections.observableArrayList((ArrayList<Summary>)list);
+        } else if (className.getName().equals(new ArrayList<Summary>().getClass().getName())) {
+            ObservableList<Summary> cartridges = FXCollections.observableArrayList((ArrayList<Summary>) list);
             TableView<Summary> table = new TableView<Summary>(cartridges);
             table.setPrefWidth(1200);
             table.setPrefHeight(700);
@@ -127,11 +139,11 @@ public class Main extends Application {
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Summary, String>("status"));
             table.getColumns().add(noticeColumn);
 
-            TableColumn<Summary, String> historyColumn = new TableColumn<Summary, String>("История");
-            historyColumn.setCellValueFactory(new PropertyValueFactory<Summary, String>("history"));
-            table.getColumns().add(historyColumn);
+//            TableColumn<Summary, String> historyColumn = new TableColumn<Summary, String>("История");
+//            historyColumn.setCellValueFactory(new PropertyValueFactory<Summary, String>("history"));
+//            table.getColumns().add(historyColumn);
             return table;
-        }else {
+        } else {
             ObservableList<Utilized> cartridges = FXCollections.observableArrayList((ArrayList<Utilized>) list);
             TableView<Utilized> table = new TableView<Utilized>(cartridges);
             table.setPrefWidth(1200);
@@ -158,12 +170,19 @@ public class Main extends Application {
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("status"));
             table.getColumns().add(noticeColumn);
 
-            TableColumn<Utilized, String> historyColumn = new TableColumn<Utilized, String>("История");
-            historyColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("history"));
-            table.getColumns().add(historyColumn);
+//            TableColumn<Utilized, String> historyColumn = new TableColumn<Utilized, String>("История");
+//            historyColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("history"));
+//            table.getColumns().add(historyColumn);
             return table;
         }
     }
+
+    public void stop(){
+        if (){
+
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         launch(args);
     }
