@@ -177,10 +177,9 @@ public class Main extends Application {
         }
     }
 
-    public void stop(){
-        if (){
-
-        }
+    public void stop() throws IOException {
+        contentStore.writeTabs();
+        contentStore.saveAll();
     }
 
     public static void main(String[] args) throws IOException {

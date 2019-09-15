@@ -27,6 +27,12 @@ public class ContentStore implements Serializable {
     private ArrayList<Utilized> utilizedArrayList = new ArrayList<>();
     ArrayList<String> tabList;
 
+    public void saveAll() throws IOException {
+        save(cartridgesMap, "q_AllTabs");
+        save(summaryArrayList, tabList.get(1));
+        save(summaryArrayList, tabList.get(2));
+    }
+
     public Map<String, ArrayList<Cartridge>> getCartridgesMap() {
         return cartridgesMap;
     }
@@ -56,7 +62,7 @@ public class ContentStore implements Serializable {
         for (String tab2 : tabList) {
             try {
                 if (tab2.startsWith("q_")) {
-                    cartridgesMap.put(tab2, (ArrayList<Cartridge>) readObjects(tab2));
+                    cartridgesMap.putAll((Map<String, ArrayList<Cartridge>>) readObjects(tab2));
                 } else if (tab2.equals("Сводная")) {
                     ArrayList<Summary> summaries = (ArrayList<Summary>) readObjects(tab2);
                     if (summaries == null) {
