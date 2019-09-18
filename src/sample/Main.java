@@ -3,9 +3,13 @@ package sample;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -15,6 +19,7 @@ import models.Utilized;
 import util.ContentStore;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,38 +46,53 @@ public class Main extends Application {
 
     private TabPane initialTabPane(List<String> listTabs) throws IOException {
         TabPane tabPane = new TabPane();
-
         Tab tableTab;
         ScrollPane scrollPaneTable;
 
         for (int i = 0; i < listTabs.size(); i++) {
+            VBox vBoxForButtonAndScroll = new VBox();
+            Button addItem = new Button("Добавить");
+
+            vBoxForButtonAndScroll.getChildren().add(addItem);
             tableTab = new Tab(listTabs.get(i));
             if (listTabs.get(i).startsWith("q_")) {
                 ArrayList<Cartridge> arrayList = new ArrayList<>();
                 ArrayList<Cartridge> listFromMap = contentStore.getCartridgesMap().get(listTabs.get(i));
+                scrollPaneTable = new ScrollPane();
+                HBox hBox = new HBox();
                 if (listFromMap != null) {
                     arrayList.addAll(listFromMap);
+                    hBox.getChildren().addAll(initiateTable(arrayList, arrayList.getClass()), createButtons(listFromMap.size()));
+                    scrollPaneTable.setContent(hBox);
                 }
-                scrollPaneTable = new ScrollPane(initiateTable(arrayList, arrayList.getClass()));
-                tableTab.setContent(scrollPaneTable);
+                vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
+                tableTab.setContent(vBoxForButtonAndScroll);
                 tabPane.getTabs().add(tableTab);
             } else if (listTabs.get(i).equals("Сводная")) {
                 ArrayList<Summary> summaryArrayList = new ArrayList<>();
                 ArrayList<Summary> secondListFromMap = contentStore.getSummaryArrayList();
+                scrollPaneTable = new ScrollPane();
+                HBox hBox = new HBox();
                 if (secondListFromMap != null) {
                     summaryArrayList.addAll(secondListFromMap);
+                    hBox.getChildren().addAll(initiateTable(summaryArrayList, summaryArrayList.getClass()), createButtons(secondListFromMap.size()));
+                    scrollPaneTable.setContent(hBox);
                 }
-                scrollPaneTable = new ScrollPane(initiateTable(summaryArrayList, summaryArrayList.getClass()));
-                tableTab.setContent(scrollPaneTable);
+                vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
+                tableTab.setContent(vBoxForButtonAndScroll);
                 tabPane.getTabs().add(tableTab);
             } else if (listTabs.get(i).equals("Списанные")) {
                 ArrayList<Utilized> utilizedArrayList = new ArrayList<>();
                 ArrayList<Utilized> thirdListFromMap = contentStore.getUtilizedArrayList();
+                scrollPaneTable = new ScrollPane();
+                HBox hBox = new HBox();
                 if (thirdListFromMap != null) {
                     utilizedArrayList.addAll(thirdListFromMap);
+                    hBox.getChildren().addAll(initiateTable(utilizedArrayList, utilizedArrayList.getClass()), createButtons(thirdListFromMap.size()));
+                    scrollPaneTable.setContent(hBox);
                 }
-                scrollPaneTable = new ScrollPane(initiateTable(utilizedArrayList, utilizedArrayList.getClass()));
-                tableTab.setContent(scrollPaneTable);
+                vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
+                tableTab.setContent(vBoxForButtonAndScroll);
                 tabPane.getTabs().add(tableTab);
             }
 
@@ -108,9 +128,6 @@ public class Main extends Application {
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("status"));
             table.getColumns().add(noticeColumn);
 
-//            TableColumn<Cartridge, String> historyColumn = new TableColumn<Cartridge, String>("История");
-//            historyColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("history"));
-//            table.getColumns().add(historyColumn);
             return table;
         } else if (className.getName().equals(new ArrayList<Summary>().getClass().getName())) {
             ObservableList<Summary> cartridges = FXCollections.observableArrayList((ArrayList<Summary>) list);
@@ -139,9 +156,6 @@ public class Main extends Application {
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Summary, String>("status"));
             table.getColumns().add(noticeColumn);
 
-//            TableColumn<Summary, String> historyColumn = new TableColumn<Summary, String>("История");
-//            historyColumn.setCellValueFactory(new PropertyValueFactory<Summary, String>("history"));
-//            table.getColumns().add(historyColumn);
             return table;
         } else {
             ObservableList<Utilized> cartridges = FXCollections.observableArrayList((ArrayList<Utilized>) list);
@@ -170,11 +184,33 @@ public class Main extends Application {
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("status"));
             table.getColumns().add(noticeColumn);
 
-//            TableColumn<Utilized, String> historyColumn = new TableColumn<Utilized, String>("История");
-//            historyColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("history"));
-//            table.getColumns().add(historyColumn);
             return table;
         }
+    }
+
+    private Node createButtons(int numberOfRows) {
+        VBox vBox = new VBox();
+        HBox hBox;
+        Button buttonEdit;
+        Button buttonDelete;
+        InputStream inputEdit = getClass().getResourceAsStream("/resources/edit.svg");
+        InputStream inputDelete = getClass().getResourceAsStream("/resources/delete.svg");
+        Image imageEdit;
+        Image imageDelete;
+        ImageView imageViewEdit;
+        ImageView imageViewDelete;
+        for (int i = 0; i < numberOfRows; i++) {
+            hBox = new HBox();
+            imageEdit = new Image(inputEdit);
+            imageDelete = new Image(inputDelete);
+            imageViewEdit = new ImageView(imageEdit);
+            imageViewDelete = new ImageView(imageDelete);
+            buttonEdit = new Button("", imageViewEdit);
+            buttonDelete = new Button("", imageViewDelete);
+            hBox.getChildren().addAll(buttonEdit, buttonDelete);
+            vBox.getChildren().addAll(hBox);
+        }
+        return vBox;
     }
 
     public void stop() throws IOException {

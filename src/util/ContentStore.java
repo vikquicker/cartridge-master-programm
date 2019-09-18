@@ -1,6 +1,4 @@
 package util;
-
-import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
@@ -10,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ContentStore implements Serializable {
@@ -62,20 +61,19 @@ public class ContentStore implements Serializable {
         for (String tab2 : tabList) {
             try {
                 if (tab2.startsWith("q_")) {
-                    cartridgesMap.putAll((Map<String, ArrayList<Cartridge>>) readObjects(tab2));
+                    Map<String, ArrayList<Cartridge>> numerikTables = (Map<String, ArrayList<Cartridge>>) readObjects(tab2);
+                    if (numerikTables != null && numerikTables.size() > 0) {
+                        cartridgesMap.putAll((Map<String, ArrayList<Cartridge>>) readObjects(tab2));
+                    }
                 } else if (tab2.equals("Сводная")) {
                     ArrayList<Summary> summaries = (ArrayList<Summary>) readObjects(tab2);
-                    if (summaries == null) {
+                    if (summaries != null && summaries.size() > 0) {
                         summaryArrayList.addAll(new ArrayList<Summary>());
-                    } else {
-                        summaryArrayList.addAll(summaries);
                     }
                 } else if (tab2.equals("Списанные")) {
                     ArrayList<Utilized> utilizeds = (ArrayList<Utilized>) readObjects(tab2);
-                    if (utilizeds == null) {
+                    if (utilizeds != null && utilizeds.size() > 0) {
                         utilizedArrayList.addAll(new ArrayList<Utilized>());
-                    } else {
-                        utilizedArrayList.addAll((utilizeds));
                     }
                 }
             } catch (IOException e) {
@@ -107,7 +105,7 @@ public class ContentStore implements Serializable {
     public void writeTabs() throws IOException {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("F:\\study\\tabs\\tabs.txt"), "windows-1251"));
         writer.write(tabList.get(0));
-        for (int i = 0; i < tabList.size(); i++) {
+        for (int i = 1; i < tabList.size(); i++) {
             writer.newLine();
             writer.write(tabList.get(i));
         }
