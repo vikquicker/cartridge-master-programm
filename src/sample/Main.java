@@ -3,6 +3,8 @@ package sample;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -10,8 +12,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Cartridge;
 import models.Summary;
@@ -52,7 +56,21 @@ public class Main extends Application {
         for (int i = 0; i < listTabs.size(); i++) {
             VBox vBoxForButtonAndScroll = new VBox();
             Button addItem = new Button("Добавить");
+            addItem.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    StackPane secondaryLayout = new StackPane();
+                    Scene newScene = new Scene(secondaryLayout,600,400);
+                    Stage newWindow = new Stage();
+                    newWindow.setTitle("Добавить элемент");
+                    newWindow.setScene(newScene);
 
+                    newWindow.initModality(Modality.APPLICATION_MODAL);
+                    newWindow.setResizable(false);
+
+                    newWindow.show();
+                }
+            });
             vBoxForButtonAndScroll.getChildren().add(addItem);
             tableTab = new Tab(listTabs.get(i));
             if (listTabs.get(i).startsWith("q_")) {
