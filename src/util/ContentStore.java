@@ -1,4 +1,5 @@
 package util;
+
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
@@ -6,10 +7,7 @@ import models.Utilized;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ContentStore implements Serializable {
     private static ContentStore contentStore;
@@ -59,27 +57,21 @@ public class ContentStore implements Serializable {
             e.printStackTrace();
         }
         for (String tab2 : tabList) {
-            try {
-                if (tab2.startsWith("q_")) {
-                    Map<String, ArrayList<Cartridge>> numerikTables = (Map<String, ArrayList<Cartridge>>) readObjects(tab2);
-                    if (numerikTables != null && numerikTables.size() > 0) {
-                        cartridgesMap.putAll((Map<String, ArrayList<Cartridge>>) readObjects(tab2));
-                    }
-                } else if (tab2.equals("Сводная")) {
-                    ArrayList<Summary> summaries = (ArrayList<Summary>) readObjects(tab2);
-                    if (summaries != null && summaries.size() > 0) {
-                        summaryArrayList.addAll(new ArrayList<Summary>());
-                    }
-                } else if (tab2.equals("Списанные")) {
-                    ArrayList<Utilized> utilizeds = (ArrayList<Utilized>) readObjects(tab2);
-                    if (utilizeds != null && utilizeds.size() > 0) {
-                        utilizedArrayList.addAll(new ArrayList<Utilized>());
-                    }
+            if (tab2.startsWith("q_")) {
+                Map<String, ArrayList<Cartridge>> numerikTables = (Map<String, ArrayList<Cartridge>>) readObjects(tab2);
+                if (numerikTables != null && numerikTables.size() > 0) {
+                    cartridgesMap.putAll((Map<String, ArrayList<Cartridge>>) readObjects(tab2));
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            } else if (tab2.equals("Сводная")) {
+                ArrayList<Summary> summaries = (ArrayList<Summary>) readObjects(tab2);
+                if (summaries != null && summaries.size() > 0) {
+                    summaryArrayList.addAll(new ArrayList<Summary>());
+                }
+            } else if (tab2.equals("Списанные")) {
+                ArrayList<Utilized> utilizeds = (ArrayList<Utilized>) readObjects(tab2);
+                if (utilizeds != null && utilizeds.size() > 0) {
+                    utilizedArrayList.addAll(new ArrayList<Utilized>());
+                }
             }
         }
     }
@@ -91,15 +83,19 @@ public class ContentStore implements Serializable {
         objectOutputStream.close();
     }
 
-    public Object readObjects(String listName) throws IOException, ClassNotFoundException {
+    public Object readObjects(String listName) {
         if (!Files.exists(Paths.get("F:\\study\\tabs\\" + listName + ".res"))) {
             return null;
         }
-        FileInputStream readFileTabs = new FileInputStream("F:\\study\\tabs\\" + listName + ".res");
-        ObjectInputStream inputStream = new ObjectInputStream(readFileTabs);
-        Object list = inputStream.readObject();
-        inputStream.close();
-        return list;
+        try {
+            FileInputStream readFileTabs = new FileInputStream("F:\\study\\tabs\\" + listName + ".res");
+            ObjectInputStream inputStream = new ObjectInputStream(readFileTabs);
+            Object list = inputStream.readObject();
+            inputStream.close();
+            return list;
+        } catch (IOException | ClassNotFoundException e) {
+            return null;
+        }
     }
 
     public void writeTabs() throws IOException {
@@ -116,11 +112,23 @@ public class ContentStore implements Serializable {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("F:\\study\\tabs\\tabs.txt"), "windows-1251"));
         ArrayList<String> cartridgeTabs = new ArrayList<>();
         String str = reader.readLine();
+        readQTabs(str, cartridgeTabs);
         while (str != null) {
             cartridgeTabs.add(str);
             str = reader.readLine();
+            readQTabs(str, cartridgeTabs);
         }
         reader.close();
         return cartridgeTabs;
+    }
+
+    private void readQTabs(String str, ArrayList<String> tabs) {
+        if (str.startsWith("q_")) {
+            Map<String, ArrayList<Cartridge>> numerikTables = (Map<String, ArrayList<Cartridge>>) readObjects(str);
+            Set<String> setQtabs= numerikTables.keySet();
+            for (:) {
+
+            }
+        }
     }
 }

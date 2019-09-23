@@ -21,12 +21,14 @@ import models.Cartridge;
 import models.Summary;
 import models.Utilized;
 import util.ContentStore;
+import util.handlers.AddButtonHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class Main extends Application {
     ContentStore contentStore = ContentStore.getContentStore();
@@ -56,25 +58,15 @@ public class Main extends Application {
         for (int i = 0; i < listTabs.size(); i++) {
             VBox vBoxForButtonAndScroll = new VBox();
             Button addItem = new Button("Добавить");
-            addItem.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    StackPane secondaryLayout = new StackPane();
-                    Scene newScene = new Scene(secondaryLayout,600,400);
-                    Stage newWindow = new Stage();
-                    newWindow.setTitle("Добавить элемент");
-                    newWindow.setScene(newScene);
-
-                    newWindow.initModality(Modality.APPLICATION_MODAL);
-                    newWindow.setResizable(false);
-
-                    newWindow.show();
-                }
-            });
+            addItem.setOnAction(new AddButtonHandler());
             vBoxForButtonAndScroll.getChildren().add(addItem);
             tableTab = new Tab(listTabs.get(i));
             if (listTabs.get(i).startsWith("q_")) {
                 ArrayList<Cartridge> arrayList = new ArrayList<>();
+                Set<String> setOfTableNames = contentStore.getCartridgesMap().keySet();
+                for (String x : setOfTableNames) {
+
+                }
                 ArrayList<Cartridge> listFromMap = contentStore.getCartridgesMap().get(listTabs.get(i));
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();
