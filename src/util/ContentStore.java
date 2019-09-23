@@ -112,22 +112,24 @@ public class ContentStore implements Serializable {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("F:\\study\\tabs\\tabs.txt"), "windows-1251"));
         ArrayList<String> cartridgeTabs = new ArrayList<>();
         String str = reader.readLine();
-        readQTabs(str, cartridgeTabs);
         while (str != null) {
+            if (str.startsWith("q_")) {
+                readQTabs(str, cartridgeTabs);
+            }
             cartridgeTabs.add(str);
             str = reader.readLine();
-            readQTabs(str, cartridgeTabs);
         }
         reader.close();
         return cartridgeTabs;
     }
 
+
     private void readQTabs(String str, ArrayList<String> tabs) {
         if (str.startsWith("q_")) {
             Map<String, ArrayList<Cartridge>> numerikTables = (Map<String, ArrayList<Cartridge>>) readObjects(str);
-            Set<String> setQtabs= numerikTables.keySet();
-            for (:) {
-
+            Set<String> setQtabs = numerikTables.keySet();
+            for (String x : setQtabs) {
+                tabList.add(x);
             }
         }
     }
