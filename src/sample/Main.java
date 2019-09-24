@@ -37,7 +37,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         VBox root = new VBox();
 
-        List<String> list = contentStore.readTabs();
+        List<String> list = contentStore.getTabList();
         Text logText = new Text("log....");
         ScrollPane scrollPaneLog = new ScrollPane();
         root.getChildren().addAll(initialTabPane(list), scrollPaneLog);
@@ -60,13 +60,12 @@ public class Main extends Application {
             Button addItem = new Button("Добавить");
             addItem.setOnAction(new AddButtonHandler());
             vBoxForButtonAndScroll.getChildren().add(addItem);
-            tableTab = new Tab(listTabs.get(i));
-            if (listTabs.get(i).startsWith("q_")) {
-                ArrayList<Cartridge> arrayList = new ArrayList<>();
-                Set<String> setOfTableNames = contentStore.getCartridgesMap().keySet();
-                for (String x : setOfTableNames) {
 
-                }
+            if (listTabs.get(i).startsWith("q_")) {
+                String presentedTabName = listTabs.get(i)
+                        .substring("q_".length());
+                tableTab = new Tab(presentedTabName);
+                ArrayList<Cartridge> arrayList = new ArrayList<>();
                 ArrayList<Cartridge> listFromMap = contentStore.getCartridgesMap().get(listTabs.get(i));
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();
@@ -89,6 +88,7 @@ public class Main extends Application {
                     scrollPaneTable.setContent(hBox);
                 }
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
+                tableTab = new Tab(listTabs.get(i));
                 tableTab.setContent(vBoxForButtonAndScroll);
                 tabPane.getTabs().add(tableTab);
             } else if (listTabs.get(i).equals("Списанные")) {
@@ -102,6 +102,7 @@ public class Main extends Application {
                     scrollPaneTable.setContent(hBox);
                 }
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
+                tableTab = new Tab(listTabs.get(i));
                 tableTab.setContent(vBoxForButtonAndScroll);
                 tabPane.getTabs().add(tableTab);
             }
@@ -224,8 +225,7 @@ public class Main extends Application {
     }
 
     public void stop() throws IOException {
-        contentStore.writeTabs();
-        contentStore.saveAll();
+        contentStore.saveContent();
     }
 
     public static void main(String[] args) throws IOException {
