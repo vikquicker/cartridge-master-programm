@@ -52,9 +52,10 @@ public class ContentStore implements Serializable {
         utilizedArrayList = new ArrayList<>();
         tabList = new ArrayList<>();
         tabList.add("q_111");
+        tabList.add("q_115");
         tabList.add("q_226");
-        tabList.add("Списанные");
         tabList.add("Сводная");
+        tabList.add("Списанные");
     }
 
     public void saveContent() throws IOException {
