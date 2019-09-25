@@ -72,8 +72,10 @@ public class Main extends Application {
                 if (listFromMap != null) {
                     arrayList.addAll(listFromMap);
                     hBox.getChildren().addAll(initiateTable(arrayList, arrayList.getClass()), createButtons(listFromMap.size()));
-                    scrollPaneTable.setContent(hBox);
+                } else {
+                    hBox.getChildren().addAll(initiateTable(arrayList, arrayList.getClass()), createButtons(0));
                 }
+                scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
                 tableTab.setContent(vBoxForButtonAndScroll);
                 tabPane.getTabs().add(tableTab);
