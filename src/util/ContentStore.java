@@ -17,6 +17,11 @@ public class ContentStore implements Serializable {
     private ArrayList<Summary> summaryArrayList;
     private ArrayList<Utilized> utilizedArrayList;
     ArrayList<String> tabList;
+    private ArrayList<String> locationList = new ArrayList<>();
+
+    public ArrayList<String> getLocationList() {
+        return locationList;
+    }
 
     public static ContentStore getContentStore() {
         contentStore = (ContentStore) readContent(START_FILE);
@@ -47,6 +52,11 @@ public class ContentStore implements Serializable {
     }
 
     public ContentStore() {
+        try {
+            readLocationList();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         cartridgesMap = new HashMap<>();
         summaryArrayList = new ArrayList<>();
         utilizedArrayList = new ArrayList<>();
@@ -56,6 +66,17 @@ public class ContentStore implements Serializable {
         tabList.add("q_226");
         tabList.add("Сводная");
         tabList.add("Списанные");
+    }
+
+    public void readLocationList() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("F:\\study\\tabs\\locationList.txt"), "windows-1251"));
+        String str = reader.readLine();
+        if (reader != null) {
+            while (str != null) {
+                getLocationList().add(str);
+                str = reader.readLine();
+            }
+        }
     }
 
     public void saveContent() throws IOException {
