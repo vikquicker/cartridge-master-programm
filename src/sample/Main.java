@@ -51,12 +51,12 @@ public class Main extends Application {
         ScrollPane scrollPaneTable;
 
         for (int i = 0; i < listTabs.size(); i++) {
-            VBox vBoxForButtonAndScroll = new VBox();
-            Button addItem = new Button("Добавить");
-            addItem.setOnAction(new AddButtonHandler());
-            vBoxForButtonAndScroll.getChildren().add(addItem);
-
             if (listTabs.get(i).startsWith("q_")) {
+                VBox vBoxForButtonAndScroll = new VBox();
+                Button addItem = new Button("Добавить");
+                addItem.setOnAction(new AddButtonHandler(listTabs.get(i)));
+                vBoxForButtonAndScroll.getChildren().add(addItem);
+
                 String presentedTabName = listTabs.get(i)
                         .substring("q_".length());
                 tableTab = new Tab(presentedTabName);
@@ -84,9 +84,7 @@ public class Main extends Application {
                     hBox.getChildren().addAll(initiateTable(summaryArrayList, summaryArrayList.getClass()), createButtons(secondListFromMap.size()));
                     scrollPaneTable.setContent(hBox);
                 }
-                vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
                 tableTab = new Tab(listTabs.get(i));
-                tableTab.setContent(vBoxForButtonAndScroll);
                 tabPane.getTabs().add(tableTab);
             } else if (listTabs.get(i).equals("Списанные")) {
                 ArrayList<Utilized> utilizedArrayList = new ArrayList<>();
@@ -98,9 +96,7 @@ public class Main extends Application {
                     hBox.getChildren().addAll(initiateTable(utilizedArrayList, utilizedArrayList.getClass()), createButtons(thirdListFromMap.size()));
                     scrollPaneTable.setContent(hBox);
                 }
-                vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
                 tableTab = new Tab(listTabs.get(i));
-                tableTab.setContent(vBoxForButtonAndScroll);
                 tabPane.getTabs().add(tableTab);
             }
 

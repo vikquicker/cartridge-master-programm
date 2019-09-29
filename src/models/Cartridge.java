@@ -1,12 +1,12 @@
 package models;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Cartridge implements Serializable {
     String number ;// = "ercf";
     String status;// = "wdc";
-    Date date;// = new Date(10000);
+    LocalDate date;// = new Date(10000);
     String location;// = "rhygef";
     String notice;// = "wdfcvef";
 
@@ -34,11 +34,11 @@ public class Cartridge implements Serializable {
         this.status = status;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

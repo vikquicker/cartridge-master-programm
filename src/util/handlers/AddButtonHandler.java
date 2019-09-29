@@ -3,18 +3,29 @@ package util.handlers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.Cartridge;
 import util.ContentStore;
 
 import java.time.LocalDate;
 
 public class AddButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
+    private String tabName;
+
+    public String getTabName() {
+        return tabName;
+    }
+
+    public AddButtonHandler(String str) {
+        tabName = str;
+    }
 
     public void handle(ActionEvent event) {
         Pane pane = new Pane();
@@ -23,9 +34,6 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
 
         newWindow.initModality(Modality.APPLICATION_MODAL);
         newWindow.setResizable(false);
-
-        Button add = new Button("Добавить");
-        add.setMinSize(80, 60);
 
         //Labels
         Label numberLabel = new Label("Номер");
@@ -71,6 +79,27 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         locationLabel.setLayoutY(5);
         noticeLabel.setLayoutY(5);
         locationLabelNew.setLayoutY(50);
+
+        Button add = new Button("Добавить");
+        add.setMinSize(80, 60);
+        add.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Cartridge cartridgeToAdd = new Cartridge();
+                cartridgeToAdd.setNumber(numberField.getText());
+                cartridgeToAdd.setStatus(statusField.getValue());
+                cartridgeToAdd.setDate(dateField.getValue());
+                //TODO Validation
+                if (locationFieldNew != null) {
+                    cartridgeToAdd.setLocation(locationFieldNew.getText());
+                } else {
+                    cartridgeToAdd.setLocation(locationField.getValue());
+                }
+                cartridgeToAdd.setNotice(textAreaField.getText());
+
+                contentStore.getCartridgesMap().get(tabName).add(cartridgeToAdd);
+            }
+        });
 
         //Position FieldY
         numberField.setLayoutY(40);
