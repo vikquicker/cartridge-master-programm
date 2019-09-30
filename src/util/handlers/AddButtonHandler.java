@@ -11,9 +11,11 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Cartridge;
+import sample.Main;
 import util.ContentStore;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class AddButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
@@ -98,6 +100,10 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 cartridgeToAdd.setNotice(textAreaField.getText());
 
                 contentStore.getCartridgesMap().get(tabName).add(cartridgeToAdd);
+                ArrayList<Cartridge> arrayList1 = new ArrayList<>();
+                arrayList1.add(cartridgeToAdd);
+                contentStore.getCartridgesMap().put(tabName, arrayList1);
+                newWindow.close();
             }
         });
 

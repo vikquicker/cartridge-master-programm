@@ -60,7 +60,14 @@ public class Main extends Application {
                 String presentedTabName = listTabs.get(i)
                         .substring("q_".length());
                 tableTab = new Tab(presentedTabName);
+
                 ArrayList<Cartridge> arrayList = new ArrayList<>();
+                Cartridge cartridge = new Cartridge();
+                ArrayList<Cartridge> arrayList1 = new ArrayList<>();
+                arrayList1.add(cartridge);
+                contentStore.getCartridgesMap().put("q_111", arrayList1);
+                contentStore.getCartridgesMap().put("q_115", arrayList1);
+                contentStore.getCartridgesMap().put("q_226", arrayList1);
                 ArrayList<Cartridge> listFromMap = contentStore.getCartridgesMap().get(listTabs.get(i));
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();
@@ -74,8 +81,11 @@ public class Main extends Application {
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
                 tableTab.setContent(vBoxForButtonAndScroll);
                 tabPane.getTabs().add(tableTab);
+                tableTab.setClosable(false);
             } else if (listTabs.get(i).equals("Сводная")) {
+                Summary summary = new Summary();
                 ArrayList<Summary> summaryArrayList = new ArrayList<>();
+                summaryArrayList.add(summary);
                 ArrayList<Summary> secondListFromMap = contentStore.getSummaryArrayList();
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();
@@ -86,8 +96,11 @@ public class Main extends Application {
                 }
                 tableTab = new Tab(listTabs.get(i));
                 tabPane.getTabs().add(tableTab);
+                tableTab.setClosable(false);
             } else if (listTabs.get(i).equals("Списанные")) {
+                Utilized utilized = new Utilized();
                 ArrayList<Utilized> utilizedArrayList = new ArrayList<>();
+                utilizedArrayList.add(utilized);
                 ArrayList<Utilized> thirdListFromMap = contentStore.getUtilizedArrayList();
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();
@@ -98,13 +111,13 @@ public class Main extends Application {
                 }
                 tableTab = new Tab(listTabs.get(i));
                 tabPane.getTabs().add(tableTab);
+                tableTab.setClosable(false);
             }
-
         }
         return tabPane;
     }
 
-    private TableView initiateTable(Object list, Class className) throws IOException {
+    private TableView initiateTable(Object list, Class className) {
         if (className.getName().equals(new ArrayList<Cartridge>().getClass().getName())) {
             ObservableList<Cartridge> cartridges = FXCollections.observableArrayList((ArrayList<Cartridge>) list);
             TableView<Cartridge> table = new TableView<Cartridge>(cartridges);
@@ -221,7 +234,7 @@ public class Main extends Application {
         contentStore.saveContent();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         launch(args);
     }
 }
