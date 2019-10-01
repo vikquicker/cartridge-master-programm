@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Cartridge;
+import models.Utilized;
 import sample.Main;
 import util.ContentStore;
 
@@ -88,6 +89,9 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
             @Override
             public void handle(ActionEvent event) {
                 Cartridge cartridgeToAdd = new Cartridge();
+                Utilized utilizedToAdd = new Utilized();
+
+                //cartridgeToAdd
                 cartridgeToAdd.setNumber(numberField.getText());
                 cartridgeToAdd.setStatus(statusField.getValue());
                 cartridgeToAdd.setDate(dateField.getValue());
@@ -99,10 +103,22 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 }
                 cartridgeToAdd.setNotice(textAreaField.getText());
 
+                //utilizedToAdd
+                utilizedToAdd.setNumber(numberField.getText());
+                utilizedToAdd.setStatus(statusField.getValue());
+                utilizedToAdd.setDate(dateField.getValue());
+                //TODO Validation
+                utilizedToAdd.setNotice(textAreaField.getText());
+
                 contentStore.getCartridgesMap().get(tabName).add(cartridgeToAdd);
                 ArrayList<Cartridge> arrayList1 = new ArrayList<>();
                 arrayList1.add(cartridgeToAdd);
                 contentStore.getCartridgesMap().put(tabName, arrayList1);
+
+                if (statusField.equals("Списан")) {
+                    contentStore.getUtilizedArrayList().add(utilizedToAdd);
+                }
+
                 newWindow.close();
             }
         });

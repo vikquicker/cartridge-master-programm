@@ -1,22 +1,22 @@
 package models;
 
 public class Summary {
-    private long ops;
-    private int number;
+    private long opsLocation;
+    private int count;
 
     public long getOps() {
-        return ops;
+        return opsLocation;
     }
 
     public void setOps(long ops) {
-        this.ops = ops;
+        this.opsLocation = ops;
     }
 
     public int getNumber() {
-        return number;
+        return count;
     }
 
     public void setNumber(int number) {
-        this.number = number;
+        this.count = number;
     }
 }
