@@ -24,6 +24,9 @@ public class ContentStore implements Serializable {
     }
 
     public static ContentStore getContentStore() {
+        if (contentStore != null) {
+            return contentStore;
+        }
         contentStore = (ContentStore) readContent(START_FILE);
         if (contentStore == null) {
             contentStore = new ContentStore();
@@ -61,6 +64,9 @@ public class ContentStore implements Serializable {
         summaryArrayList = new ArrayList<>();
         utilizedArrayList = new ArrayList<>();
         tabList = new ArrayList<>();
+        this.getCartridgesMap().put("q_111", new ArrayList<Cartridge>());
+        this.getCartridgesMap().put("q_115", new ArrayList<Cartridge>());
+        this.getCartridgesMap().put("q_226", new ArrayList<Cartridge>());
         tabList.add("q_111");
         tabList.add("q_115");
         tabList.add("q_226");

@@ -1,8 +1,9 @@
 package models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Utilized {
+public class Utilized implements Serializable {
     String number ;// = "ercf";
     String status;// = "wdc";
     LocalDate date;// = new Date(10000);

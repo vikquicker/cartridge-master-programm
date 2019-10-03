@@ -111,10 +111,6 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 utilizedToAdd.setNotice(textAreaField.getText());
 
                 contentStore.getCartridgesMap().get(tabName).add(cartridgeToAdd);
-                ArrayList<Cartridge> arrayList1 = new ArrayList<>();
-                arrayList1.add(cartridgeToAdd);
-                contentStore.getCartridgesMap().put(tabName, arrayList1);
-
                 if (statusField.equals("Списан")) {
                     contentStore.getUtilizedArrayList().add(utilizedToAdd);
                 }

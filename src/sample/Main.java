@@ -62,12 +62,6 @@ public class Main extends Application {
                 tableTab = new Tab(presentedTabName);
 
                 ArrayList<Cartridge> arrayList = new ArrayList<>();
-                Cartridge cartridge = new Cartridge();
-                ArrayList<Cartridge> arrayList1 = new ArrayList<>();
-                arrayList1.add(cartridge);
-                contentStore.getCartridgesMap().put("q_111", arrayList1);
-                contentStore.getCartridgesMap().put("q_115", arrayList1);
-                contentStore.getCartridgesMap().put("q_226", arrayList1);
                 ArrayList<Cartridge> listFromMap = contentStore.getCartridgesMap().get(listTabs.get(i));
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();

@@ -1,6 +1,8 @@
 package models;
 
-public class Summary {
+import java.io.Serializable;
+
+public class Summary implements Serializable {
     private long opsLocation;
     private int count;
 
