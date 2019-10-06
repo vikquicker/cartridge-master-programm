@@ -3,14 +3,14 @@ package models;
 import java.io.Serializable;
 
 public class Summary implements Serializable {
-    private long opsLocation;
+    private String opsLocation;
     private int count;
 
-    public long getOps() {
+    public String getOps() {
         return opsLocation;
     }
 
-    public void setOps(long ops) {
+    public void setOps(String ops) {
         this.opsLocation = ops;
     }
 

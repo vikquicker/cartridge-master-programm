@@ -15,18 +15,21 @@ import models.Utilized;
 import sample.Main;
 import util.ContentStore;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class AddButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
     private String tabName;
+    private TableView<Cartridge> tab;
 
     public String getTabName() {
         return tabName;
     }
 
-    public AddButtonHandler(String str) {
+    public AddButtonHandler(String str, TableView<Cartridge> tab) {
+        this.tab = tab;
         tabName = str;
     }
 
@@ -89,32 +92,22 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
             @Override
             public void handle(ActionEvent event) {
                 Cartridge cartridgeToAdd = new Cartridge();
-                Utilized utilizedToAdd = new Utilized();
 
                 //cartridgeToAdd
                 cartridgeToAdd.setNumber(numberField.getText());
                 cartridgeToAdd.setStatus(statusField.getValue());
                 cartridgeToAdd.setDate(dateField.getValue());
                 //TODO Validation
-                if (locationFieldNew != null) {
+                if (locationFieldNew.getLength() > 0) {
                     cartridgeToAdd.setLocation(locationFieldNew.getText());
                 } else {
                     cartridgeToAdd.setLocation(locationField.getValue());
                 }
                 cartridgeToAdd.setNotice(textAreaField.getText());
 
-                //utilizedToAdd
-                utilizedToAdd.setNumber(numberField.getText());
-                utilizedToAdd.setStatus(statusField.getValue());
-                utilizedToAdd.setDate(dateField.getValue());
-                //TODO Validation
-                utilizedToAdd.setNotice(textAreaField.getText());
+                contentStore.getCartridgesMap().get("q_" + tabName).add(cartridgeToAdd);
 
-                contentStore.getCartridgesMap().get(tabName).add(cartridgeToAdd);
-                if (statusField.equals("Списан")) {
-                    contentStore.getUtilizedArrayList().add(utilizedToAdd);
-                }
-
+                tab.getItems().add(cartridgeToAdd);
                 newWindow.close();
             }
         });

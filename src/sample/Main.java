@@ -27,14 +27,25 @@ import java.util.List;
 
 public class Main extends Application {
     ContentStore contentStore = ContentStore.getContentStore();
+    VBox root = new VBox();
+    List<String> list = contentStore.getTabList();
+    ScrollPane scrollPaneLog = new ScrollPane();
+
+    public List<String> getList() {
+        return list;
+    }
+
+    public ScrollPane getScrollPaneLog() {
+        return scrollPaneLog;
+    }
+
+    public VBox getRoot() {
+        return root;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        VBox root = new VBox();
-
-        List<String> list = contentStore.getTabList();
         Text logText = new Text("log....");
-        ScrollPane scrollPaneLog = new ScrollPane();
         root.getChildren().addAll(initialTabPane(list), scrollPaneLog);
         primaryStage.setTitle("Cartridge Master 4000");
         Scene scene = new Scene(root);
@@ -45,32 +56,36 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private TabPane initialTabPane(List<String> listTabs) throws IOException {
+    public TabPane initialTabPane(List<String> listTabs) throws IOException {
         TabPane tabPane = new TabPane();
         Tab tableTab;
         ScrollPane scrollPaneTable;
+        TableView<Cartridge> tableView;
 
         for (int i = 0; i < listTabs.size(); i++) {
             if (listTabs.get(i).startsWith("q_")) {
                 VBox vBoxForButtonAndScroll = new VBox();
-                Button addItem = new Button("Добавить");
-                addItem.setOnAction(new AddButtonHandler(listTabs.get(i)));
-                vBoxForButtonAndScroll.getChildren().add(addItem);
-
                 String presentedTabName = listTabs.get(i)
                         .substring("q_".length());
                 tableTab = new Tab(presentedTabName);
+
+                Button addItem = new Button("Добавить");
+                vBoxForButtonAndScroll.getChildren().add(addItem);
 
                 ArrayList<Cartridge> arrayList = new ArrayList<>();
                 ArrayList<Cartridge> listFromMap = contentStore.getCartridgesMap().get(listTabs.get(i));
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();
                 if (listFromMap != null) {
+                    tableView = initiateTable(arrayList, arrayList.getClass());
                     arrayList.addAll(listFromMap);
-                    hBox.getChildren().addAll(initiateTable(arrayList, arrayList.getClass()), createButtons(listFromMap.size()));
+                    hBox.getChildren().addAll(tableView, createButtons(listFromMap.size()));
                 } else {
-                    hBox.getChildren().addAll(initiateTable(arrayList, arrayList.getClass()), createButtons(0));
+                    tableView = initiateTable(arrayList, arrayList.getClass());
+                    hBox.getChildren().addAll(tableView, createButtons(0));
                 }
+                addItem.setOnAction(new AddButtonHandler(presentedTabName,tableView));
+
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
                 tableTab.setContent(vBoxForButtonAndScroll);
@@ -111,6 +126,7 @@ public class Main extends Application {
         return tabPane;
     }
 
+
     private TableView initiateTable(Object list, Class className) {
         if (className.getName().equals(new ArrayList<Cartridge>().getClass().getName())) {
             ObservableList<Cartridge> cartridges = FXCollections.observableArrayList((ArrayList<Cartridge>) list);
@@ -132,11 +148,11 @@ public class Main extends Application {
             table.getColumns().add(dateColumn);
 
             TableColumn<Cartridge, String> locationColumn = new TableColumn<Cartridge, String>("Расположение");
-            locationColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("status"));
+            locationColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("location"));
             table.getColumns().add(locationColumn);
 
             TableColumn<Cartridge, String> noticeColumn = new TableColumn<Cartridge, String>("Примечание");
-            noticeColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("status"));
+            noticeColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("notice"));
             table.getColumns().add(noticeColumn);
 
             return table;
@@ -147,25 +163,13 @@ public class Main extends Application {
             table.setPrefHeight(700);
 
 // столбец для вывода имени
-            TableColumn<Summary, String> numberColumn = new TableColumn<Summary, String>("Номер");
-            numberColumn.setCellValueFactory(new PropertyValueFactory<Summary, String>("number"));
+            TableColumn<Summary, String> numberColumn = new TableColumn<Summary, String>("ОПС");
+            numberColumn.setCellValueFactory(new PropertyValueFactory<Summary, String>("opsLocation"));
             table.getColumns().add(numberColumn);
 
-            TableColumn<Summary, String> statusColumn = new TableColumn<Summary, String>("Статус");
-            statusColumn.setCellValueFactory(new PropertyValueFactory<Summary, String>("status"));
-            table.getColumns().add(statusColumn);
-
-            TableColumn<Summary, Date> dateColumn = new TableColumn<Summary, Date>("Дата");
-            dateColumn.setCellValueFactory(new PropertyValueFactory<Summary, Date>("date"));
-            table.getColumns().add(dateColumn);
-
-            TableColumn<Summary, String> locationColumn = new TableColumn<Summary, String>("Расположение");
-            locationColumn.setCellValueFactory(new PropertyValueFactory<Summary, String>("status"));
+            TableColumn<Summary, Integer> locationColumn = new TableColumn<Summary, Integer>("Количество Картриджей");
+            locationColumn.setCellValueFactory(new PropertyValueFactory<Summary, Integer>("count"));
             table.getColumns().add(locationColumn);
-
-            TableColumn<Summary, String> noticeColumn = new TableColumn<Summary, String>("Примечание");
-            noticeColumn.setCellValueFactory(new PropertyValueFactory<Summary, String>("status"));
-            table.getColumns().add(noticeColumn);
 
             return table;
         } else {
@@ -187,12 +191,8 @@ public class Main extends Application {
             dateColumn.setCellValueFactory(new PropertyValueFactory<Utilized, Date>("date"));
             table.getColumns().add(dateColumn);
 
-            TableColumn<Utilized, String> locationColumn = new TableColumn<Utilized, String>("Расположение");
-            locationColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("status"));
-            table.getColumns().add(locationColumn);
-
             TableColumn<Utilized, String> noticeColumn = new TableColumn<Utilized, String>("Примечание");
-            noticeColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("status"));
+            noticeColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("notice"));
             table.getColumns().add(noticeColumn);
 
             return table;
