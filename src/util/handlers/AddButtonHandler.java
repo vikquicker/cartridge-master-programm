@@ -3,7 +3,6 @@ package util.handlers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -11,13 +10,8 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Cartridge;
-import models.Utilized;
-import sample.Main;
 import util.ContentStore;
-
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class AddButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();

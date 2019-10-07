@@ -27,24 +27,12 @@ import java.util.List;
 
 public class Main extends Application {
     ContentStore contentStore = ContentStore.getContentStore();
-    VBox root = new VBox();
-    List<String> list = contentStore.getTabList();
-    ScrollPane scrollPaneLog = new ScrollPane();
-
-    public List<String> getList() {
-        return list;
-    }
-
-    public ScrollPane getScrollPaneLog() {
-        return scrollPaneLog;
-    }
-
-    public VBox getRoot() {
-        return root;
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        VBox root = new VBox();
+        List<String> list = contentStore.getTabList();
+        ScrollPane scrollPaneLog = new ScrollPane();
         Text logText = new Text("log....");
         root.getChildren().addAll(initialTabPane(list), scrollPaneLog);
         primaryStage.setTitle("Cartridge Master 4000");
@@ -77,12 +65,10 @@ public class Main extends Application {
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();
                 if (listFromMap != null) {
-                    tableView = initiateTable(arrayList, arrayList.getClass());
                     arrayList.addAll(listFromMap);
-                    hBox.getChildren().addAll(tableView, createButtons(listFromMap.size()));
+                    hBox.getChildren().addAll(tableView = initiateTable(arrayList, arrayList.getClass()), createButtons(listFromMap.size()));
                 } else {
-                    tableView = initiateTable(arrayList, arrayList.getClass());
-                    hBox.getChildren().addAll(tableView, createButtons(0));
+                    hBox.getChildren().addAll(tableView = initiateTable(arrayList, arrayList.getClass()), createButtons(0));
                 }
                 addItem.setOnAction(new AddButtonHandler(presentedTabName,tableView));
 
