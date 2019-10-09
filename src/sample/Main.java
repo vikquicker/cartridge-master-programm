@@ -22,6 +22,7 @@ import util.handlers.AddButtonHandler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main extends Application {
     ContentStore contentStore = ContentStore.getContentStore();
@@ -43,7 +44,9 @@ public class Main extends Application {
     }
 
     public TabPane initialTabPane(List<String> listTabs) {
-        String[] locationArray = (String[]) contentStore.getLocationList().toArray();
+       List<String> locationArray = Arrays.stream(contentStore.getLocationList()
+                .toArray())
+                .map(Object::toString).collect(Collectors.toList());
 
 
         TabPane tabPane = new TabPane();
@@ -100,8 +103,8 @@ public class Main extends Application {
                 for (int j = 0; j < contentStore.getLocationList().size(); j++) {
                     for (Map.Entry<String, Integer> map : summaryCount.entrySet()) {
                         Summary summaryNew = new Summary();
-                        summaryNew.setOpsLocation(locationArray[j]);
-                        if (locationArray[j].equals(map.getKey())) {
+                        summaryNew.setOpsLocation(locationArray.get(j));
+                        if (locationArray.get(j).equals(map.getKey())) {
                             summaryNew.setCount(map.getValue());
                         }
                         contentStore.getSummaryArrayList().add(summaryNew);
@@ -272,22 +275,7 @@ public class Main extends Application {
         return vBox;
     }
 
-    public void addLocationList() {
-        contentStore.getLocationList().clear();
-        HashMap<String, Integer> numberOfCartridges = new HashMap<>();
-        for (int i = 0; i < contentStore.getCartridgesMap().get("q_111").size(); i++) {
-            numberOfCartridges.put(contentStore.getCartridgesMap().get("q_111").get(i).getLocation(), 0);
-        }
-        for (int i = 0; i < contentStore.getCartridgesMap().get("q_115").size(); i++) {
-            contentStore.getLocationList().add(contentStore.getCartridgesMap().get("q_115").get(i).getLocation());
-        }
-        for (int i = 0; i < contentStore.getCartridgesMap().get("q_226").size(); i++) {
-            contentStore.getLocationList().add(contentStore.getCartridgesMap().get("q_226").get(i).getLocation());
-        }
-        for (Map.Entry<String, Integer> map : numberOfCartridges.entrySet()) {
-            contentStore.getLocationList().add(map.getKey());
-        }
-    }
+
 
     public HashMap<String, Integer> summuryCount() {
         ArrayList<String> arrayListCount = new ArrayList<>();

@@ -17,8 +17,11 @@ import util.ContentStore;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AddButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
@@ -97,7 +100,9 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
             @Override
             public void handle(ActionEvent event) {
 
-
+                List<String> locationArray = Arrays.stream(contentStore.getLocationList()
+                        .toArray())
+                        .map(Object::toString).collect(Collectors.toList());
                 Cartridge cartridgeToAdd = new Cartridge();
                 //cartridgeToAdd
                 cartridgeToAdd.setNumber(numberField.getText());
@@ -130,13 +135,11 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 if (statusField.getValue().equals("На отделении")) {
                     tabSummary.getItems().clear();
                     HashMap<String, Integer> summaryCount = main.summuryCount();
-                    String[] locationArray = (String[]) contentStore.getLocationList().toArray();
-
                     for (int j = 0; j < contentStore.getLocationList().size(); j++) {
                         Summary summaryNew = new Summary();
                         for (Map.Entry<String, Integer> map : summaryCount.entrySet()) {
-                            summaryNew.setOpsLocation(locationArray[j]);
-                            if (locationArray[j].equals(map.getKey())) {
+                            summaryNew.setOpsLocation(locationArray.get(j));
+                            if (locationArray.get(j).equals(map.getKey())) {
                                 summaryNew.setCount(map.getValue());
                             }
                             contentStore.getSummaryArrayList().add(summaryNew);
