@@ -43,7 +43,9 @@ public class Main extends Application {
     }
 
     public TabPane initialTabPane(List<String> listTabs) {
-        //summuryCount();
+        String[] locationArray = (String[]) contentStore.getLocationList().toArray();
+
+
         TabPane tabPane = new TabPane();
         Tab tableTab;
         Tab tableTabUtilized = new Tab();
@@ -93,11 +95,13 @@ public class Main extends Application {
 
                 Summary summary = new Summary();
                 contentStore.getSummaryArrayList().clear();
+
+
                 for (int j = 0; j < contentStore.getLocationList().size(); j++) {
                     for (Map.Entry<String, Integer> map : summaryCount.entrySet()) {
                         Summary summaryNew = new Summary();
-                        summaryNew.setOpsLocation(contentStore.getLocationList().get(j));
-                        if (contentStore.getLocationList().get(j).equals(map.getKey())) {
+                        summaryNew.setOpsLocation(locationArray[j]);
+                        if (locationArray[j].equals(map.getKey())) {
                             summaryNew.setCount(map.getValue());
                         }
                         contentStore.getSummaryArrayList().add(summaryNew);

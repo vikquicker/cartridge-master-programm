@@ -57,6 +57,7 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         TextField numberField = new TextField();
         numberField.setMaxWidth(80);
 
+        //TODO replace it
         ObservableList<String> statusList = FXCollections.observableArrayList("На отделении",
                 "На заправке 1",
                 "На заправке 2",
@@ -95,21 +96,16 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         add.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (locationFieldNew.getLength() > 0) {
-                    try {
-                        contentStore.writeLocationString(locationFieldNew.getText());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Cartridge cartridgeToAdd = new Cartridge();
 
+
+                Cartridge cartridgeToAdd = new Cartridge();
                 //cartridgeToAdd
                 cartridgeToAdd.setNumber(numberField.getText());
                 cartridgeToAdd.setStatus(statusField.getValue());
                 cartridgeToAdd.setDate(dateField.getValue());
                 //TODO Validation
                 if (locationFieldNew.getLength() > 0) {
+                    contentStore.getLocationList().add(locationFieldNew.getText());
                     cartridgeToAdd.setLocation(locationFieldNew.getText());
                 } else {
                     cartridgeToAdd.setLocation(locationField.getValue());
@@ -134,11 +130,13 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 if (statusField.getValue().equals("На отделении")) {
                     tabSummary.getItems().clear();
                     HashMap<String, Integer> summaryCount = main.summuryCount();
+                    String[] locationArray = (String[]) contentStore.getLocationList().toArray();
+
                     for (int j = 0; j < contentStore.getLocationList().size(); j++) {
                         Summary summaryNew = new Summary();
                         for (Map.Entry<String, Integer> map : summaryCount.entrySet()) {
-                            summaryNew.setOpsLocation(contentStore.getLocationList().get(j));
-                            if (contentStore.getLocationList().get(j).equals(map.getKey())) {
+                            summaryNew.setOpsLocation(locationArray[j]);
+                            if (locationArray[j].equals(map.getKey())) {
                                 summaryNew.setCount(map.getValue());
                             }
                             contentStore.getSummaryArrayList().add(summaryNew);

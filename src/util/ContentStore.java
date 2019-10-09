@@ -17,9 +17,9 @@ public class ContentStore implements Serializable {
     private ArrayList<Summary> summaryArrayList;
     private ArrayList<Utilized> utilizedArrayList;
     ArrayList<String> tabList;
-    private ArrayList<String> locationList = new ArrayList<>();
+    private Set<String> locationList;
 
-    public ArrayList<String> getLocationList() {
+    public Set<String> getLocationList() {
         return locationList;
     }
 
@@ -55,15 +55,11 @@ public class ContentStore implements Serializable {
     }
 
     public ContentStore() {
-        try {
-            readLocationList();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         cartridgesMap = new HashMap<>();
         summaryArrayList = new ArrayList<>();
         utilizedArrayList = new ArrayList<>();
         tabList = new ArrayList<>();
+        locationList = new HashSet<String>();
         this.getCartridgesMap().put("q_111", new ArrayList<Cartridge>());
         this.getCartridgesMap().put("q_115", new ArrayList<Cartridge>());
         this.getCartridgesMap().put("q_226", new ArrayList<Cartridge>());
@@ -72,49 +68,8 @@ public class ContentStore implements Serializable {
         tabList.add("q_111");
         tabList.add("q_115");
         tabList.add("q_226");
-    }
-
-    public void readLocationList() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("F:\\study\\tabs\\locationList.txt"), "windows-1251"));
-        String str = reader.readLine();
-        if (reader != null) {
-            while (str != null) {
-                getLocationList().add(str);
-                str = reader.readLine();
-            }
-        }
-    }
-
-//    public ArrayList<String> readLocation() throws IOException {
-//        ArrayList<String> list = new ArrayList<>();
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("F:\\study\\tabs\\locationList.txt"), "windows-1251"));
-//        String str = reader.readLine();
-//        if (reader != null) {
-//            while (str != null) {
-//                list.add(str);
-//                str = reader.readLine();
-//            }
-//        }
-//        return list;
-//    }
-
-    public void writeLocationList(ArrayList<String> str) throws IOException {
-
-    }
-
-    public void writeLocationString(String str) throws IOException {
-        readLocationList();
-        BufferedWriter writeInFile = new BufferedWriter(new FileWriter("F:\\study\\tabs\\locationList.txt"));
-        int count = 0;
-        for (int i = 0; i < getLocationList().size(); i++) {
-            if (!getLocationList().get(i).equals(str)) {
-                count++;
-            }
-        }
-        if (count == getLocationList().size()) {
-            writeInFile.write(str);
-        }
-        readLocationList();
+        locationList.add("356542");
+        locationList.add("356532");
     }
 
     public void saveContent() throws IOException {
