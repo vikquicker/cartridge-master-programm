@@ -10,20 +10,30 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Cartridge;
+import models.Summary;
+import models.Utilized;
+import sample.Main;
 import util.ContentStore;
+
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
+    Main main = new Main();
     private String tabName;
-    private TableView<Cartridge> tab;
+    private TableView<Cartridge> tabCartridge;
+    private TableView<Utilized> tabUtilized;
+    private TableView<Summary> tabSummary;
 
-    public String getTabName() {
-        return tabName;
-    }
-
-    public AddButtonHandler(String str, TableView<Cartridge> tab) {
-        this.tab = tab;
+    public AddButtonHandler(String str, TableView<Cartridge> tabCartridge,
+                            TableView<Utilized> tabUtilized,
+                            TableView<Summary> tabSummary) {
+        this.tabCartridge = tabCartridge;
+        this.tabUtilized = tabUtilized;
+        this.tabSummary = tabSummary;
         tabName = str;
     }
 
@@ -85,6 +95,13 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         add.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                if (locationFieldNew.getLength() > 0) {
+                    try {
+                        contentStore.writeLocationString(locationFieldNew.getText());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 Cartridge cartridgeToAdd = new Cartridge();
 
                 //cartridgeToAdd
@@ -101,7 +118,34 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
 
                 contentStore.getCartridgesMap().get("q_" + tabName).add(cartridgeToAdd);
 
-                tab.getItems().add(cartridgeToAdd);
+                tabCartridge.getItems().add(cartridgeToAdd);
+                if (statusField.getValue().equals("Списан")) {
+                    Utilized utilizedToAdd = new Utilized();
+
+                    utilizedToAdd.setNumber(numberField.getText());
+                    utilizedToAdd.setStatus(statusField.getValue());
+                    utilizedToAdd.setDate(dateField.getValue());
+                    utilizedToAdd.setNotice(textAreaField.getText());
+
+                    contentStore.getUtilizedArrayList().add(utilizedToAdd);
+                    tabUtilized.getItems().add(utilizedToAdd);
+                }
+
+                if (statusField.getValue().equals("На отделении")) {
+                    tabSummary.getItems().clear();
+                    HashMap<String, Integer> summaryCount = main.summuryCount();
+                    for (int j = 0; j < contentStore.getLocationList().size(); j++) {
+                        Summary summaryNew = new Summary();
+                        for (Map.Entry<String, Integer> map : summaryCount.entrySet()) {
+                            summaryNew.setOpsLocation(contentStore.getLocationList().get(j));
+                            if (contentStore.getLocationList().get(j).equals(map.getKey())) {
+                                summaryNew.setCount(map.getValue());
+                            }
+                            contentStore.getSummaryArrayList().add(summaryNew);
+                        }
+                        tabSummary.getItems().add(summaryNew);
+                    }
+                }
                 newWindow.close();
             }
         });

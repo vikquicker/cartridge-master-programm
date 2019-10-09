@@ -67,11 +67,11 @@ public class ContentStore implements Serializable {
         this.getCartridgesMap().put("q_111", new ArrayList<Cartridge>());
         this.getCartridgesMap().put("q_115", new ArrayList<Cartridge>());
         this.getCartridgesMap().put("q_226", new ArrayList<Cartridge>());
+        tabList.add("Списанные");
+        tabList.add("Сводная");
         tabList.add("q_111");
         tabList.add("q_115");
         tabList.add("q_226");
-        tabList.add("Сводная");
-        tabList.add("Списанные");
     }
 
     public void readLocationList() throws IOException {
@@ -83,6 +83,38 @@ public class ContentStore implements Serializable {
                 str = reader.readLine();
             }
         }
+    }
+
+//    public ArrayList<String> readLocation() throws IOException {
+//        ArrayList<String> list = new ArrayList<>();
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("F:\\study\\tabs\\locationList.txt"), "windows-1251"));
+//        String str = reader.readLine();
+//        if (reader != null) {
+//            while (str != null) {
+//                list.add(str);
+//                str = reader.readLine();
+//            }
+//        }
+//        return list;
+//    }
+
+    public void writeLocationList(ArrayList<String> str) throws IOException {
+
+    }
+
+    public void writeLocationString(String str) throws IOException {
+        readLocationList();
+        BufferedWriter writeInFile = new BufferedWriter(new FileWriter("F:\\study\\tabs\\locationList.txt"));
+        int count = 0;
+        for (int i = 0; i < getLocationList().size(); i++) {
+            if (!getLocationList().get(i).equals(str)) {
+                count++;
+            }
+        }
+        if (count == getLocationList().size()) {
+            writeInFile.write(str);
+        }
+        readLocationList();
     }
 
     public void saveContent() throws IOException {

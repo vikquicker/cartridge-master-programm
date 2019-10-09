@@ -21,9 +21,7 @@ import util.handlers.AddButtonHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Main extends Application {
     ContentStore contentStore = ContentStore.getContentStore();
@@ -44,14 +42,20 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public TabPane initialTabPane(List<String> listTabs) throws IOException {
+    public TabPane initialTabPane(List<String> listTabs) {
+        //summuryCount();
         TabPane tabPane = new TabPane();
         Tab tableTab;
+        Tab tableTabUtilized = new Tab();
+        Tab tableTabSummary = new Tab();
         ScrollPane scrollPaneTable;
-        TableView<Cartridge> tableView;
+        TableView<Cartridge> tableViewCartridge = new TableView<>();
+        TableView<Utilized> tableViewUtilized = new TableView<>();
+        TableView<Summary> tableViewSummary = new TableView<>();
 
         for (int i = 0; i < listTabs.size(); i++) {
             if (listTabs.get(i).startsWith("q_")) {
+                Cartridge cartridge = new Cartridge();
                 VBox vBoxForButtonAndScroll = new VBox();
                 String presentedTabName = listTabs.get(i)
                         .substring("q_".length());
@@ -66,11 +70,11 @@ public class Main extends Application {
                 HBox hBox = new HBox();
                 if (listFromMap != null) {
                     arrayList.addAll(listFromMap);
-                    hBox.getChildren().addAll(tableView = initiateTable(arrayList, arrayList.getClass()), createButtons(listFromMap.size()));
+                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass()), createButtons(listFromMap.size()));
                 } else {
-                    hBox.getChildren().addAll(tableView = initiateTable(arrayList, arrayList.getClass()), createButtons(0));
+                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass()), createButtons(0));
                 }
-                addItem.setOnAction(new AddButtonHandler(presentedTabName,tableView));
+                addItem.setOnAction(new AddButtonHandler(presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -78,45 +82,85 @@ public class Main extends Application {
                 tabPane.getTabs().add(tableTab);
                 tableTab.setClosable(false);
             } else if (listTabs.get(i).equals("Сводная")) {
+                //addLocationList();
+
+                HashMap<String, Integer> summaryCount = summuryCount();
+                VBox vBoxForButtonAndScroll = new VBox();
+                String presentedTabNameSummary = listTabs.get(i);
+                tableTab = new Tab(presentedTabNameSummary);
+
+                Button addItem = new Button("Добавить");
+
                 Summary summary = new Summary();
+                contentStore.getSummaryArrayList().clear();
+                for (int j = 0; j < contentStore.getLocationList().size(); j++) {
+                    for (Map.Entry<String, Integer> map : summaryCount.entrySet()) {
+                        Summary summaryNew = new Summary();
+                        summaryNew.setOpsLocation(contentStore.getLocationList().get(j));
+                        if (contentStore.getLocationList().get(j).equals(map.getKey())) {
+                            summaryNew.setCount(map.getValue());
+                        }
+                        contentStore.getSummaryArrayList().add(summaryNew);
+                    }
+                }
                 ArrayList<Summary> summaryArrayList = new ArrayList<>();
-                summaryArrayList.add(summary);
                 ArrayList<Summary> secondListFromMap = contentStore.getSummaryArrayList();
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();
                 if (secondListFromMap != null) {
                     summaryArrayList.addAll(secondListFromMap);
-                    hBox.getChildren().addAll(initiateTable(summaryArrayList, summaryArrayList.getClass()), createButtons(secondListFromMap.size()));
-                    scrollPaneTable.setContent(hBox);
+                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass()), createButtons(secondListFromMap.size()));
+                } else {
+                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass()), createButtons(0));
                 }
-                tableTab = new Tab(listTabs.get(i));
-                tabPane.getTabs().add(tableTab);
+                addItem.setOnAction(new AddButtonHandler(presentedTabNameSummary, tableViewCartridge, tableViewUtilized, tableViewSummary));
+
+                scrollPaneTable.setContent(hBox);
+                vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
+                tableTab.setContent(vBoxForButtonAndScroll);
+                tableTabSummary = tableTab;
                 tableTab.setClosable(false);
             } else if (listTabs.get(i).equals("Списанные")) {
-                Utilized utilized = new Utilized();
+                VBox vBoxForButtonAndScroll = new VBox();
+                String presentedTabNameUtilized = listTabs.get(i);
+                tableTab = new Tab(presentedTabNameUtilized);
+
+                Button addItem = new Button("Добавить");
+
                 ArrayList<Utilized> utilizedArrayList = new ArrayList<>();
-                utilizedArrayList.add(utilized);
                 ArrayList<Utilized> thirdListFromMap = contentStore.getUtilizedArrayList();
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();
+                tableViewCartridge = initiateTable(utilizedArrayList, utilizedArrayList.getClass());
                 if (thirdListFromMap != null) {
                     utilizedArrayList.addAll(thirdListFromMap);
-                    hBox.getChildren().addAll(initiateTable(utilizedArrayList, utilizedArrayList.getClass()), createButtons(thirdListFromMap.size()));
-                    scrollPaneTable.setContent(hBox);
+                    hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()),
+                            createButtons(thirdListFromMap.size()));
+                } else {
+                    hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()), createButtons(0));
                 }
-                tableTab = new Tab(listTabs.get(i));
-                tabPane.getTabs().add(tableTab);
+                addItem.setOnAction(new AddButtonHandler(presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary));
+
+                scrollPaneTable.setContent(hBox);
+                vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
+                tableTab.setContent(vBoxForButtonAndScroll);
+                tableTabUtilized = tableTab;
                 tableTab.setClosable(false);
             }
         }
+        tabPane.getTabs().add(tableTabSummary);
+        tabPane.getTabs().add(tableTabUtilized);
         return tabPane;
     }
 
 
     private TableView initiateTable(Object list, Class className) {
-        if (className.getName().equals(new ArrayList<Cartridge>().getClass().getName())) {
+        Cartridge cartridge = new Cartridge();
+        Summary summary = new Summary();
+        if (className.equals(cartridge.getClass())) {
             ObservableList<Cartridge> cartridges = FXCollections.observableArrayList((ArrayList<Cartridge>) list);
             TableView<Cartridge> table = new TableView<Cartridge>(cartridges);
+            table.setEditable(true);
             table.setPrefWidth(1200);
             table.setPrefHeight(700);
 
@@ -124,43 +168,52 @@ public class Main extends Application {
             TableColumn<Cartridge, String> numberColumn = new TableColumn<Cartridge, String>("Номер");
             numberColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("number"));
             table.getColumns().add(numberColumn);
+            numberColumn.setMinWidth(100);
 
             TableColumn<Cartridge, String> statusColumn = new TableColumn<Cartridge, String>("Статус");
             statusColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("status"));
             table.getColumns().add(statusColumn);
+            statusColumn.setMinWidth(100);
 
             TableColumn<Cartridge, Date> dateColumn = new TableColumn<Cartridge, Date>("Дата");
             dateColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, Date>("date"));
             table.getColumns().add(dateColumn);
+            dateColumn.setMinWidth(100);
 
             TableColumn<Cartridge, String> locationColumn = new TableColumn<Cartridge, String>("Расположение");
             locationColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("location"));
             table.getColumns().add(locationColumn);
+            locationColumn.setMinWidth(100);
 
             TableColumn<Cartridge, String> noticeColumn = new TableColumn<Cartridge, String>("Примечание");
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("notice"));
             table.getColumns().add(noticeColumn);
+            noticeColumn.setMinWidth(860);
 
             return table;
-        } else if (className.getName().equals(new ArrayList<Summary>().getClass().getName())) {
+        } else if (className.equals(summary.getClass())) {
             ObservableList<Summary> cartridges = FXCollections.observableArrayList((ArrayList<Summary>) list);
             TableView<Summary> table = new TableView<Summary>(cartridges);
+            table.setEditable(true);
             table.setPrefWidth(1200);
             table.setPrefHeight(700);
 
 // столбец для вывода имени
-            TableColumn<Summary, String> numberColumn = new TableColumn<Summary, String>("ОПС");
+            TableColumn<Summary, String> numberColumn = new TableColumn<>("ОПС");
             numberColumn.setCellValueFactory(new PropertyValueFactory<Summary, String>("opsLocation"));
             table.getColumns().add(numberColumn);
+            numberColumn.setMinWidth(100);
 
             TableColumn<Summary, Integer> locationColumn = new TableColumn<Summary, Integer>("Количество Картриджей");
             locationColumn.setCellValueFactory(new PropertyValueFactory<Summary, Integer>("count"));
             table.getColumns().add(locationColumn);
+            locationColumn.setMinWidth(200);
 
             return table;
         } else {
             ObservableList<Utilized> cartridges = FXCollections.observableArrayList((ArrayList<Utilized>) list);
             TableView<Utilized> table = new TableView<Utilized>(cartridges);
+            table.setEditable(true);
             table.setPrefWidth(1200);
             table.setPrefHeight(700);
 
@@ -168,22 +221,27 @@ public class Main extends Application {
             TableColumn<Utilized, String> numberColumn = new TableColumn<Utilized, String>("Номер");
             numberColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("number"));
             table.getColumns().add(numberColumn);
+            numberColumn.setMinWidth(100);
 
             TableColumn<Utilized, String> statusColumn = new TableColumn<Utilized, String>("Статус");
             statusColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("status"));
             table.getColumns().add(statusColumn);
+            statusColumn.setMinWidth(100);
 
             TableColumn<Utilized, Date> dateColumn = new TableColumn<Utilized, Date>("Дата");
             dateColumn.setCellValueFactory(new PropertyValueFactory<Utilized, Date>("date"));
             table.getColumns().add(dateColumn);
+            dateColumn.setMinWidth(100);
 
             TableColumn<Utilized, String> noticeColumn = new TableColumn<Utilized, String>("Примечание");
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("notice"));
             table.getColumns().add(noticeColumn);
+            noticeColumn.setMinWidth(900);
 
             return table;
         }
     }
+
 
     private Node createButtons(int numberOfRows) {
         VBox vBox = new VBox();
@@ -208,6 +266,64 @@ public class Main extends Application {
             vBox.getChildren().addAll(hBox);
         }
         return vBox;
+    }
+
+    public void addLocationList() {
+        contentStore.getLocationList().clear();
+        HashMap<String, Integer> numberOfCartridges = new HashMap<>();
+        for (int i = 0; i < contentStore.getCartridgesMap().get("q_111").size(); i++) {
+            numberOfCartridges.put(contentStore.getCartridgesMap().get("q_111").get(i).getLocation(), 0);
+        }
+        for (int i = 0; i < contentStore.getCartridgesMap().get("q_115").size(); i++) {
+            contentStore.getLocationList().add(contentStore.getCartridgesMap().get("q_115").get(i).getLocation());
+        }
+        for (int i = 0; i < contentStore.getCartridgesMap().get("q_226").size(); i++) {
+            contentStore.getLocationList().add(contentStore.getCartridgesMap().get("q_226").get(i).getLocation());
+        }
+        for (Map.Entry<String, Integer> map : numberOfCartridges.entrySet()) {
+            contentStore.getLocationList().add(map.getKey());
+        }
+    }
+
+    public HashMap<String, Integer> summuryCount() {
+        ArrayList<String> arrayListCount = new ArrayList<>();
+        HashMap<String, Integer> numberOfCartridges = new HashMap<>();
+        for (int i = 0; i < contentStore.getCartridgesMap().get("q_111").size(); i++) {
+            String location111 = contentStore.getCartridgesMap().get("q_111").get(i).getLocation();
+            String status111 = contentStore.getCartridgesMap().get("q_111").get(i).getStatus();
+            if (status111.equals("На отделении")) {
+                arrayListCount.add(location111);
+            }
+        }
+        for (int i = 0; i < contentStore.getCartridgesMap().get("q_115").size(); i++) {
+            String location115 = contentStore.getCartridgesMap().get("q_115").get(i).getLocation();
+            String status115 = contentStore.getCartridgesMap().get("q_115").get(i).getStatus();
+            if (status115.equals("На отделении")) {
+                arrayListCount.add(location115);
+            }
+        }
+        for (int i = 0; i < contentStore.getCartridgesMap().get("q_226").size(); i++) {
+            String location226 = contentStore.getCartridgesMap().get("q_226").get(i).getLocation();
+            String status226 = contentStore.getCartridgesMap().get("q_226").get(i).getStatus();
+            if (status226.equals("На отделении")) {
+                arrayListCount.add(location226);
+            }
+        }
+
+        for (String str : arrayListCount) {
+            numberOfCartridges.put(str, 0);
+        }
+
+        for (Map.Entry<String, Integer> map : numberOfCartridges.entrySet()) {
+            for (int i = 0; i < arrayListCount.size(); i++) {
+                if (map.getKey().equals(arrayListCount.get(i))) {
+                    int x = map.getValue();
+                    x++;
+                    map.setValue(x);
+                }
+            }
+        }
+        return numberOfCartridges;
     }
 
     public void stop() throws IOException {

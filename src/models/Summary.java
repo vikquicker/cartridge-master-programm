@@ -3,22 +3,22 @@ package models;
 import java.io.Serializable;
 
 public class Summary implements Serializable {
-    private String opsLocation;
-    private int count;
+    String opsLocation;
+    int count;
 
-    public String getOps() {
+    public String getOpsLocation() {
         return opsLocation;
     }
 
-    public void setOps(String ops) {
-        this.opsLocation = ops;
-    }
-
-    public int getNumber() {
+    public int getCount() {
         return count;
     }
 
-    public void setNumber(int number) {
-        this.count = number;
+    public void setOpsLocation(String opsLocation) {
+        this.opsLocation = opsLocation;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }
