@@ -133,7 +133,9 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 }
 
                 if (statusField.getValue().equals("На отделении")) {
-                    tabSummary.getItems().clear();
+                    Summary summaryObject = new Summary();
+
+                    tabSummary.getItems().add(summaryObject);
                     HashMap<String, Integer> summaryCount = main.summuryCount();
                     for (int j = 0; j < contentStore.getLocationList().size(); j++) {
                         Summary summaryNew = new Summary();

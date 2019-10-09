@@ -48,7 +48,6 @@ public class Main extends Application {
                 .toArray())
                 .map(Object::toString).collect(Collectors.toList());
 
-
         TabPane tabPane = new TabPane();
         Tab tableTab;
         Tab tableTabUtilized = new Tab();
