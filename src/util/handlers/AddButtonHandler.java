@@ -15,7 +15,6 @@ import models.Utilized;
 import sample.Main;
 import util.ContentStore;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -99,7 +98,6 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         add.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
                 List<String> locationArray = Arrays.stream(contentStore.getLocationList()
                         .toArray())
                         .map(Object::toString).collect(Collectors.toList());
@@ -111,6 +109,9 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 //TODO Validation
                 if (locationFieldNew.getLength() > 0) {
                     contentStore.getLocationList().add(locationFieldNew.getText());
+                    locationArray = Arrays.stream(contentStore.getLocationList()
+                            .toArray())
+                            .map(Object::toString).collect(Collectors.toList());
                     cartridgeToAdd.setLocation(locationFieldNew.getText());
                 } else {
                     cartridgeToAdd.setLocation(locationField.getValue());
@@ -133,9 +134,9 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 }
 
                 if (statusField.getValue().equals("На отделении")) {
-                    Summary summaryObject = new Summary();
-
-                    tabSummary.getItems().add(summaryObject);
+//                    Summary summaryObject = new Summary();
+//                    tabSummary.getItems().add(summaryObject);
+                    tabSummary.getItems().clear();
                     HashMap<String, Integer> summaryCount = main.summuryCount();
                     for (int j = 0; j < contentStore.getLocationList().size(); j++) {
                         Summary summaryNew = new Summary();

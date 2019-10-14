@@ -18,6 +18,7 @@ import models.Summary;
 import models.Utilized;
 import util.ContentStore;
 import util.handlers.AddButtonHandler;
+import util.handlers.RemoveButtonHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,7 +67,9 @@ public class Main extends Application {
                 tableTab = new Tab(presentedTabName);
 
                 Button addItem = new Button("Добавить");
+                Button removeItem = new Button("Удалить");
                 vBoxForButtonAndScroll.getChildren().add(addItem);
+                vBoxForButtonAndScroll.getChildren().add(removeItem);
 
                 ArrayList<Cartridge> arrayList = new ArrayList<>();
                 ArrayList<Cartridge> listFromMap = contentStore.getCartridgesMap().get(listTabs.get(i));
@@ -79,6 +82,7 @@ public class Main extends Application {
                     hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass()), createButtons(0));
                 }
                 addItem.setOnAction(new AddButtonHandler(presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary));
+                removeItem.setOnAction(new RemoveButtonHandler(presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -86,19 +90,17 @@ public class Main extends Application {
                 tabPane.getTabs().add(tableTab);
                 tableTab.setClosable(false);
             } else if (listTabs.get(i).equals("Сводная")) {
-                //addLocationList();
-
                 HashMap<String, Integer> summaryCount = summuryCount();
                 VBox vBoxForButtonAndScroll = new VBox();
                 String presentedTabNameSummary = listTabs.get(i);
                 tableTab = new Tab(presentedTabNameSummary);
 
                 Button addItem = new Button("Добавить");
+                Button removeItem = new Button("Удалить");
+                vBoxForButtonAndScroll.getChildren().add(removeItem);
 
                 Summary summary = new Summary();
                 contentStore.getSummaryArrayList().clear();
-
-
                 for (int j = 0; j < contentStore.getLocationList().size(); j++) {
                     for (Map.Entry<String, Integer> map : summaryCount.entrySet()) {
                         Summary summaryNew = new Summary();
@@ -132,6 +134,8 @@ public class Main extends Application {
                 tableTab = new Tab(presentedTabNameUtilized);
 
                 Button addItem = new Button("Добавить");
+                Button removeItem = new Button("Удалить");
+                vBoxForButtonAndScroll.getChildren().add(removeItem);
 
                 ArrayList<Utilized> utilizedArrayList = new ArrayList<>();
                 ArrayList<Utilized> thirdListFromMap = contentStore.getUtilizedArrayList();
