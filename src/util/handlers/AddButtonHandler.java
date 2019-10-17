@@ -134,12 +134,11 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 }
 
                 if (statusField.getValue().equals("На отделении")) {
-//                    Summary summaryObject = new Summary();
-//                    tabSummary.getItems().add(summaryObject);
                     tabSummary.getItems().clear();
                     HashMap<String, Integer> summaryCount = main.summuryCount();
+                    Summary summaryNew = new Summary();
                     for (int j = 0; j < contentStore.getLocationList().size(); j++) {
-                        Summary summaryNew = new Summary();
+
                         for (Map.Entry<String, Integer> map : summaryCount.entrySet()) {
                             summaryNew.setOpsLocation(locationArray.get(j));
                             if (locationArray.get(j).equals(map.getKey())) {
@@ -147,8 +146,9 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                             }
                             contentStore.getSummaryArrayList().add(summaryNew);
                         }
-                        tabSummary.getItems().add(summaryNew);
+
                     }
+                    tabSummary.getItems().add(summaryNew);
                 }
                 newWindow.close();
             }

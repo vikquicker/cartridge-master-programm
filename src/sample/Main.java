@@ -96,21 +96,19 @@ public class Main extends Application {
                 tableTab = new Tab(presentedTabNameSummary);
 
                 Button addItem = new Button("Добавить");
-                Button removeItem = new Button("Удалить");
-                vBoxForButtonAndScroll.getChildren().add(removeItem);
 
                 Summary summary = new Summary();
-                contentStore.getSummaryArrayList().clear();
-                for (int j = 0; j < contentStore.getLocationList().size(); j++) {
-                    for (Map.Entry<String, Integer> map : summaryCount.entrySet()) {
-                        Summary summaryNew = new Summary();
-                        summaryNew.setOpsLocation(locationArray.get(j));
-                        if (locationArray.get(j).equals(map.getKey())) {
-                            summaryNew.setCount(map.getValue());
-                        }
-                        contentStore.getSummaryArrayList().add(summaryNew);
-                    }
-                }
+//                contentStore.getSummaryArrayList().clear();
+//                for (int j = 0; j < contentStore.getLocationList().size(); j++) {
+//                    for (Map.Entry<String, Integer> map : summaryCount.entrySet()) {
+//                        Summary summaryNew = new Summary();
+//                        summaryNew.setOpsLocation(locationArray.get(j));
+//                        if (locationArray.get(j).equals(map.getKey())) {
+//                            summaryNew.setCount(map.getValue());
+//                        }
+//                        contentStore.getSummaryArrayList().add(summaryNew);
+//                    }
+//                }
                 ArrayList<Summary> summaryArrayList = new ArrayList<>();
                 ArrayList<Summary> secondListFromMap = contentStore.getSummaryArrayList();
                 scrollPaneTable = new ScrollPane();
