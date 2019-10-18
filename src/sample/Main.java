@@ -90,7 +90,7 @@ public class Main extends Application {
                 tabPane.getTabs().add(tableTab);
                 tableTab.setClosable(false);
             } else if (listTabs.get(i).equals("Сводная")) {
-                HashMap<String, Integer> summaryCount = summuryCount();
+                //HashMap<String, Integer> summaryCount = summuryCount();
                 VBox vBoxForButtonAndScroll = new VBox();
                 String presentedTabNameSummary = listTabs.get(i);
                 tableTab = new Tab(presentedTabNameSummary);
@@ -278,46 +278,7 @@ public class Main extends Application {
 
 
 
-    public HashMap<String, Integer> summuryCount() {
-        ArrayList<String> arrayListCount = new ArrayList<>();
-        HashMap<String, Integer> numberOfCartridges = new HashMap<>();
-        for (int i = 0; i < contentStore.getCartridgesMap().get("q_111").size(); i++) {
-            String location111 = contentStore.getCartridgesMap().get("q_111").get(i).getLocation();
-            String status111 = contentStore.getCartridgesMap().get("q_111").get(i).getStatus();
-            if (status111.equals("На отделении")) {
-                arrayListCount.add(location111);
-            }
-        }
-        for (int i = 0; i < contentStore.getCartridgesMap().get("q_115").size(); i++) {
-            String location115 = contentStore.getCartridgesMap().get("q_115").get(i).getLocation();
-            String status115 = contentStore.getCartridgesMap().get("q_115").get(i).getStatus();
-            if (status115.equals("На отделении")) {
-                arrayListCount.add(location115);
-            }
-        }
-        for (int i = 0; i < contentStore.getCartridgesMap().get("q_226").size(); i++) {
-            String location226 = contentStore.getCartridgesMap().get("q_226").get(i).getLocation();
-            String status226 = contentStore.getCartridgesMap().get("q_226").get(i).getStatus();
-            if (status226.equals("На отделении")) {
-                arrayListCount.add(location226);
-            }
-        }
 
-        for (String str : arrayListCount) {
-            numberOfCartridges.put(str, 0);
-        }
-
-        for (Map.Entry<String, Integer> map : numberOfCartridges.entrySet()) {
-            for (int i = 0; i < arrayListCount.size(); i++) {
-                if (map.getKey().equals(arrayListCount.get(i))) {
-                    int x = map.getValue();
-                    x++;
-                    map.setValue(x);
-                }
-            }
-        }
-        return numberOfCartridges;
-    }
 
     public void stop() throws IOException {
         contentStore.saveContent();

@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 public class AddButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
-    Main main = new Main();
     private String tabName;
     private TableView<Cartridge> tabCartridge;
     private TableView<Utilized> tabUtilized;
@@ -102,6 +101,7 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                         .toArray())
                         .map(Object::toString).collect(Collectors.toList());
                 Cartridge cartridgeToAdd = new Cartridge();
+                Summary summaryNew;
                 //cartridgeToAdd
                 cartridgeToAdd.setNumber(numberField.getText());
                 cartridgeToAdd.setStatus(statusField.getValue());
@@ -135,20 +135,15 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
 
                 if (statusField.getValue().equals("На отделении")) {
                     tabSummary.getItems().clear();
-                    HashMap<String, Integer> summaryCount = main.summuryCount();
-                    Summary summaryNew = new Summary();
-                    for (int j = 0; j < contentStore.getLocationList().size(); j++) {
-
-                        for (Map.Entry<String, Integer> map : summaryCount.entrySet()) {
-                            summaryNew.setOpsLocation(locationArray.get(j));
-                            if (locationArray.get(j).equals(map.getKey())) {
-                                summaryNew.setCount(map.getValue());
-                            }
+                    HashMap<String, Integer> summaryCount = contentStore.summuryCount();
+                        contentStore.getSummaryArrayList().clear();
+                        for (Map.Entry<String, Integer> countAndLocation : summaryCount.entrySet()) {
+                            summaryNew = new Summary();
+                            summaryNew.setOpsLocation(countAndLocation.getKey());
+                            summaryNew.setCount(countAndLocation.getValue());
                             contentStore.getSummaryArrayList().add(summaryNew);
                         }
-
-                    }
-                    tabSummary.getItems().add(summaryNew);
+                    tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
                 }
                 newWindow.close();
             }
