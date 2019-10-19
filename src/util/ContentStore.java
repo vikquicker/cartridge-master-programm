@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
+import util.handlers.EditButtonHandler;
 import util.handlers.RemoveButtonHandler;
 
 import java.io.*;
@@ -98,7 +99,7 @@ public class ContentStore implements Serializable {
         imageViewDelete = new ImageView(imageDelete);
         hBox = new HBox();
         buttonDelete = new Button("", imageViewDelete);
-        buttonDelete.setMinSize(33,10);
+        buttonDelete.setMinSize(33, 10);
         hBox.getChildren().addAll(buttonDelete);
         vBox.getChildren().addAll(hBox);
         for (int i = 0; i < numberOfRows; i++) {
@@ -112,7 +113,8 @@ public class ContentStore implements Serializable {
             hBox.getChildren().addAll(buttonEdit, buttonDelete);
             vBox.getChildren().addAll(hBox);
 
-            buttonDelete.setOnAction(new RemoveButtonHandler(i, str,tabCartridge,tabUtilized,tabSummary));
+            buttonEdit.setOnAction(new EditButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary));
+            buttonDelete.setOnAction(new RemoveButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary));
         }
         return vBox;
     }
