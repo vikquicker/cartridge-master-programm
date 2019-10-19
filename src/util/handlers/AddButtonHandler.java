@@ -12,15 +12,10 @@ import javafx.stage.Stage;
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
-import sample.Main;
 import util.ContentStore;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class AddButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
@@ -28,13 +23,16 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
     private TableView<Cartridge> tabCartridge;
     private TableView<Utilized> tabUtilized;
     private TableView<Summary> tabSummary;
+    private HBox hBox;
 
     public AddButtonHandler(String str, TableView<Cartridge> tabCartridge,
                             TableView<Utilized> tabUtilized,
-                            TableView<Summary> tabSummary) {
+                            TableView<Summary> tabSummary,
+                            HBox hBox) {
         this.tabCartridge = tabCartridge;
         this.tabUtilized = tabUtilized;
         this.tabSummary = tabSummary;
+        this.hBox = hBox;
         tabName = str;
     }
 
@@ -97,9 +95,6 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         add.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                List<String> locationArray = Arrays.stream(contentStore.getLocationList()
-                        .toArray())
-                        .map(Object::toString).collect(Collectors.toList());
                 Cartridge cartridgeToAdd = new Cartridge();
                 Summary summaryNew;
                 //cartridgeToAdd
@@ -109,18 +104,15 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 //TODO Validation
                 if (locationFieldNew.getLength() > 0) {
                     contentStore.getLocationList().add(locationFieldNew.getText());
-                    locationArray = Arrays.stream(contentStore.getLocationList()
-                            .toArray())
-                            .map(Object::toString).collect(Collectors.toList());
                     cartridgeToAdd.setLocation(locationFieldNew.getText());
                 } else {
                     cartridgeToAdd.setLocation(locationField.getValue());
                 }
                 cartridgeToAdd.setNotice(textAreaField.getText());
-
                 contentStore.getCartridgesMap().get("q_" + tabName).add(cartridgeToAdd);
-
+                //hBox.getChildren().add(contentStore.createButtons(1));
                 tabCartridge.getItems().add(cartridgeToAdd);
+
                 if (statusField.getValue().equals("Списан")) {
                     Utilized utilizedToAdd = new Utilized();
 

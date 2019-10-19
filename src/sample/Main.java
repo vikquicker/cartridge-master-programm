@@ -3,12 +3,9 @@ package sample;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -18,12 +15,9 @@ import models.Summary;
 import models.Utilized;
 import util.ContentStore;
 import util.handlers.AddButtonHandler;
-import util.handlers.RemoveButtonHandler;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Main extends Application {
     ContentStore contentStore = ContentStore.getContentStore();
@@ -45,10 +39,6 @@ public class Main extends Application {
     }
 
     public TabPane initialTabPane(List<String> listTabs) {
-       List<String> locationArray = Arrays.stream(contentStore.getLocationList()
-                .toArray())
-                .map(Object::toString).collect(Collectors.toList());
-
         TabPane tabPane = new TabPane();
         Tab tableTab;
         Tab tableTabUtilized = new Tab();
@@ -67,9 +57,7 @@ public class Main extends Application {
                 tableTab = new Tab(presentedTabName);
 
                 Button addItem = new Button("Добавить");
-                Button removeItem = new Button("Удалить");
                 vBoxForButtonAndScroll.getChildren().add(addItem);
-                vBoxForButtonAndScroll.getChildren().add(removeItem);
 
                 ArrayList<Cartridge> arrayList = new ArrayList<>();
                 ArrayList<Cartridge> listFromMap = contentStore.getCartridgesMap().get(listTabs.get(i));
@@ -77,12 +65,13 @@ public class Main extends Application {
                 HBox hBox = new HBox();
                 if (listFromMap != null) {
                     arrayList.addAll(listFromMap);
-                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass()), createButtons(listFromMap.size()));
+                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass()),
+                            contentStore.createButtons(listFromMap.size(),presentedTabName, tableViewCartridge, tableViewUtilized,tableViewSummary));
                 } else {
-                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass()), createButtons(0));
+                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass()),
+                            contentStore.createButtons(0,presentedTabName, tableViewCartridge, tableViewUtilized,tableViewSummary));
                 }
-                addItem.setOnAction(new AddButtonHandler(presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary));
-                removeItem.setOnAction(new RemoveButtonHandler(presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary));
+                addItem.setOnAction(new AddButtonHandler(presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary,hBox));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -90,7 +79,6 @@ public class Main extends Application {
                 tabPane.getTabs().add(tableTab);
                 tableTab.setClosable(false);
             } else if (listTabs.get(i).equals("Сводная")) {
-                //HashMap<String, Integer> summaryCount = summuryCount();
                 VBox vBoxForButtonAndScroll = new VBox();
                 String presentedTabNameSummary = listTabs.get(i);
                 tableTab = new Tab(presentedTabNameSummary);
@@ -98,28 +86,17 @@ public class Main extends Application {
                 Button addItem = new Button("Добавить");
 
                 Summary summary = new Summary();
-//                contentStore.getSummaryArrayList().clear();
-//                for (int j = 0; j < contentStore.getLocationList().size(); j++) {
-//                    for (Map.Entry<String, Integer> map : summaryCount.entrySet()) {
-//                        Summary summaryNew = new Summary();
-//                        summaryNew.setOpsLocation(locationArray.get(j));
-//                        if (locationArray.get(j).equals(map.getKey())) {
-//                            summaryNew.setCount(map.getValue());
-//                        }
-//                        contentStore.getSummaryArrayList().add(summaryNew);
-//                    }
-//                }
                 ArrayList<Summary> summaryArrayList = new ArrayList<>();
                 ArrayList<Summary> secondListFromMap = contentStore.getSummaryArrayList();
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();
                 if (secondListFromMap != null) {
                     summaryArrayList.addAll(secondListFromMap);
-                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass()), createButtons(secondListFromMap.size()));
+                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass()));
                 } else {
-                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass()), createButtons(0));
+                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass()));
                 }
-                addItem.setOnAction(new AddButtonHandler(presentedTabNameSummary, tableViewCartridge, tableViewUtilized, tableViewSummary));
+                addItem.setOnAction(new AddButtonHandler(presentedTabNameSummary, tableViewCartridge, tableViewUtilized, tableViewSummary,hBox));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -132,8 +109,6 @@ public class Main extends Application {
                 tableTab = new Tab(presentedTabNameUtilized);
 
                 Button addItem = new Button("Добавить");
-                Button removeItem = new Button("Удалить");
-                vBoxForButtonAndScroll.getChildren().add(removeItem);
 
                 ArrayList<Utilized> utilizedArrayList = new ArrayList<>();
                 ArrayList<Utilized> thirdListFromMap = contentStore.getUtilizedArrayList();
@@ -143,11 +118,12 @@ public class Main extends Application {
                 if (thirdListFromMap != null) {
                     utilizedArrayList.addAll(thirdListFromMap);
                     hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()),
-                            createButtons(thirdListFromMap.size()));
+                            contentStore.createButtons(thirdListFromMap.size(),presentedTabNameUtilized, tableViewCartridge, tableViewUtilized,tableViewSummary));
                 } else {
-                    hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()), createButtons(0));
+                    hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()),
+                            contentStore.createButtons(0,presentedTabNameUtilized, tableViewCartridge, tableViewUtilized,tableViewSummary));
                 }
-                addItem.setOnAction(new AddButtonHandler(presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary));
+                addItem.setOnAction(new AddButtonHandler(presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary,hBox));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -196,7 +172,7 @@ public class Main extends Application {
             TableColumn<Cartridge, String> noticeColumn = new TableColumn<Cartridge, String>("Примечание");
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("notice"));
             table.getColumns().add(noticeColumn);
-            noticeColumn.setMinWidth(860);
+            noticeColumn.setMinWidth(799);
 
             return table;
         } else if (className.equals(summary.getClass())) {
@@ -244,41 +220,11 @@ public class Main extends Application {
             TableColumn<Utilized, String> noticeColumn = new TableColumn<Utilized, String>("Примечание");
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("notice"));
             table.getColumns().add(noticeColumn);
-            noticeColumn.setMinWidth(900);
+            noticeColumn.setMinWidth(899);
 
             return table;
         }
     }
-
-
-    private Node createButtons(int numberOfRows) {
-        VBox vBox = new VBox();
-        HBox hBox;
-        Button buttonEdit;
-        Button buttonDelete;
-        InputStream inputEdit = getClass().getResourceAsStream("/resources/edit.svg");
-        InputStream inputDelete = getClass().getResourceAsStream("/resources/delete.svg");
-        Image imageEdit;
-        Image imageDelete;
-        ImageView imageViewEdit;
-        ImageView imageViewDelete;
-        for (int i = 0; i < numberOfRows; i++) {
-            hBox = new HBox();
-            imageEdit = new Image(inputEdit);
-            imageDelete = new Image(inputDelete);
-            imageViewEdit = new ImageView(imageEdit);
-            imageViewDelete = new ImageView(imageDelete);
-            buttonEdit = new Button("", imageViewEdit);
-            buttonDelete = new Button("", imageViewDelete);
-            hBox.getChildren().addAll(buttonEdit, buttonDelete);
-            vBox.getChildren().addAll(hBox);
-        }
-        return vBox;
-    }
-
-
-
-
 
     public void stop() throws IOException {
         contentStore.saveContent();

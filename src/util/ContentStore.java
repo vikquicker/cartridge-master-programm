@@ -1,8 +1,16 @@
 package util;
 
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
+import util.handlers.RemoveButtonHandler;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -70,6 +78,43 @@ public class ContentStore implements Serializable {
         tabList.add("q_226");
         locationList.add("356542");
         locationList.add("356532");
+    }
+
+    public Node createButtons(int numberOfRows, String str, TableView<Cartridge> tabCartridge,
+                              TableView<Utilized> tabUtilized,
+                              TableView<Summary> tabSummary) {
+        VBox vBox = new VBox();
+        HBox hBox;
+        Button buttonEdit;
+        Button buttonDelete;
+        InputStream inputEdit = getClass().getResourceAsStream("/resources/edit.svg");
+        InputStream inputDelete = getClass().getResourceAsStream("/resources/delete.svg");
+        Image imageEdit;
+        Image imageDelete;
+        ImageView imageViewEdit;
+        ImageView imageViewDelete;
+
+        imageDelete = new Image(inputDelete);
+        imageViewDelete = new ImageView(imageDelete);
+        hBox = new HBox();
+        buttonDelete = new Button("", imageViewDelete);
+        buttonDelete.setMinSize(33,10);
+        hBox.getChildren().addAll(buttonDelete);
+        vBox.getChildren().addAll(hBox);
+        for (int i = 0; i < numberOfRows; i++) {
+            hBox = new HBox();
+            imageEdit = new Image(inputEdit);
+            imageDelete = new Image(inputDelete);
+            imageViewEdit = new ImageView(imageEdit);
+            imageViewDelete = new ImageView(imageDelete);
+            buttonEdit = new Button("", imageViewEdit);
+            buttonDelete = new Button("", imageViewDelete);
+            hBox.getChildren().addAll(buttonEdit, buttonDelete);
+            vBox.getChildren().addAll(hBox);
+
+            buttonDelete.setOnAction(new RemoveButtonHandler(i, str,tabCartridge,tabUtilized,tabSummary));
+        }
+        return vBox;
     }
 
     public HashMap<String, Integer> summuryCount() {
