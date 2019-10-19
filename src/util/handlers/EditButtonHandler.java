@@ -23,7 +23,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
     private TableView<Cartridge> tabCartridge;
     private TableView<Utilized> tabUtilized;
     private TableView<Summary> tabSummary;
-
+//
     public EditButtonHandler(int numberOfButton, String str,
                              TableView<Cartridge> tabCartridge,
                              TableView<Utilized> tabUtilized,
