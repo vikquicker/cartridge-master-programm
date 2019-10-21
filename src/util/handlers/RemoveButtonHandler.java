@@ -4,7 +4,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Cartridge;
@@ -12,6 +16,7 @@ import models.Summary;
 import models.Utilized;
 import util.ContentStore;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,15 +28,18 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
     private TableView<Cartridge> tabCartridge;
     private TableView<Utilized> tabUtilized;
     private TableView<Summary> tabSummary;
+    private VBox vBoxForEditAndDelete;
 
     public RemoveButtonHandler(int numberOfButton, String str,
                                TableView<Cartridge> tabCartridge,
                                TableView<Utilized> tabUtilized,
-                               TableView<Summary> tabSummary) {
+                               TableView<Summary> tabSummary,
+                               VBox vBoxForEditAndDelete) {
         this.tabCartridge = tabCartridge;
         this.tabUtilized = tabUtilized;
         this.numberOfButton = numberOfButton;
         this.tabSummary = tabSummary;
+        this.vBoxForEditAndDelete = vBoxForEditAndDelete;
         tabNameFromCreateButtonns = str;
     }
 
@@ -138,6 +146,22 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
                     contentStore.getUtilizedArrayList().remove(numberOfButton);
                     tabUtilized.getItems().remove(numberOfButton);
                 }
+
+                if (tabNameFromCreateButtonns.equals("111")) {
+                    int rowNumber = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).size() - 1;
+                    vBoxForEditAndDelete.getChildren().remove(rowNumber);
+                } else if (tabNameFromCreateButtonns.equals("115")) {
+                    int rowNumber = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).size() - 1;
+                    vBoxForEditAndDelete.getChildren().remove(rowNumber);
+                } else if (tabNameFromCreateButtonns.equals("226")) {
+                    int rowNumber = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).size() - 1;
+                    vBoxForEditAndDelete.getChildren().remove(rowNumber);
+                } else {
+                    int rowNumber = contentStore.getUtilizedArrayList().size() - 1;
+                    vBoxForEditAndDelete.getChildren().remove(rowNumber);
+                }
+
+                contentStore.saveContent();
                 newWindow.close();
             }
         });

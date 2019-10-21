@@ -81,43 +81,7 @@ public class ContentStore implements Serializable {
         locationList.add("356532");
     }
 
-    public Node createButtons(int numberOfRows, String str, TableView<Cartridge> tabCartridge,
-                              TableView<Utilized> tabUtilized,
-                              TableView<Summary> tabSummary) {
-        VBox vBox = new VBox();
-        HBox hBox;
-        Button buttonEdit;
-        Button buttonDelete;
-        InputStream inputEdit = getClass().getResourceAsStream("/resources/edit.svg");
-        InputStream inputDelete = getClass().getResourceAsStream("/resources/delete.svg");
-        Image imageEdit;
-        Image imageDelete;
-        ImageView imageViewEdit;
-        ImageView imageViewDelete;
 
-        imageDelete = new Image(inputDelete);
-        imageViewDelete = new ImageView(imageDelete);
-        hBox = new HBox();
-        buttonDelete = new Button("", imageViewDelete);
-        buttonDelete.setMinSize(33, 10);
-        hBox.getChildren().addAll(buttonDelete);
-        vBox.getChildren().addAll(hBox);
-        for (int i = 0; i < numberOfRows; i++) {
-            hBox = new HBox();
-            imageEdit = new Image(inputEdit);
-            imageDelete = new Image(inputDelete);
-            imageViewEdit = new ImageView(imageEdit);
-            imageViewDelete = new ImageView(imageDelete);
-            buttonEdit = new Button("", imageViewEdit);
-            buttonDelete = new Button("", imageViewDelete);
-            hBox.getChildren().addAll(buttonEdit, buttonDelete);
-            vBox.getChildren().addAll(hBox);
-
-            buttonEdit.setOnAction(new EditButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary));
-            buttonDelete.setOnAction(new RemoveButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary));
-        }
-        return vBox;
-    }
 
     public HashMap<String, Integer> summuryCount() {
         ArrayList<String> arrayListCount = new ArrayList<>();
@@ -160,11 +124,15 @@ public class ContentStore implements Serializable {
         return numberOfCartridges;
     }
 
-    public void saveContent() throws IOException {
-        FileOutputStream writeInFile = new FileOutputStream(START_FILE);
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(writeInFile);
-        objectOutputStream.writeObject(this);
-        objectOutputStream.close();
+    public void saveContent(){
+        try {
+            FileOutputStream writeInFile = new FileOutputStream(START_FILE);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(writeInFile);
+            objectOutputStream.writeObject(this);
+            objectOutputStream.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public static Object readContent(String listName) {

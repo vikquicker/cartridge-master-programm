@@ -6,14 +6,18 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
+import sample.Main;
 import util.ContentStore;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -23,16 +27,19 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
     private TableView<Cartridge> tabCartridge;
     private TableView<Utilized> tabUtilized;
     private TableView<Summary> tabSummary;
-    private HBox hBox;
+    private VBox vBoxForEditAndDelete;
+    private VBox vBoxForEditAndDeleteButtonsUtilize;
 
     public AddButtonHandler(String str, TableView<Cartridge> tabCartridge,
                             TableView<Utilized> tabUtilized,
                             TableView<Summary> tabSummary,
-                            HBox hBox) {
+                            VBox vBoxForEditAndDelete,
+                            VBox vBoxForEditAndDeleteButtonsUtilize) {
         this.tabCartridge = tabCartridge;
         this.tabUtilized = tabUtilized;
         this.tabSummary = tabSummary;
-        this.hBox = hBox;
+        this.vBoxForEditAndDelete = vBoxForEditAndDelete;
+        this.vBoxForEditAndDeleteButtonsUtilize = vBoxForEditAndDeleteButtonsUtilize;
         tabName = str;
     }
 
@@ -128,15 +135,67 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 if (statusField.getValue().equals("На отделении")) {
                     tabSummary.getItems().clear();
                     HashMap<String, Integer> summaryCount = contentStore.summuryCount();
-                        contentStore.getSummaryArrayList().clear();
-                        for (Map.Entry<String, Integer> countAndLocation : summaryCount.entrySet()) {
-                            summaryNew = new Summary();
-                            summaryNew.setOpsLocation(countAndLocation.getKey());
-                            summaryNew.setCount(countAndLocation.getValue());
-                            contentStore.getSummaryArrayList().add(summaryNew);
-                        }
+                    contentStore.getSummaryArrayList().clear();
+                    for (Map.Entry<String, Integer> countAndLocation : summaryCount.entrySet()) {
+                        summaryNew = new Summary();
+                        summaryNew.setOpsLocation(countAndLocation.getKey());
+                        summaryNew.setCount(countAndLocation.getValue());
+                        contentStore.getSummaryArrayList().add(summaryNew);
+                    }
                     tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
                 }
+
+                int rowNumber = contentStore.getCartridgesMap().get("q_" + tabName).size() - 1;
+                HBox hBoxForButtonPair = new HBox();
+                Button buttonEdit;
+                Button buttonDelete;
+                InputStream inputEdit = getClass().getResourceAsStream("/sample/edit.svg");
+                InputStream inputDelete = getClass().getResourceAsStream("/sample/delete.svg");
+                Image imageEdit;
+                Image imageDelete;
+                ImageView imageViewEdit;
+                ImageView imageViewDelete;
+
+                imageEdit = new Image(inputEdit);
+                imageDelete = new Image(inputDelete);
+                imageViewEdit = new ImageView(imageEdit);
+                imageViewDelete = new ImageView(imageDelete);
+                buttonEdit = new Button("", imageViewEdit);
+                buttonDelete = new Button("", imageViewDelete);
+                hBoxForButtonPair.getChildren().addAll(buttonEdit, buttonDelete);
+                vBoxForEditAndDelete.getChildren().add(hBoxForButtonPair);
+
+                buttonEdit.setOnAction(new EditButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary));
+                buttonDelete.setOnAction(new RemoveButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary, vBoxForEditAndDelete));
+
+                if (statusField.getValue().equals("Списан")){
+                    int rowNumberUtilize = contentStore.getUtilizedArrayList().size();
+                    HBox hBoxForButtonPairUtilize = new HBox();
+                    Button buttonEdit1;
+                    Button buttonDelete1;
+                    InputStream inputEdit1 = getClass().getResourceAsStream("/sample/edit.svg");
+                    InputStream inputDelete1 = getClass().getResourceAsStream("/sample/delete.svg");
+                    Image imageEdit1;
+                    Image imageDelete1;
+                    ImageView imageViewEdit1;
+                    ImageView imageViewDelete1;
+
+                    imageEdit1 = new Image(inputEdit1);
+                    imageDelete1 = new Image(inputDelete1);
+                    imageViewEdit1 = new ImageView(imageEdit1);
+                    imageViewDelete1 = new ImageView(imageDelete1);
+                    buttonEdit1 = new Button("", imageViewEdit1);
+                    buttonDelete1 = new Button("", imageViewDelete1);
+                    hBoxForButtonPairUtilize.getChildren().addAll(buttonEdit1, buttonDelete1);
+                    vBoxForEditAndDeleteButtonsUtilize.getChildren().add(hBoxForButtonPairUtilize);
+
+                    buttonEdit.setOnAction(new EditButtonHandler(rowNumberUtilize, tabName, tabCartridge, tabUtilized, tabSummary));
+                    buttonDelete.setOnAction(new RemoveButtonHandler(rowNumberUtilize, tabName, tabCartridge, tabUtilized, tabSummary, vBoxForEditAndDelete));
+
+                }
+
+                contentStore.saveContent();
+
                 newWindow.close();
             }
         });

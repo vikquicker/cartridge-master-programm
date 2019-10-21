@@ -3,9 +3,12 @@ package sample;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -15,12 +18,16 @@ import models.Summary;
 import models.Utilized;
 import util.ContentStore;
 import util.handlers.AddButtonHandler;
+import util.handlers.EditButtonHandler;
+import util.handlers.RemoveButtonHandler;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 public class Main extends Application {
     ContentStore contentStore = ContentStore.getContentStore();
+    VBox vBoxForEditAndDeleteButtons;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -47,6 +54,7 @@ public class Main extends Application {
         TableView<Cartridge> tableViewCartridge = new TableView<>();
         TableView<Utilized> tableViewUtilized = new TableView<>();
         TableView<Summary> tableViewSummary = new TableView<>();
+        VBox vBoxForEditAndDeleteButtonsUtilize = new VBox();
 
         for (int i = 0; i < listTabs.size(); i++) {
             if (listTabs.get(i).startsWith("q_")) {
@@ -66,12 +74,13 @@ public class Main extends Application {
                 if (listFromMap != null) {
                     arrayList.addAll(listFromMap);
                     hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass()),
-                            contentStore.createButtons(listFromMap.size(),presentedTabName, tableViewCartridge, tableViewUtilized,tableViewSummary));
+                            createButtons(listFromMap.size(), presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary));
                 } else {
                     hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass()),
-                            contentStore.createButtons(0,presentedTabName, tableViewCartridge, tableViewUtilized,tableViewSummary));
+                            createButtons(0, presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary));
                 }
-                addItem.setOnAction(new AddButtonHandler(presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary,hBox));
+                addItem.setOnAction(new AddButtonHandler(presentedTabName, tableViewCartridge, tableViewUtilized,
+                        tableViewSummary, vBoxForEditAndDeleteButtons,vBoxForEditAndDeleteButtonsUtilize));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -96,7 +105,8 @@ public class Main extends Application {
                 } else {
                     hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass()));
                 }
-                addItem.setOnAction(new AddButtonHandler(presentedTabNameSummary, tableViewCartridge, tableViewUtilized, tableViewSummary,hBox));
+                addItem.setOnAction(new AddButtonHandler(presentedTabNameSummary, tableViewCartridge, tableViewUtilized,
+                        tableViewSummary, vBoxForEditAndDeleteButtons,vBoxForEditAndDeleteButtonsUtilize));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -118,12 +128,14 @@ public class Main extends Application {
                 if (thirdListFromMap != null) {
                     utilizedArrayList.addAll(thirdListFromMap);
                     hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()),
-                            contentStore.createButtons(thirdListFromMap.size(),presentedTabNameUtilized, tableViewCartridge, tableViewUtilized,tableViewSummary));
+                            createButtons(thirdListFromMap.size(), presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary));
                 } else {
                     hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()),
-                            contentStore.createButtons(0,presentedTabNameUtilized, tableViewCartridge, tableViewUtilized,tableViewSummary));
+                            createButtons(0, presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary));
                 }
-                addItem.setOnAction(new AddButtonHandler(presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary,hBox));
+                vBoxForEditAndDeleteButtonsUtilize = vBoxForEditAndDeleteButtons;
+                addItem.setOnAction(new AddButtonHandler(presentedTabNameUtilized, tableViewCartridge, tableViewUtilized,
+                        tableViewSummary, vBoxForEditAndDeleteButtons, vBoxForEditAndDeleteButtonsUtilize));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -225,6 +237,45 @@ public class Main extends Application {
             return table;
         }
     }
+
+    public Node createButtons(int numberOfRows, String str, TableView<Cartridge> tabCartridge,
+                              TableView<Utilized> tabUtilized,
+                              TableView<Summary> tabSummary) {
+        vBoxForEditAndDeleteButtons = new VBox();
+        HBox hBox;
+        Button buttonEdit;
+        Button buttonDelete;
+        InputStream inputEdit = getClass().getResourceAsStream("edit.svg");
+        InputStream inputDelete = getClass().getResourceAsStream("delete.svg");
+        Image imageEdit;
+        Image imageDelete;
+        ImageView imageViewEdit;
+        ImageView imageViewDelete;
+
+        imageDelete = new Image(inputDelete);
+        imageViewDelete = new ImageView(imageDelete);
+        hBox = new HBox();
+        buttonDelete = new Button("", imageViewDelete);
+        buttonDelete.setMinSize(33, 10);
+        hBox.getChildren().addAll(buttonDelete);
+        vBoxForEditAndDeleteButtons.getChildren().addAll(hBox);
+        for (int i = 0; i < numberOfRows; i++) {
+            hBox = new HBox();
+            imageEdit = new Image(inputEdit);
+            imageDelete = new Image(inputDelete);
+            imageViewEdit = new ImageView(imageEdit);
+            imageViewDelete = new ImageView(imageDelete);
+            buttonEdit = new Button("", imageViewEdit);
+            buttonDelete = new Button("", imageViewDelete);
+            hBox.getChildren().addAll(buttonEdit, buttonDelete);
+            vBoxForEditAndDeleteButtons.getChildren().addAll(hBox);
+
+            buttonEdit.setOnAction(new EditButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary));
+            buttonDelete.setOnAction(new RemoveButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary, vBoxForEditAndDeleteButtons));
+        }
+        return vBoxForEditAndDeleteButtons;
+    }
+
 
     public void stop() throws IOException {
         contentStore.saveContent();
