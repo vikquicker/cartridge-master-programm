@@ -168,31 +168,7 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 buttonEdit.setOnAction(new EditButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary));
                 buttonDelete.setOnAction(new RemoveButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary, vBoxForEditAndDelete));
 
-                if (statusField.getValue().equals("Списан")){
-                    int rowNumberUtilize = contentStore.getUtilizedArrayList().size();
-                    HBox hBoxForButtonPairUtilize = new HBox();
-                    Button buttonEdit1;
-                    Button buttonDelete1;
-                    InputStream inputEdit1 = getClass().getResourceAsStream("/sample/edit.svg");
-                    InputStream inputDelete1 = getClass().getResourceAsStream("/sample/delete.svg");
-                    Image imageEdit1;
-                    Image imageDelete1;
-                    ImageView imageViewEdit1;
-                    ImageView imageViewDelete1;
 
-                    imageEdit1 = new Image(inputEdit1);
-                    imageDelete1 = new Image(inputDelete1);
-                    imageViewEdit1 = new ImageView(imageEdit1);
-                    imageViewDelete1 = new ImageView(imageDelete1);
-                    buttonEdit1 = new Button("", imageViewEdit1);
-                    buttonDelete1 = new Button("", imageViewDelete1);
-                    hBoxForButtonPairUtilize.getChildren().addAll(buttonEdit1, buttonDelete1);
-                    vBoxForEditAndDeleteButtonsUtilize.getChildren().add(hBoxForButtonPairUtilize);
-
-                    buttonEdit.setOnAction(new EditButtonHandler(rowNumberUtilize, tabName, tabCartridge, tabUtilized, tabSummary));
-                    buttonDelete.setOnAction(new RemoveButtonHandler(rowNumberUtilize, tabName, tabCartridge, tabUtilized, tabSummary, vBoxForEditAndDelete));
-
-                }
 
                 contentStore.saveContent();
 

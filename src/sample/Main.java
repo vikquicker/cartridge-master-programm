@@ -10,6 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -118,7 +119,7 @@ public class Main extends Application {
                 String presentedTabNameUtilized = listTabs.get(i);
                 tableTab = new Tab(presentedTabNameUtilized);
 
-                Button addItem = new Button("Добавить");
+                //Button addItem = new Button("Добавить");
 
                 ArrayList<Utilized> utilizedArrayList = new ArrayList<>();
                 ArrayList<Utilized> thirdListFromMap = contentStore.getUtilizedArrayList();
@@ -128,14 +129,14 @@ public class Main extends Application {
                 if (thirdListFromMap != null) {
                     utilizedArrayList.addAll(thirdListFromMap);
                     hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()),
-                            createButtons(thirdListFromMap.size(), presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary));
+                           new Pane()); //createButtons(thirdListFromMap.size(), presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary));
                 } else {
                     hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()),
-                            createButtons(0, presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary));
+                            new Pane());// createButtons(0, presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary));
                 }
                 vBoxForEditAndDeleteButtonsUtilize = vBoxForEditAndDeleteButtons;
-                addItem.setOnAction(new AddButtonHandler(presentedTabNameUtilized, tableViewCartridge, tableViewUtilized,
-                        tableViewSummary, vBoxForEditAndDeleteButtons, vBoxForEditAndDeleteButtonsUtilize));
+                //addItem.setOnAction(new AddButtonHandler(presentedTabNameUtilized, tableViewCartridge, tableViewUtilized,
+                      //  tableViewSummary, vBoxForEditAndDeleteButtons, vBoxForEditAndDeleteButtonsUtilize));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
