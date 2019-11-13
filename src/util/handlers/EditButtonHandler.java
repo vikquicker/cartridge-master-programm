@@ -19,11 +19,16 @@ import java.time.LocalDate;
 public class EditButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
     private int numberOfButton;
-    private String tabNameFromCreateButtonns;
+    private String tabNameFromEditButtonns;
     private TableView<Cartridge> tabCartridge;
     private TableView<Utilized> tabUtilized;
     private TableView<Summary> tabSummary;
-//
+
+    Cartridge cartridgeFromContent;
+    Cartridge cartridgeFromTable;
+    private final String utilize = "Списанные";
+
+    //
     public EditButtonHandler(int numberOfButton, String str,
                              TableView<Cartridge> tabCartridge,
                              TableView<Utilized> tabUtilized,
@@ -32,7 +37,15 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         this.tabUtilized = tabUtilized;
         this.numberOfButton = numberOfButton;
         this.tabSummary = tabSummary;
-        tabNameFromCreateButtonns = str;
+        tabNameFromEditButtonns = str;
+        if (!tabNameFromEditButtonns.equals(utilize)) {
+            tabNameFromEditButtonns = "q_"+tabNameFromEditButtonns;
+        }
+        cartridgeFromContent = contentStore.getCartridgesMap()
+                .get(tabNameFromEditButtonns)
+                .get(numberOfButton);
+
+        cartridgeFromTable = tabCartridge.getItems().get(numberOfButton);
     }
 
     @Override
@@ -54,6 +67,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
 
         //Fields
         TextField numberField = new TextField();
+        numberField.setText(cartridgeFromContent.getNumber());
         numberField.setMaxWidth(80);
 
         //TODO replace it
