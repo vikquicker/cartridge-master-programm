@@ -15,6 +15,7 @@ import models.Cartridge;
 import models.Summary;
 import models.Utilized;
 import util.ContentStore;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
                                TableView<Cartridge> tabCartridge,
                                TableView<Utilized> tabUtilized,
                                TableView<Summary> tabSummary,
-                               VBox vBoxForEditAndDelete,Cartridge cartridgeForRemove) {
+                               VBox vBoxForEditAndDelete, Cartridge cartridgeForRemove) {
         this.tabCartridge = tabCartridge;
         this.tabUtilized = tabUtilized;
         this.numberOfButton = numberOfButton;
@@ -69,6 +70,8 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
                     String cartridgeLocation = cartridgeForRemove.getLocation();
                     contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).remove(cartridgeForRemove);
                     tabCartridge.getItems().remove(cartridgeForRemove);
+                    int rowNumber = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).indexOf(cartridgeForRemove);
+                    vBoxForEditAndDelete.getChildren().remove(rowNumber);
                     if (cartridgeStatus.equals("На отделении")) {
                         for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
                             if (contentStore.getSummaryArrayList().get(i).getOpsLocation().
@@ -139,6 +142,7 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
                 }
 
                 if (tabNameFromCreateButtonns.equals("111")) {
+                    //contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).indexOf();
                     int rowNumber = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).size() - 1;
                     vBoxForEditAndDelete.getChildren().remove(rowNumber);
                 } else if (tabNameFromCreateButtonns.equals("115")) {
@@ -146,9 +150,6 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
                     vBoxForEditAndDelete.getChildren().remove(rowNumber);
                 } else if (tabNameFromCreateButtonns.equals("226")) {
                     int rowNumber = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).size() - 1;
-                    vBoxForEditAndDelete.getChildren().remove(rowNumber);
-                } else {
-                    int rowNumber = contentStore.getUtilizedArrayList().size() - 1;
                     vBoxForEditAndDelete.getChildren().remove(rowNumber);
                 }
 

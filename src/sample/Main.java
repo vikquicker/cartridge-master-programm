@@ -242,7 +242,7 @@ public class Main extends Application {
     public Node createButtons(int numberOfRows, String str, TableView<Cartridge> tabCartridge,
                               TableView<Utilized> tabUtilized,
                               TableView<Summary> tabSummary) {
-        Cartridge cartridge = new Cartridge();
+        Cartridge cartridge;
         vBoxForEditAndDeleteButtons = new VBox();
         HBox hBox;
         Button buttonEdit;
