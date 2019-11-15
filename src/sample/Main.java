@@ -81,7 +81,7 @@ public class Main extends Application {
                             createButtons(0, presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary));
                 }
                 addItem.setOnAction(new AddButtonHandler(presentedTabName, tableViewCartridge, tableViewUtilized,
-                        tableViewSummary, vBoxForEditAndDeleteButtons,vBoxForEditAndDeleteButtonsUtilize));
+                        tableViewSummary, vBoxForEditAndDeleteButtons, vBoxForEditAndDeleteButtonsUtilize));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -107,7 +107,7 @@ public class Main extends Application {
                     hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass()));
                 }
                 addItem.setOnAction(new AddButtonHandler(presentedTabNameSummary, tableViewCartridge, tableViewUtilized,
-                        tableViewSummary, vBoxForEditAndDeleteButtons,vBoxForEditAndDeleteButtonsUtilize));
+                        tableViewSummary, vBoxForEditAndDeleteButtons, vBoxForEditAndDeleteButtonsUtilize));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -129,14 +129,14 @@ public class Main extends Application {
                 if (thirdListFromMap != null) {
                     utilizedArrayList.addAll(thirdListFromMap);
                     hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()),
-                           new Pane()); //createButtons(thirdListFromMap.size(), presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary));
+                            new Pane()); //createButtons(thirdListFromMap.size(), presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary));
                 } else {
                     hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()),
                             new Pane());// createButtons(0, presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary));
                 }
                 vBoxForEditAndDeleteButtonsUtilize = vBoxForEditAndDeleteButtons;
                 //addItem.setOnAction(new AddButtonHandler(presentedTabNameUtilized, tableViewCartridge, tableViewUtilized,
-                      //  tableViewSummary, vBoxForEditAndDeleteButtons, vBoxForEditAndDeleteButtonsUtilize));
+                //  tableViewSummary, vBoxForEditAndDeleteButtons, vBoxForEditAndDeleteButtonsUtilize));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -242,6 +242,7 @@ public class Main extends Application {
     public Node createButtons(int numberOfRows, String str, TableView<Cartridge> tabCartridge,
                               TableView<Utilized> tabUtilized,
                               TableView<Summary> tabSummary) {
+        Cartridge cartridge = new Cartridge();
         vBoxForEditAndDeleteButtons = new VBox();
         HBox hBox;
         Button buttonEdit;
@@ -261,6 +262,7 @@ public class Main extends Application {
         hBox.getChildren().addAll(buttonDelete);
         vBoxForEditAndDeleteButtons.getChildren().addAll(hBox);
         for (int i = 0; i < numberOfRows; i++) {
+            cartridge = contentStore.getCartridgesMap().get("q_" + str).get(i);
             hBox = new HBox();
             imageEdit = new Image(inputEdit);
             imageDelete = new Image(inputDelete);
@@ -272,7 +274,7 @@ public class Main extends Application {
             vBoxForEditAndDeleteButtons.getChildren().addAll(hBox);
 
             buttonEdit.setOnAction(new EditButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary));
-            buttonDelete.setOnAction(new RemoveButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary, vBoxForEditAndDeleteButtons));
+            buttonDelete.setOnAction(new RemoveButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary, vBoxForEditAndDeleteButtons, cartridge));
         }
         return vBoxForEditAndDeleteButtons;
     }

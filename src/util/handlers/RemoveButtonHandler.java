@@ -15,15 +15,14 @@ import models.Cartridge;
 import models.Summary;
 import models.Utilized;
 import util.ContentStore;
-
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class RemoveButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
-    private int numberOfButton;
+    int numberOfButton;
+    private Cartridge cartridgeForRemove;
     private String tabNameFromCreateButtonns;
     private TableView<Cartridge> tabCartridge;
     private TableView<Utilized> tabUtilized;
@@ -34,13 +33,14 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
                                TableView<Cartridge> tabCartridge,
                                TableView<Utilized> tabUtilized,
                                TableView<Summary> tabSummary,
-                               VBox vBoxForEditAndDelete) {
+                               VBox vBoxForEditAndDelete,Cartridge cartridgeForRemove) {
         this.tabCartridge = tabCartridge;
         this.tabUtilized = tabUtilized;
         this.numberOfButton = numberOfButton;
         this.tabSummary = tabSummary;
         this.vBoxForEditAndDelete = vBoxForEditAndDelete;
         tabNameFromCreateButtonns = str;
+        this.cartridgeForRemove = cartridgeForRemove;
     }
 
     @Override
@@ -65,12 +65,10 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
             @Override
             public void handle(ActionEvent event) {
                 if (tabNameFromCreateButtonns.equals("111")) {
-                    String cartridgeStatus = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).
-                            get(numberOfButton).getStatus();
-                    String cartridgeLocation = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).
-                            get(numberOfButton).getLocation();
-                    contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).remove(numberOfButton);
-                    tabCartridge.getItems().remove(numberOfButton);
+                    String cartridgeStatus = cartridgeForRemove.getStatus();
+                    String cartridgeLocation = cartridgeForRemove.getLocation();
+                    contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).remove(cartridgeForRemove);
+                    tabCartridge.getItems().remove(cartridgeForRemove);
                     if (cartridgeStatus.equals("На отделении")) {
                         for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
                             if (contentStore.getSummaryArrayList().get(i).getOpsLocation().
@@ -91,12 +89,10 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
                         tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
                     }
                 } else if (tabNameFromCreateButtonns.equals("115")) {
-                    String cartridgeStatus = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).
-                            get(numberOfButton).getStatus();
-                    String cartridgeLocation = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).
-                            get(numberOfButton).getLocation();
-                    contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).remove(numberOfButton);
-                    tabCartridge.getItems().remove(numberOfButton);
+                    String cartridgeStatus = cartridgeForRemove.getStatus();
+                    String cartridgeLocation = cartridgeForRemove.getLocation();
+                    contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).remove(cartridgeForRemove);
+                    tabCartridge.getItems().remove(cartridgeForRemove);
                     if (cartridgeStatus.equals("На отделении")) {
                         for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
                             if (contentStore.getSummaryArrayList().get(i).getOpsLocation().
@@ -117,12 +113,10 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
                         tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
                     }
                 } else if (tabNameFromCreateButtonns.equals("226")) {
-                    String cartridgeStatus = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).
-                            get(numberOfButton).getStatus();
-                    String cartridgeLocation = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).
-                            get(numberOfButton).getLocation();
-                    contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).remove(numberOfButton);
-                    tabCartridge.getItems().remove(numberOfButton);
+                    String cartridgeStatus = cartridgeForRemove.getStatus();
+                    String cartridgeLocation = cartridgeForRemove.getLocation();
+                    contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).remove(cartridgeForRemove);
+                    tabCartridge.getItems().remove(cartridgeForRemove);
                     if (cartridgeStatus.equals("На отделении")) {
                         for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
                             if (contentStore.getSummaryArrayList().get(i).getOpsLocation().
@@ -142,9 +136,6 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
                         }
                         tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
                     }
-                } else if (tabNameFromCreateButtonns.equals("Списанные")) {
-                    contentStore.getUtilizedArrayList().remove(numberOfButton);
-                    tabUtilized.getItems().remove(numberOfButton);
                 }
 
                 if (tabNameFromCreateButtonns.equals("111")) {

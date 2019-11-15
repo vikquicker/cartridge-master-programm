@@ -166,7 +166,7 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 vBoxForEditAndDelete.getChildren().add(hBoxForButtonPair);
 
                 buttonEdit.setOnAction(new EditButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary));
-                buttonDelete.setOnAction(new RemoveButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary, vBoxForEditAndDelete));
+                buttonDelete.setOnAction(new RemoveButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary, vBoxForEditAndDelete,cartridgeToAdd));
 
 
 

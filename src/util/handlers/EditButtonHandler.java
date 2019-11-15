@@ -6,6 +6,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -14,7 +17,10 @@ import models.Summary;
 import models.Utilized;
 import util.ContentStore;
 
+import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
@@ -38,9 +44,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         this.numberOfButton = numberOfButton;
         this.tabSummary = tabSummary;
         tabNameFromEditButtonns = str;
-        if (!tabNameFromEditButtonns.equals(utilize)) {
-            tabNameFromEditButtonns = "q_"+tabNameFromEditButtonns;
-        }
+        tabNameFromEditButtonns = "q_" + tabNameFromEditButtonns;
         cartridgeFromContent = contentStore.getCartridgesMap()
                 .get(tabNameFromEditButtonns)
                 .get(numberOfButton);
@@ -77,16 +81,16 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                 "Списан",
                 "Заправлен");
         ComboBox<String> statusField = new ComboBox<>(statusList);
-        statusField.setValue("Пустой");
+        statusField.setValue(cartridgeFromContent.getStatus());
 
         DatePicker dateField = new DatePicker();
-        dateField.setValue(LocalDate.of(2016, 1, 1));
+        dateField.setValue(cartridgeFromContent.getDate());
         dateField.setShowWeekNumbers(true);
         dateField.setMaxWidth(100);
 
         ObservableList<String> locationList = FXCollections.observableArrayList(contentStore.getLocationList());
         ComboBox<String> locationField = new ComboBox<>(locationList);
-        locationField.setValue(locationList.get(0));
+        locationField.setValue(cartridgeFromContent.getLocation());
         locationField.setMinWidth(100);
 
         TextField locationFieldNew = new TextField();
@@ -94,6 +98,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
 
         TextArea textAreaField = new TextArea();
         textAreaField.setMaxSize(215, 70);
+        textAreaField.setText(cartridgeFromContent.getNotice());
         textAreaField.setWrapText(true);
 
         //Position LabelY
@@ -109,7 +114,24 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         add.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                cartridgeFromContent.setNumber(numberField.getText());
+                cartridgeFromContent.setStatus(statusField.getValue());
+                cartridgeFromContent.setDate(dateField.getValue());
+                cartridgeFromContent.setLocation(locationField.getValue());
+                cartridgeFromContent.setNotice(textAreaField.getText());
 
+                cartridgeFromTable.setNumber(numberField.getText());
+                cartridgeFromTable.setStatus(statusField.getValue());
+                cartridgeFromTable.setDate(dateField.getValue());
+                cartridgeFromTable.setLocation(locationField.getValue());
+                cartridgeFromTable.setNotice(textAreaField.getText());
+
+                contentStore.saveContent();
+
+                tabCartridge.refresh();
+                tabSummary.refresh();
+
+                newWindow.close();
             }
         });
 
