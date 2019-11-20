@@ -17,11 +17,6 @@ import models.Summary;
 import models.Utilized;
 import util.ContentStore;
 
-import java.io.InputStream;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-
 public class EditButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
     private int numberOfButton;
@@ -30,6 +25,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
     private TableView<Utilized> tabUtilized;
     private TableView<Summary> tabSummary;
 
+    double cartridgeForEdit;
     Cartridge cartridgeFromContent;
     Cartridge cartridgeFromTable;
     private final String utilize = "Списанные";
@@ -38,11 +34,12 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
     public EditButtonHandler(int numberOfButton, String str,
                              TableView<Cartridge> tabCartridge,
                              TableView<Utilized> tabUtilized,
-                             TableView<Summary> tabSummary) {
+                             TableView<Summary> tabSummary, double cartridgeForEdit) {
         this.tabCartridge = tabCartridge;
         this.tabUtilized = tabUtilized;
         this.numberOfButton = numberOfButton;
         this.tabSummary = tabSummary;
+        this.cartridgeForEdit = cartridgeForEdit;
         tabNameFromEditButtonns = str;
         tabNameFromEditButtonns = "q_" + tabNameFromEditButtonns;
         cartridgeFromContent = contentStore.getCartridgesMap()
@@ -114,6 +111,8 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         add.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                String previosStatus = cartridgeFromContent.getStatus();
+
                 cartridgeFromContent.setNumber(numberField.getText());
                 cartridgeFromContent.setStatus(statusField.getValue());
                 cartridgeFromContent.setDate(dateField.getValue());
@@ -126,10 +125,32 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                 cartridgeFromTable.setLocation(locationField.getValue());
                 cartridgeFromTable.setNotice(textAreaField.getText());
 
+                //TODO think about observer
+                if (cartridgeFromContent.getStatus().equals("Списан")) {
+                    Utilized utilized = new Utilized();
+                    utilized.setNumber(numberField.getText());
+                    utilized.setStatus(statusField.getValue());
+                    utilized.setDate(dateField.getValue());
+                    utilized.setNotice(textAreaField.getText());
+                    tabUtilized.getItems().add(utilized);
+
+                    contentStore.getUtilizedArrayList().add(utilized);
+                }
+
+                if (previosStatus.equals("Списан") && !cartridgeFromContent.getStatus().equals("Списан")) {
+                    for (int i = 0; i < contentStore.getUtilizedArrayList().size(); i++) {
+                        if (cartridgeForEdit == contentStore.getUtilizedArrayList().get(i).getId()) {
+                            contentStore.getUtilizedArrayList().remove(i);
+                            tabUtilized.getItems().remove(i);
+                        }
+                    }
+                }
+
                 contentStore.saveContent();
 
                 tabCartridge.refresh();
                 tabSummary.refresh();
+                tabUtilized.refresh();
 
                 newWindow.close();
             }

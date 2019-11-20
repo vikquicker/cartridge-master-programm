@@ -4,13 +4,22 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Utilized implements Serializable {
-    String number ;// = "ercf";
+    double id;
+    String number;// = "ercf";
     String status;// = "wdc";
     LocalDate date;// = new Date(10000);
     String notice;// = "wdfcvef";
 
     public String getNumber() {
         return number;
+    }
+
+    public double getId() {
+        return id;
+    }
+
+    public void setId(double id) {
+        this.id = id;
     }
 
     public String getStatus() {

@@ -1,12 +1,5 @@
 package util;
 
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
@@ -63,7 +56,7 @@ public class ContentStore implements Serializable {
         this.tabList = tabList;
     }
 
-    public ContentStore() {
+    private ContentStore() {
         cartridgesMap = new HashMap<>();
         summaryArrayList = new ArrayList<>();
         utilizedArrayList = new ArrayList<>();
@@ -80,7 +73,6 @@ public class ContentStore implements Serializable {
         locationList.add("356542");
         locationList.add("356532");
     }
-
 
 
     public HashMap<String, Integer> summuryCount() {
@@ -124,13 +116,14 @@ public class ContentStore implements Serializable {
         return numberOfCartridges;
     }
 
-    public void saveContent(){
+
+    public void saveContent() {
         try {
             FileOutputStream writeInFile = new FileOutputStream(START_FILE);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(writeInFile);
             objectOutputStream.writeObject(this);
             objectOutputStream.close();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

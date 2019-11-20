@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
-import sample.Main;
 import util.ContentStore;
 
 import java.io.InputStream;
@@ -99,12 +98,19 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
 
         Button add = new Button("Добавить");
         add.setMinSize(80, 60);
+
+
+
         add.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 Cartridge cartridgeToAdd = new Cartridge();
                 Summary summaryNew;
+
+                double idToCartridgeAndUtil = Math.random();
+
                 //cartridgeToAdd
+                cartridgeToAdd.setId(idToCartridgeAndUtil);
                 cartridgeToAdd.setNumber(numberField.getText());
                 cartridgeToAdd.setStatus(statusField.getValue());
                 cartridgeToAdd.setDate(dateField.getValue());
@@ -123,6 +129,7 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 if (statusField.getValue().equals("Списан")) {
                     Utilized utilizedToAdd = new Utilized();
 
+                    utilizedToAdd.setId(idToCartridgeAndUtil);
                     utilizedToAdd.setNumber(numberField.getText());
                     utilizedToAdd.setStatus(statusField.getValue());
                     utilizedToAdd.setDate(dateField.getValue());
@@ -149,8 +156,8 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 HBox hBoxForButtonPair = new HBox();
                 Button buttonEdit;
                 Button buttonDelete;
-                InputStream inputEdit = getClass().getResourceAsStream("/sample/edit.svg");
-                InputStream inputDelete = getClass().getResourceAsStream("/sample/delete.svg");
+                InputStream inputEdit = getClass().getResourceAsStream("/ui/edit.svg");
+                InputStream inputDelete = getClass().getResourceAsStream("/ui/delete.svg");
                 Image imageEdit;
                 Image imageDelete;
                 ImageView imageViewEdit;
@@ -165,9 +172,8 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 hBoxForButtonPair.getChildren().addAll(buttonEdit, buttonDelete);
                 vBoxForEditAndDelete.getChildren().add(hBoxForButtonPair);
 
-                buttonEdit.setOnAction(new EditButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary));
-                buttonDelete.setOnAction(new RemoveButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary, vBoxForEditAndDelete,cartridgeToAdd));
-
+                buttonEdit.setOnAction(new EditButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary, idToCartridgeAndUtil));
+                buttonDelete.setOnAction(new RemoveButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary, vBoxForEditAndDelete, cartridgeToAdd));
 
 
                 contentStore.saveContent();

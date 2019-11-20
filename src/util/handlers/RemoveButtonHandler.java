@@ -65,92 +65,41 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
         add.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (tabNameFromCreateButtonns.equals("111")) {
-                    String cartridgeStatus = cartridgeForRemove.getStatus();
-                    String cartridgeLocation = cartridgeForRemove.getLocation();
-                    contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).remove(cartridgeForRemove);
-                    tabCartridge.getItems().remove(cartridgeForRemove);
-                    int rowNumber = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).indexOf(cartridgeForRemove);
-                    vBoxForEditAndDelete.getChildren().remove(rowNumber);
-                    if (cartridgeStatus.equals("На отделении")) {
-                        for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
-                            if (contentStore.getSummaryArrayList().get(i).getOpsLocation().
-                                    equals(cartridgeLocation)) {
-                                contentStore.getSummaryArrayList().remove(i);
-                            }
+                String cartridgeStatus = cartridgeForRemove.getStatus();
+                String cartridgeLocation = cartridgeForRemove.getLocation();
+                int rowNumber = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).indexOf(cartridgeForRemove);
+                vBoxForEditAndDelete.getChildren().remove(rowNumber + 1);
+                contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).remove(cartridgeForRemove);
+                tabCartridge.getItems().remove(cartridgeForRemove);
+                if (cartridgeStatus.equals("На отделении")) {
+                    for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
+                        if (contentStore.getSummaryArrayList().get(i).getOpsLocation().
+                                equals(cartridgeLocation)) {
+                            contentStore.getSummaryArrayList().remove(i);
                         }
-                        tabSummary.getItems().clear();
-                        HashMap<String, Integer> summaryCount = contentStore.summuryCount();
-                        Summary summaryNew;
-                        contentStore.getSummaryArrayList().clear();
-                        for (Map.Entry<String, Integer> countAndLocation : summaryCount.entrySet()) {
-                            summaryNew = new Summary();
-                            summaryNew.setOpsLocation(countAndLocation.getKey());
-                            summaryNew.setCount(countAndLocation.getValue());
-                            contentStore.getSummaryArrayList().add(summaryNew);
-                        }
-                        tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
                     }
-                } else if (tabNameFromCreateButtonns.equals("115")) {
-                    String cartridgeStatus = cartridgeForRemove.getStatus();
-                    String cartridgeLocation = cartridgeForRemove.getLocation();
-                    contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).remove(cartridgeForRemove);
-                    tabCartridge.getItems().remove(cartridgeForRemove);
-                    if (cartridgeStatus.equals("На отделении")) {
-                        for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
-                            if (contentStore.getSummaryArrayList().get(i).getOpsLocation().
-                                    equals(cartridgeLocation)) {
-                                contentStore.getSummaryArrayList().remove(i);
-                            }
-                        }
-                        tabSummary.getItems().clear();
-                        HashMap<String, Integer> summaryCount = contentStore.summuryCount();
-                        Summary summaryNew;
-                        contentStore.getSummaryArrayList().clear();
-                        for (Map.Entry<String, Integer> countAndLocation : summaryCount.entrySet()) {
-                            summaryNew = new Summary();
-                            summaryNew.setOpsLocation(countAndLocation.getKey());
-                            summaryNew.setCount(countAndLocation.getValue());
-                            contentStore.getSummaryArrayList().add(summaryNew);
-                        }
-                        tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
+                    tabSummary.getItems().clear();
+                    HashMap<String, Integer> summaryCount = contentStore.summuryCount();
+                    Summary summaryNew;
+                    contentStore.getSummaryArrayList().clear();
+                    for (Map.Entry<String, Integer> countAndLocation : summaryCount.entrySet()) {
+                        summaryNew = new Summary();
+                        summaryNew.setOpsLocation(countAndLocation.getKey());
+                        summaryNew.setCount(countAndLocation.getValue());
+                        contentStore.getSummaryArrayList().add(summaryNew);
                     }
-                } else if (tabNameFromCreateButtonns.equals("226")) {
-                    String cartridgeStatus = cartridgeForRemove.getStatus();
-                    String cartridgeLocation = cartridgeForRemove.getLocation();
-                    contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).remove(cartridgeForRemove);
-                    tabCartridge.getItems().remove(cartridgeForRemove);
-                    if (cartridgeStatus.equals("На отделении")) {
-                        for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
-                            if (contentStore.getSummaryArrayList().get(i).getOpsLocation().
-                                    equals(cartridgeLocation)) {
-                                contentStore.getSummaryArrayList().remove(i);
-                            }
-                        }
-                        tabSummary.getItems().clear();
-                        HashMap<String, Integer> summaryCount = contentStore.summuryCount();
-                        Summary summaryNew;
-                        contentStore.getSummaryArrayList().clear();
-                        for (Map.Entry<String, Integer> countAndLocation : summaryCount.entrySet()) {
-                            summaryNew = new Summary();
-                            summaryNew.setOpsLocation(countAndLocation.getKey());
-                            summaryNew.setCount(countAndLocation.getValue());
-                            contentStore.getSummaryArrayList().add(summaryNew);
-                        }
-                        tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
-                    }
+                    tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
                 }
 
-                if (tabNameFromCreateButtonns.equals("111")) {
-                    //contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).indexOf();
-                    int rowNumber = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).size() - 1;
-                    vBoxForEditAndDelete.getChildren().remove(rowNumber);
-                } else if (tabNameFromCreateButtonns.equals("115")) {
-                    int rowNumber = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).size() - 1;
-                    vBoxForEditAndDelete.getChildren().remove(rowNumber);
-                } else if (tabNameFromCreateButtonns.equals("226")) {
-                    int rowNumber = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).size() - 1;
-                    vBoxForEditAndDelete.getChildren().remove(rowNumber);
+                int x = contentStore.getUtilizedArrayList().size();
+                if (cartridgeStatus.equals("Списан")) {
+                    for (int i = 0; i < x; i++) {
+                        if (cartridgeForRemove.getId() == contentStore.getUtilizedArrayList().get(i).getId()) {
+                            contentStore.getUtilizedArrayList().remove(i);
+                            tabUtilized.getItems().remove(i);
+                            break;
+                        }
+                    }
                 }
 
                 contentStore.saveContent();

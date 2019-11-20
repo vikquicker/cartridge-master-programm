@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Cartridge implements Serializable {
+    double id;
     String number ;// = "ercf";
     String status;// = "wdc";
     LocalDate date;// = new Date(10000);
@@ -17,6 +18,14 @@ public class Cartridge implements Serializable {
 
     public Cartridge(String str) {
 
+    }
+
+    public double getId() {
+        return id;
+    }
+
+    public void setId(double id) {
+        this.id = id;
     }
 
     public String getNumber() {
