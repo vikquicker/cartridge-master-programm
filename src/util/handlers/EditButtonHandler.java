@@ -17,6 +17,9 @@ import models.Summary;
 import models.Utilized;
 import util.ContentStore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class EditButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
     private int numberOfButton;
@@ -112,6 +115,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
             @Override
             public void handle(ActionEvent event) {
                 String previosStatus = cartridgeFromContent.getStatus();
+                String cartridgeLocation = cartridgeFromContent.getLocation();
 
                 cartridgeFromContent.setNumber(numberField.getText());
                 cartridgeFromContent.setStatus(statusField.getValue());
@@ -125,9 +129,50 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                 cartridgeFromTable.setLocation(locationField.getValue());
                 cartridgeFromTable.setNotice(textAreaField.getText());
 
+                if (cartridgeFromContent.getStatus().equals("На отделении")) {
+                    for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
+                        if (contentStore.getSummaryArrayList().get(i).getOpsLocation().
+                                equals(cartridgeLocation)) {
+                            contentStore.getSummaryArrayList().remove(i);
+                        }
+                    }
+                    tabSummary.getItems().clear();
+                    HashMap<String, Integer> summaryCount = contentStore.summuryCount();
+                    Summary summaryNew;
+                    contentStore.getSummaryArrayList().clear();
+                    for (Map.Entry<String, Integer> countAndLocation : summaryCount.entrySet()) {
+                        summaryNew = new Summary();
+                        summaryNew.setOpsLocation(countAndLocation.getKey());
+                        summaryNew.setCount(countAndLocation.getValue());
+                        contentStore.getSummaryArrayList().add(summaryNew);
+                    }
+                    tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
+                }
+
+                if (previosStatus.equals("На отделении") && !cartridgeFromContent.getStatus().equals("На отделении")) {
+                    for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
+                        if (contentStore.getSummaryArrayList().get(i).getOpsLocation().
+                                equals(cartridgeLocation)) {
+                            contentStore.getSummaryArrayList().remove(i);
+                        }
+                    }
+                    tabSummary.getItems().clear();
+                    HashMap<String, Integer> summaryCount = contentStore.summuryCount();
+                    Summary summaryNew;
+                    contentStore.getSummaryArrayList().clear();
+                    for (Map.Entry<String, Integer> countAndLocation : summaryCount.entrySet()) {
+                        summaryNew = new Summary();
+                        summaryNew.setOpsLocation(countAndLocation.getKey());
+                        summaryNew.setCount(countAndLocation.getValue());
+                        contentStore.getSummaryArrayList().add(summaryNew);
+                    }
+                    tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
+                }
+
                 //TODO think about observer
                 if (cartridgeFromContent.getStatus().equals("Списан")) {
                     Utilized utilized = new Utilized();
+                    utilized.setId(cartridgeForEdit);
                     utilized.setNumber(numberField.getText());
                     utilized.setStatus(statusField.getValue());
                     utilized.setDate(dateField.getValue());

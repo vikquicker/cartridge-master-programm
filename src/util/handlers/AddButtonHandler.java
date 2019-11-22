@@ -156,8 +156,8 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 HBox hBoxForButtonPair = new HBox();
                 Button buttonEdit;
                 Button buttonDelete;
-                InputStream inputEdit = getClass().getResourceAsStream("/ui/edit.svg");
-                InputStream inputDelete = getClass().getResourceAsStream("/ui/delete.svg");
+                InputStream inputEdit = getClass().getResourceAsStream("/ui/edit.png");
+                InputStream inputDelete = getClass().getResourceAsStream("/ui/delete.png");
                 Image imageEdit;
                 Image imageDelete;
                 ImageView imageViewEdit;

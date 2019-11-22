@@ -130,8 +130,6 @@ public class UIpainter {
                 String presentedTabNameUtilized = listTabs.get(i);
                 tableTab = new Tab(presentedTabNameUtilized);
 
-                //Button addItem = new Button("Добавить");
-
                 ArrayList<Utilized> utilizedArrayList = new ArrayList<>();
                 ArrayList<Utilized> thirdListFromMap = contentStore.getUtilizedArrayList();
                 scrollPaneTable = new ScrollPane();
@@ -140,14 +138,12 @@ public class UIpainter {
                 if (thirdListFromMap != null) {
                     utilizedArrayList.addAll(thirdListFromMap);
                     hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()),
-                            new Pane()); //createButtons(thirdListFromMap.size(), presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary));
+                            new Pane());
                 } else {
                     hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()),
-                            new Pane());// createButtons(0, presentedTabNameUtilized, tableViewCartridge, tableViewUtilized, tableViewSummary));
+                            new Pane());
                 }
                 vBoxForEditAndDeleteButtonsUtilize = vBoxForEditAndDeleteButtons;
-                //addItem.setOnAction(new AddButtonHandler(presentedTabNameUtilized, tableViewCartridge, tableViewUtilized,
-                //  tableViewSummary, vBoxForEditAndDeleteButtons, vBoxForEditAndDeleteButtonsUtilize));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -259,25 +255,27 @@ public class UIpainter {
         HBox hBox;
         Button buttonEdit;
         Button buttonDelete;
-        InputStream inputEdit = getClass().getResourceAsStream("edit.svg");
-        InputStream inputDelete = getClass().getResourceAsStream("delete.svg");
+        InputStream inputEdit = getClass().getResourceAsStream("edit.png");
+        InputStream inputDelete = getClass().getResourceAsStream("delete.png");
         Image imageEdit;
         Image imageDelete;
         ImageView imageViewEdit;
         ImageView imageViewDelete;
 
-        imageDelete = new Image(inputDelete);
-        imageViewDelete = new ImageView(imageDelete);
+        InputStream inputBlock = getClass().getResourceAsStream("");
+        Image imageBlock = new Image(inputBlock);
+        ImageView imageViewBlock = new ImageView(imageBlock);
         hBox = new HBox();
-        buttonDelete = new Button("", imageViewDelete);
-        buttonDelete.setMinSize(33, 10);
-        hBox.getChildren().addAll(buttonDelete);
+        Button buttonBlock = new Button("", imageViewBlock);
+        buttonBlock.setMinSize(58, 10);
+        hBox.getChildren().addAll(buttonBlock);
         vBoxForEditAndDeleteButtons.getChildren().addAll(hBox);
         for (int i = 0; i < numberOfRows; i++) {
             cartridge = contentStore.getCartridgesMap().get("q_" + str).get(i);
             utilized = new Utilized();
             utilized.setId(cartridge.getId());
             hBox = new HBox();
+
             imageEdit = new Image(inputEdit);
             imageDelete = new Image(inputDelete);
             imageViewEdit = new ImageView(imageEdit);
