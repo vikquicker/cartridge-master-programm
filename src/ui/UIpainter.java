@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
@@ -193,6 +194,38 @@ public class UIpainter {
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("notice"));
             table.getColumns().add(noticeColumn);
             noticeColumn.setMinWidth(799);
+
+            TableColumn actionCol = new TableColumn("Action");
+            actionCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
+
+            Callback<TableColumn<Cartridge, String>, TableCell<Cartridge, String>> cellFactory
+                    = //
+                    new Callback<TableColumn<Cartridge, String>, TableCell<Cartridge, String>>() {
+                        @Override
+                        public TableCell call(final TableColumn<Cartridge, String> param) {
+                            final TableCell<Cartridge, String> cell = new TableCell<Cartridge, String>() {
+
+                                final Button edit = new Button("Edit");
+                               // final Button delete = new Button("Delete");
+
+                                @Override
+                                public void updateItem(String item, boolean empty) {
+                                    super.updateItem(item, empty);
+                                    if (empty) {
+                                        setGraphic(null);
+                                        setText(null);
+                                    } else {
+                                        edit.setOnAction(new EditButtonHandler(i, str, utilized.getId()));
+                                        setGraphic(edit);
+                                        setText(null);
+                                    }
+                                }
+                            };
+                            return cell;
+                        }
+                    };
+
+            actionCol.setCellFactory(cellFactory);
 
             return table;
         } else if (className.equals(summary.getClass())) {

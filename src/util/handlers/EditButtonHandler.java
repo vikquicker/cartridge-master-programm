@@ -120,13 +120,19 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                 cartridgeFromContent.setNumber(numberField.getText());
                 cartridgeFromContent.setStatus(statusField.getValue());
                 cartridgeFromContent.setDate(dateField.getValue());
-                cartridgeFromContent.setLocation(locationField.getValue());
+                if (locationFieldNew.getLength() > 0) {
+                    contentStore.getLocationList().add(locationFieldNew.getText());
+                    cartridgeFromContent.setLocation(locationFieldNew.getText());
+                    cartridgeFromTable.setLocation(locationFieldNew.getText());
+                } else {
+                    cartridgeFromContent.setLocation(locationField.getValue());
+                    cartridgeFromTable.setLocation(locationField.getValue());
+                }
                 cartridgeFromContent.setNotice(textAreaField.getText());
 
                 cartridgeFromTable.setNumber(numberField.getText());
                 cartridgeFromTable.setStatus(statusField.getValue());
                 cartridgeFromTable.setDate(dateField.getValue());
-                cartridgeFromTable.setLocation(locationField.getValue());
                 cartridgeFromTable.setNotice(textAreaField.getText());
 
                 if (cartridgeFromContent.getStatus().equals("На отделении")) {
