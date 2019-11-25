@@ -4,9 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -24,23 +21,18 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
     int numberOfButton;
     private Cartridge cartridgeForRemove;
-    private String tabNameFromCreateButtonns;
+    private String tabName;
     private TableView<Cartridge> tabCartridge;
     private TableView<Utilized> tabUtilized;
     private TableView<Summary> tabSummary;
     private VBox vBoxForEditAndDelete;
 
-    public RemoveButtonHandler(int numberOfButton, String str,
-                               TableView<Cartridge> tabCartridge,
-                               TableView<Utilized> tabUtilized,
-                               TableView<Summary> tabSummary,
-                               VBox vBoxForEditAndDelete, Cartridge cartridgeForRemove) {
+    public RemoveButtonHandler(String str, Cartridge cartridgeForRemove,TableView<Cartridge> tabCartridge,
+                               TableView<Utilized> tabUtilized,TableView<Summary> tabSummary) {
         this.tabCartridge = tabCartridge;
         this.tabUtilized = tabUtilized;
-        this.numberOfButton = numberOfButton;
         this.tabSummary = tabSummary;
-        this.vBoxForEditAndDelete = vBoxForEditAndDelete;
-        tabNameFromCreateButtonns = str;
+        tabName = str;
         this.cartridgeForRemove = cartridgeForRemove;
     }
 
@@ -67,10 +59,9 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
             public void handle(ActionEvent event) {
                 String cartridgeStatus = cartridgeForRemove.getStatus();
                 String cartridgeLocation = cartridgeForRemove.getLocation();
-                int rowNumber = contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).indexOf(cartridgeForRemove);
-                vBoxForEditAndDelete.getChildren().remove(rowNumber + 1);
-                contentStore.getCartridgesMap().get("q_" + tabNameFromCreateButtonns).remove(cartridgeForRemove);
+                contentStore.getCartridgesMap().get("q_" + tabName).remove(cartridgeForRemove);
                 tabCartridge.getItems().remove(cartridgeForRemove);
+                tabCartridge.refresh();
                 if (cartridgeStatus.equals("На отделении")) {
                     for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
                         if (contentStore.getSummaryArrayList().get(i).getOpsLocation().

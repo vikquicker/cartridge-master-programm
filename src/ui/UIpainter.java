@@ -22,6 +22,7 @@ import util.handlers.AddButtonHandler;
 import util.handlers.EditButtonHandler;
 import util.handlers.RemoveButtonHandler;
 
+import javax.xml.crypto.Data;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,10 +41,10 @@ public class UIpainter {
         return uIpainter;
     }
 
-    private UIpainter(){
+    private UIpainter() {
     }
 
-    public void createUI(Stage primaryStage){
+    public void createUI(Stage primaryStage) {
         VBox root = new VBox();
         List<String> list = contentStore.getTabList();
         ScrollPane scrollPaneLog = new ScrollPane();
@@ -86,11 +87,13 @@ public class UIpainter {
                 HBox hBox = new HBox();
                 if (listFromMap != null) {
                     arrayList.addAll(listFromMap);
-                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass()),
-                            createButtons(listFromMap.size(), presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary));
+                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass(),presentedTabName,
+                            tableViewCartridge, tableViewUtilized, tableViewSummary));
+//                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass()),
+//                            createButtons(listFromMap.size(), presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary));
                 } else {
-                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass()),
-                            createButtons(0, presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary));
+                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass(),presentedTabName,
+                            tableViewCartridge, tableViewUtilized, tableViewSummary));
                 }
                 addItem.setOnAction(new AddButtonHandler(presentedTabName, tableViewCartridge, tableViewUtilized,
                         tableViewSummary, vBoxForEditAndDeleteButtons, vBoxForEditAndDeleteButtonsUtilize));
@@ -114,9 +117,11 @@ public class UIpainter {
                 HBox hBox = new HBox();
                 if (secondListFromMap != null) {
                     summaryArrayList.addAll(secondListFromMap);
-                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass()));
+                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass(),presentedTabNameSummary,
+                            tableViewCartridge, tableViewUtilized, tableViewSummary));
                 } else {
-                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass()));
+                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass(),presentedTabNameSummary,
+                            tableViewCartridge, tableViewUtilized, tableViewSummary));
                 }
                 addItem.setOnAction(new AddButtonHandler(presentedTabNameSummary, tableViewCartridge, tableViewUtilized,
                         tableViewSummary, vBoxForEditAndDeleteButtons, vBoxForEditAndDeleteButtonsUtilize));
@@ -135,13 +140,16 @@ public class UIpainter {
                 ArrayList<Utilized> thirdListFromMap = contentStore.getUtilizedArrayList();
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();
-                tableViewCartridge = initiateTable(utilizedArrayList, utilizedArrayList.getClass());
+                tableViewCartridge = initiateTable(utilizedArrayList, utilizedArrayList.getClass(),presentedTabNameUtilized,
+                        tableViewCartridge, tableViewUtilized, tableViewSummary);
                 if (thirdListFromMap != null) {
                     utilizedArrayList.addAll(thirdListFromMap);
-                    hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()),
+                    hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass(),presentedTabNameUtilized,
+                            tableViewCartridge, tableViewUtilized, tableViewSummary),
                             new Pane());
                 } else {
-                    hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass()),
+                    hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass(),presentedTabNameUtilized,
+                            tableViewCartridge, tableViewUtilized, tableViewSummary),
                             new Pane());
                 }
                 vBoxForEditAndDeleteButtonsUtilize = vBoxForEditAndDeleteButtons;
@@ -159,7 +167,8 @@ public class UIpainter {
     }
 
 
-    private TableView initiateTable(Object list, Class className) {
+    private TableView initiateTable(Object list, Class className,String tabName,
+                                    TableView<Cartridge> cartridgeTable, TableView<Utilized> utilizedTable, TableView<Summary> summaryTable) {
         Cartridge cartridge = new Cartridge();
         Summary summary = new Summary();
         if (className.equals(cartridge.getClass())) {
@@ -193,20 +202,25 @@ public class UIpainter {
             TableColumn<Cartridge, String> noticeColumn = new TableColumn<Cartridge, String>("Примечание");
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("notice"));
             table.getColumns().add(noticeColumn);
-            noticeColumn.setMinWidth(799);
+            noticeColumn.setMinWidth(700);
 
-            TableColumn actionCol = new TableColumn("Action");
-            actionCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
+            TableColumn actionColEdit = new TableColumn("Edit");
+            actionColEdit.setMaxWidth(35);
 
-            Callback<TableColumn<Cartridge, String>, TableCell<Cartridge, String>> cellFactory
-                    = //
+            TableColumn actionColDelete = new TableColumn("Delete");
+            actionColDelete.setMaxWidth(50);
+            actionColDelete.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
+
+            Callback<TableColumn<Cartridge, String>, TableCell<Cartridge, String>> cellFactoryEdit
+                    =
                     new Callback<TableColumn<Cartridge, String>, TableCell<Cartridge, String>>() {
                         @Override
                         public TableCell call(final TableColumn<Cartridge, String> param) {
                             final TableCell<Cartridge, String> cell = new TableCell<Cartridge, String>() {
-
-                                final Button edit = new Button("Edit");
-                               // final Button delete = new Button("Delete");
+                                InputStream inputEdit = getClass().getResourceAsStream("edit.png");
+                                Image imageEdit = new Image(inputEdit);
+                                ImageView imageViewEdit = new ImageView(imageEdit);
+                                final Button edit = new Button("", imageViewEdit);
 
                                 @Override
                                 public void updateItem(String item, boolean empty) {
@@ -215,7 +229,10 @@ public class UIpainter {
                                         setGraphic(null);
                                         setText(null);
                                     } else {
-                                        edit.setOnAction(new EditButtonHandler(i, str, utilized.getId()));
+                                        Cartridge cartridge = getTableView().getItems().get(getIndex());
+                                        TableView<Cartridge> cartridgeTableView = getTableView();
+                                        edit.setOnAction(new EditButtonHandler(tabName, cartridge.getId(),cartridgeTableView,
+                                                utilizedTable,summaryTable,cartridge));
                                         setGraphic(edit);
                                         setText(null);
                                     }
@@ -225,8 +242,46 @@ public class UIpainter {
                         }
                     };
 
-            actionCol.setCellFactory(cellFactory);
 
+            Callback<TableColumn<Cartridge, String>, TableCell<Cartridge, String>> cellFactoryDelete
+                    =
+                    new Callback<TableColumn<Cartridge, String>, TableCell<Cartridge, String>>() {
+                        @Override
+                        public TableCell call(final TableColumn<Cartridge, String> param) {
+                            final TableCell<Cartridge, String> cell = new TableCell<Cartridge, String>() {
+
+                                InputStream inputDelete = getClass().getResourceAsStream("delete.png");
+                                Image imageDelete = new Image(inputDelete);
+                                ImageView imageViewDelete = new ImageView(imageDelete);
+                                final Button delete = new Button("", imageViewDelete);
+
+
+                                @Override
+                                public void updateItem(String item, boolean empty) {
+                                    super.updateItem(item, empty);
+                                    if (empty) {
+                                        setGraphic(null);
+                                        setText(null);
+                                    } else {
+                                        delete.setMinSize(43,15);
+                                        Cartridge cartridge = getTableView().getItems().get(getIndex());
+                                        TableView<Cartridge> cartridgeTableView = getTableView();
+                                        delete.setOnAction(new RemoveButtonHandler(tabName, cartridge,cartridgeTableView,
+                                                utilizedTable,summaryTable));
+                                        setGraphic(delete);
+                                        setText(null);
+                                    }
+                                }
+                            };
+                            return cell;
+                        }
+                    };
+
+            actionColEdit.setCellFactory(cellFactoryEdit);
+            table.getColumns().add(actionColEdit);
+
+            actionColDelete.setCellFactory(cellFactoryDelete);
+            table.getColumns().add(actionColDelete);
             return table;
         } else if (className.equals(summary.getClass())) {
             ObservableList<Summary> cartridges = FXCollections.observableArrayList((ArrayList<Summary>) list);
@@ -279,50 +334,50 @@ public class UIpainter {
         }
     }
 
-    public Node createButtons(int numberOfRows, String str, TableView<Cartridge> tabCartridge,
-                              TableView<Utilized> tabUtilized,
-                              TableView<Summary> tabSummary) {
-        Cartridge cartridge;
-        Utilized utilized;
-        vBoxForEditAndDeleteButtons = new VBox();
-        HBox hBox;
-        Button buttonEdit;
-        Button buttonDelete;
-        InputStream inputEdit = getClass().getResourceAsStream("edit.png");
-        InputStream inputDelete = getClass().getResourceAsStream("delete.png");
-        Image imageEdit;
-        Image imageDelete;
-        ImageView imageViewEdit;
-        ImageView imageViewDelete;
-
-        InputStream inputBlock = getClass().getResourceAsStream("");
-        Image imageBlock = new Image(inputBlock);
-        ImageView imageViewBlock = new ImageView(imageBlock);
-        hBox = new HBox();
-        Button buttonBlock = new Button("", imageViewBlock);
-        buttonBlock.setMinSize(58, 10);
-        hBox.getChildren().addAll(buttonBlock);
-        vBoxForEditAndDeleteButtons.getChildren().addAll(hBox);
-        for (int i = 0; i < numberOfRows; i++) {
-            cartridge = contentStore.getCartridgesMap().get("q_" + str).get(i);
-            utilized = new Utilized();
-            utilized.setId(cartridge.getId());
-            hBox = new HBox();
-
-            imageEdit = new Image(inputEdit);
-            imageDelete = new Image(inputDelete);
-            imageViewEdit = new ImageView(imageEdit);
-            imageViewDelete = new ImageView(imageDelete);
-            buttonEdit = new Button("", imageViewEdit);
-            buttonDelete = new Button("", imageViewDelete);
-            hBox.getChildren().addAll(buttonEdit, buttonDelete);
-            vBoxForEditAndDeleteButtons.getChildren().addAll(hBox);
-
-            buttonEdit.setOnAction(new EditButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary,utilized.getId()));
-            buttonDelete.setOnAction(new RemoveButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary,
-                    vBoxForEditAndDeleteButtons, cartridge));
-        }
-        return vBoxForEditAndDeleteButtons;
-    }
+//    public Node createButtons(int numberOfRows, String str, TableView<Cartridge> tabCartridge,
+//                              TableView<Utilized> tabUtilized,
+//                              TableView<Summary> tabSummary) {
+//        Cartridge cartridge;
+//        Utilized utilized;
+//        vBoxForEditAndDeleteButtons = new VBox();
+//        HBox hBox;
+//        Button buttonEdit;
+//        Button buttonDelete;
+//        InputStream inputEdit = getClass().getResourceAsStream("edit.png");
+//        InputStream inputDelete = getClass().getResourceAsStream("delete.png");
+//        Image imageEdit;
+//        Image imageDelete;
+//        ImageView imageViewEdit;
+//        ImageView imageViewDelete;
+//
+//        InputStream inputBlock = getClass().getResourceAsStream("");
+//        Image imageBlock = new Image(inputBlock);
+//        ImageView imageViewBlock = new ImageView(imageBlock);
+//        hBox = new HBox();
+//        Button buttonBlock = new Button("", imageViewBlock);
+//        buttonBlock.setMinSize(58, 10);
+//        hBox.getChildren().addAll(buttonBlock);
+//        vBoxForEditAndDeleteButtons.getChildren().addAll(hBox);
+//        for (int i = 0; i < numberOfRows; i++) {
+//            cartridge = contentStore.getCartridgesMap().get("q_" + str).get(i);
+//            utilized = new Utilized();
+//            utilized.setId(cartridge.getId());
+//            hBox = new HBox();
+//
+//            imageEdit = new Image(inputEdit);
+//            imageDelete = new Image(inputDelete);
+//            imageViewEdit = new ImageView(imageEdit);
+//            imageViewDelete = new ImageView(imageDelete);
+//            buttonEdit = new Button("", imageViewEdit);
+//            buttonDelete = new Button("", imageViewDelete);
+//            hBox.getChildren().addAll(buttonEdit, buttonDelete);
+//            vBoxForEditAndDeleteButtons.getChildren().addAll(hBox);
+//
+//            buttonEdit.setOnAction(new EditButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary, utilized.getId()));
+//            buttonDelete.setOnAction(new RemoveButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary,
+//                    vBoxForEditAndDeleteButtons, cartridge));
+//        }
+//        return vBoxForEditAndDeleteButtons;
+//    }
 
 }

@@ -152,28 +152,28 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
                 }
 
-                int rowNumber = contentStore.getCartridgesMap().get("q_" + tabName).size() - 1;
-                HBox hBoxForButtonPair = new HBox();
-                Button buttonEdit;
-                Button buttonDelete;
-                InputStream inputEdit = getClass().getResourceAsStream("/ui/edit.png");
-                InputStream inputDelete = getClass().getResourceAsStream("/ui/delete.png");
-                Image imageEdit;
-                Image imageDelete;
-                ImageView imageViewEdit;
-                ImageView imageViewDelete;
-
-                imageEdit = new Image(inputEdit);
-                imageDelete = new Image(inputDelete);
-                imageViewEdit = new ImageView(imageEdit);
-                imageViewDelete = new ImageView(imageDelete);
-                buttonEdit = new Button("", imageViewEdit);
-                buttonDelete = new Button("", imageViewDelete);
-                hBoxForButtonPair.getChildren().addAll(buttonEdit, buttonDelete);
-                vBoxForEditAndDelete.getChildren().add(hBoxForButtonPair);
-
-                buttonEdit.setOnAction(new EditButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary, idToCartridgeAndUtil));
-                buttonDelete.setOnAction(new RemoveButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary, vBoxForEditAndDelete, cartridgeToAdd));
+//                int rowNumber = contentStore.getCartridgesMap().get("q_" + tabName).size() - 1;
+//                HBox hBoxForButtonPair = new HBox();
+//                Button buttonEdit;
+//                Button buttonDelete;
+//                InputStream inputEdit = getClass().getResourceAsStream("/ui/edit.png");
+//                InputStream inputDelete = getClass().getResourceAsStream("/ui/delete.png");
+//                Image imageEdit;
+//                Image imageDelete;
+//                ImageView imageViewEdit;
+//                ImageView imageViewDelete;
+//
+//                imageEdit = new Image(inputEdit);
+//                imageDelete = new Image(inputDelete);
+//                imageViewEdit = new ImageView(imageEdit);
+//                imageViewDelete = new ImageView(imageDelete);
+//                buttonEdit = new Button("", imageViewEdit);
+//                buttonDelete = new Button("", imageViewDelete);
+//                hBoxForButtonPair.getChildren().addAll(buttonEdit, buttonDelete);
+//                vBoxForEditAndDelete.getChildren().add(hBoxForButtonPair);
+//
+//                buttonEdit.setOnAction(new EditButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary, idToCartridgeAndUtil));
+//                buttonDelete.setOnAction(new RemoveButtonHandler(rowNumber, tabName, tabCartridge, tabUtilized, tabSummary, vBoxForEditAndDelete, cartridgeToAdd));
 
 
                 contentStore.saveContent();

@@ -6,9 +6,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,7 +19,6 @@ import java.util.Map;
 
 public class EditButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
-    private int numberOfButton;
     private String tabNameFromEditButtonns;
     private TableView<Cartridge> tabCartridge;
     private TableView<Utilized> tabUtilized;
@@ -30,26 +26,18 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
 
     double cartridgeForEdit;
     Cartridge cartridgeFromContent;
-    Cartridge cartridgeFromTable;
-    private final String utilize = "Списанные";
 
-    //
-    public EditButtonHandler(int numberOfButton, String str,
+    public EditButtonHandler(String str, double cartridgeForEdit,
                              TableView<Cartridge> tabCartridge,
                              TableView<Utilized> tabUtilized,
-                             TableView<Summary> tabSummary, double cartridgeForEdit) {
+                             TableView<Summary> tabSummary, Cartridge cartridgeFromContent) {
         this.tabCartridge = tabCartridge;
         this.tabUtilized = tabUtilized;
-        this.numberOfButton = numberOfButton;
         this.tabSummary = tabSummary;
         this.cartridgeForEdit = cartridgeForEdit;
         tabNameFromEditButtonns = str;
         tabNameFromEditButtonns = "q_" + tabNameFromEditButtonns;
-        cartridgeFromContent = contentStore.getCartridgesMap()
-                .get(tabNameFromEditButtonns)
-                .get(numberOfButton);
-
-        cartridgeFromTable = tabCartridge.getItems().get(numberOfButton);
+        this.cartridgeFromContent = cartridgeFromContent;
     }
 
     @Override
@@ -123,17 +111,11 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                 if (locationFieldNew.getLength() > 0) {
                     contentStore.getLocationList().add(locationFieldNew.getText());
                     cartridgeFromContent.setLocation(locationFieldNew.getText());
-                    cartridgeFromTable.setLocation(locationFieldNew.getText());
                 } else {
                     cartridgeFromContent.setLocation(locationField.getValue());
-                    cartridgeFromTable.setLocation(locationField.getValue());
                 }
                 cartridgeFromContent.setNotice(textAreaField.getText());
 
-                cartridgeFromTable.setNumber(numberField.getText());
-                cartridgeFromTable.setStatus(statusField.getValue());
-                cartridgeFromTable.setDate(dateField.getValue());
-                cartridgeFromTable.setNotice(textAreaField.getText());
 
                 if (cartridgeFromContent.getStatus().equals("На отделении")) {
                     for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
@@ -176,7 +158,23 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                 }
 
                 //TODO think about observer
-                if (cartridgeFromContent.getStatus().equals("Списан")) {
+                if (previosStatus.equals("Списан") && cartridgeFromContent.getStatus().equals("Списан")) {
+                    Utilized utilized = new Utilized();
+                    utilized.setId(cartridgeForEdit);
+                    utilized.setNumber(numberField.getText());
+                    utilized.setStatus(statusField.getValue());
+                    utilized.setDate(dateField.getValue());
+                    utilized.setNotice(textAreaField.getText());
+
+                    for (int i = 0; i < contentStore.getUtilizedArrayList().size(); i++) {
+                        if (cartridgeFromContent.getId() == contentStore.getUtilizedArrayList().get(i).getId()) {
+                            contentStore.getUtilizedArrayList().set(i, utilized);
+                        }
+                    }
+                    tabUtilized.getItems().clear();
+                    tabUtilized.getItems().addAll(contentStore.getUtilizedArrayList());
+                }
+                if (!previosStatus.equals("Списан") && cartridgeFromContent.getStatus().equals("Списан")) {
                     Utilized utilized = new Utilized();
                     utilized.setId(cartridgeForEdit);
                     utilized.setNumber(numberField.getText());
