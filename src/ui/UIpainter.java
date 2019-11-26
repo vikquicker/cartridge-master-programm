@@ -2,7 +2,6 @@ package ui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -22,7 +21,6 @@ import util.handlers.AddButtonHandler;
 import util.handlers.EditButtonHandler;
 import util.handlers.RemoveButtonHandler;
 
-import javax.xml.crypto.Data;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,7 +47,7 @@ public class UIpainter {
         List<String> list = contentStore.getTabList();
         ScrollPane scrollPaneLog = new ScrollPane();
         Text logText = new Text("log....");
-        root.getChildren().addAll(initialTabPane(list), scrollPaneLog);
+        root.getChildren().addAll(initialTabPane(list),scrollPaneLog);
         primaryStage.setTitle("Cartridge Master 4000");
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -89,14 +87,12 @@ public class UIpainter {
                     arrayList.addAll(listFromMap);
                     hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass(),presentedTabName,
                             tableViewCartridge, tableViewUtilized, tableViewSummary));
-//                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass()),
-//                            createButtons(listFromMap.size(), presentedTabName, tableViewCartridge, tableViewUtilized, tableViewSummary));
                 } else {
                     hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass(),presentedTabName,
                             tableViewCartridge, tableViewUtilized, tableViewSummary));
                 }
                 addItem.setOnAction(new AddButtonHandler(presentedTabName, tableViewCartridge, tableViewUtilized,
-                        tableViewSummary, vBoxForEditAndDeleteButtons, vBoxForEditAndDeleteButtonsUtilize));
+                        tableViewSummary));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -124,7 +120,7 @@ public class UIpainter {
                             tableViewCartridge, tableViewUtilized, tableViewSummary));
                 }
                 addItem.setOnAction(new AddButtonHandler(presentedTabNameSummary, tableViewCartridge, tableViewUtilized,
-                        tableViewSummary, vBoxForEditAndDeleteButtons, vBoxForEditAndDeleteButtonsUtilize));
+                        tableViewSummary));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);

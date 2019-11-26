@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Cartridge;
@@ -19,13 +18,11 @@ import java.util.Map;
 
 public class RemoveButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
-    int numberOfButton;
     private Cartridge cartridgeForRemove;
     private String tabName;
     private TableView<Cartridge> tabCartridge;
     private TableView<Utilized> tabUtilized;
     private TableView<Summary> tabSummary;
-    private VBox vBoxForEditAndDelete;
 
     public RemoveButtonHandler(String str, Cartridge cartridgeForRemove,TableView<Cartridge> tabCartridge,
                                TableView<Utilized> tabUtilized,TableView<Summary> tabSummary) {
