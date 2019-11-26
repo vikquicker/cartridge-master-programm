@@ -72,7 +72,8 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                 "На заправке 1",
                 "На заправке 2",
                 "Списан",
-                "Заправлен");
+                "Заправлен",
+                "Пустой");
         ComboBox<String> statusField = new ComboBox<>(statusList);
         statusField.setValue(cartridgeFromContent.getStatus());
 

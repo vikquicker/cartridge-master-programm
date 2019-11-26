@@ -3,9 +3,18 @@ package models;
 import java.io.Serializable;
 
 public class Summary implements Serializable {
-    String color;
+    int color;
     String opsLocation;
     int count;
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
 
     public String getOpsLocation() {
         return opsLocation;

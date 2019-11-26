@@ -149,6 +149,7 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     double idToCartridgeAndUtil = Math.random();
 
                     //cartridgeToAdd
+                    //cartridgeToAdd.setColor("");
                     cartridgeToAdd.setId(idToCartridgeAndUtil);
                     cartridgeToAdd.setNumber(numberField.getText());
                     cartridgeToAdd.setStatus(statusField.getValue());

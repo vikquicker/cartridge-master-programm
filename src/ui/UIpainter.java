@@ -10,7 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import models.Cartridge;
@@ -45,9 +45,10 @@ public class UIpainter {
         List<String> list = contentStore.getTabList();
         String logText = ("Добро пожаловать в программу - Cartridge Master 4000....");
         TextArea log = new TextArea(logText);
+        log.setEditable(false);
         log.setMaxHeight(100);
         log.setMinHeight(100);
-        root.getChildren().addAll(initialTabPane(list,log),log);
+        root.getChildren().addAll(initialTabPane(list, log), log);
         primaryStage.setTitle("Cartridge Master 4000");
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -57,7 +58,7 @@ public class UIpainter {
         primaryStage.show();
     }
 
-    public TabPane initialTabPane(List<String> listTabs,TextArea log) {
+    public TabPane initialTabPane(List<String> listTabs, TextArea log) {
         TabPane tabPane = new TabPane();
         Tab tableTab;
         Tab tableTabUtilized = new Tab();
@@ -84,14 +85,14 @@ public class UIpainter {
                 HBox hBox = new HBox();
                 if (listFromMap != null) {
                     arrayList.addAll(listFromMap);
-                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass(),presentedTabName,
+                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass(), presentedTabName,
                             tableViewCartridge, tableViewUtilized, tableViewSummary, log));
                 } else {
-                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass(),presentedTabName,
+                    hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass(), presentedTabName,
                             tableViewCartridge, tableViewUtilized, tableViewSummary, log));
                 }
                 addItem.setOnAction(new AddButtonHandler(presentedTabName, tableViewCartridge, tableViewUtilized,
-                        tableViewSummary,log));
+                        tableViewSummary, log));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -110,10 +111,10 @@ public class UIpainter {
                 HBox hBox = new HBox();
                 if (secondListFromMap != null) {
                     summaryArrayList.addAll(secondListFromMap);
-                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass(),presentedTabNameSummary,
+                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass(), presentedTabNameSummary,
                             tableViewCartridge, tableViewUtilized, tableViewSummary, log));
                 } else {
-                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass(),presentedTabNameSummary,
+                    hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass(), presentedTabNameSummary,
                             tableViewCartridge, tableViewUtilized, tableViewSummary, log));
                 }
 
@@ -131,15 +132,15 @@ public class UIpainter {
                 ArrayList<Utilized> thirdListFromMap = contentStore.getUtilizedArrayList();
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();
-                tableViewCartridge = initiateTable(utilizedArrayList, utilizedArrayList.getClass(),presentedTabNameUtilized,
+                tableViewCartridge = initiateTable(utilizedArrayList, utilizedArrayList.getClass(), presentedTabNameUtilized,
                         tableViewCartridge, tableViewUtilized, tableViewSummary, log);
                 if (thirdListFromMap != null) {
                     utilizedArrayList.addAll(thirdListFromMap);
-                    hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass(),presentedTabNameUtilized,
+                    hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass(), presentedTabNameUtilized,
                             tableViewCartridge, tableViewUtilized, tableViewSummary, log),
                             new Pane());
                 } else {
-                    hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass(),presentedTabNameUtilized,
+                    hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass(), presentedTabNameUtilized,
                             tableViewCartridge, tableViewUtilized, tableViewSummary, log),
                             new Pane());
                 }
@@ -157,7 +158,7 @@ public class UIpainter {
     }
 
 
-    private TableView initiateTable(Object list, Class className,String tabName,
+    private TableView initiateTable(Object list, Class className, String tabName,
                                     TableView<Cartridge> cartridgeTable, TableView<Utilized> utilizedTable, TableView<Summary> summaryTable,
                                     TextArea log) {
         Cartridge cartridge = new Cartridge();
@@ -174,6 +175,12 @@ public class UIpainter {
             numberColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("number"));
             table.getColumns().add(numberColumn);
             numberColumn.setMinWidth(100);
+
+            TableColumn<Cartridge, String> colorColumn = new TableColumn<Cartridge, String>("Col");
+            colorColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("color"));
+            table.getColumns().add(colorColumn);
+            colorColumn.setMinWidth(30);
+            colorColumn.setMaxWidth(30);
 
             TableColumn<Cartridge, String> statusColumn = new TableColumn<Cartridge, String>("Статус");
             statusColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("status"));
@@ -193,7 +200,7 @@ public class UIpainter {
             TableColumn<Cartridge, String> noticeColumn = new TableColumn<Cartridge, String>("Примечание");
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("notice"));
             table.getColumns().add(noticeColumn);
-            noticeColumn.setMinWidth(700);
+            noticeColumn.setMinWidth(683);
 
             TableColumn actionColEdit = new TableColumn("Edit");
             actionColEdit.setMaxWidth(35);
@@ -201,6 +208,38 @@ public class UIpainter {
             TableColumn actionColDelete = new TableColumn("Delete");
             actionColDelete.setMaxWidth(50);
             actionColDelete.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
+
+            colorColumn.setCellFactory(column -> {
+                return new TableCell<Cartridge, String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (item == null || empty) {
+                            setText(null);
+                            setStyle("");
+                        } else {
+                            Cartridge cartridge = getTableView().getItems().get(getIndex());
+                            if (cartridge.getStatus().equals("Заправлен")) {
+                                setTextFill(Color.CHOCOLATE);
+                                setStyle("-fx-background-color: green");
+                            } else if (cartridge.getStatus().equals("Пустой")) {
+                                setTextFill(Color.CHOCOLATE);
+                                setStyle("-fx-background-color: yellow");
+                            } else if (cartridge.getStatus().equals("Списан")) {
+                                setTextFill(Color.CHOCOLATE);
+                                setStyle("-fx-background-color: red");
+                            }else if (cartridge.getStatus().equals("На заправке 1") || cartridge.getStatus().equals("На заправке 2")) {
+                                setTextFill(Color.CHOCOLATE);
+                                setStyle("-fx-background-color: blue");
+                            }else if (cartridge.getStatus().equals("На отделении")) {
+                                setTextFill(Color.CHOCOLATE);
+                                setStyle("-fx-background-color: orange");
+                            }
+                        }
+                    }
+                };
+            });
 
             Callback<TableColumn<Cartridge, String>, TableCell<Cartridge, String>> cellFactoryEdit
                     =
@@ -222,8 +261,8 @@ public class UIpainter {
                                     } else {
                                         Cartridge cartridge = getTableView().getItems().get(getIndex());
                                         TableView<Cartridge> cartridgeTableView = getTableView();
-                                        edit.setOnAction(new EditButtonHandler(tabName, cartridge.getId(),cartridgeTableView,
-                                                utilizedTable,summaryTable,cartridge,log));
+                                        edit.setOnAction(new EditButtonHandler(tabName, cartridge.getId(), cartridgeTableView,
+                                                utilizedTable, summaryTable, cartridge, log));
                                         setGraphic(edit);
                                         setText(null);
                                     }
@@ -254,11 +293,11 @@ public class UIpainter {
                                         setGraphic(null);
                                         setText(null);
                                     } else {
-                                        delete.setMinSize(43,15);
+                                        delete.setMinSize(43, 25);
                                         Cartridge cartridge = getTableView().getItems().get(getIndex());
                                         TableView<Cartridge> cartridgeTableView = getTableView();
-                                        delete.setOnAction(new RemoveButtonHandler(tabName, cartridge,cartridgeTableView,
-                                                utilizedTable,summaryTable,log));
+                                        delete.setOnAction(new RemoveButtonHandler(tabName, cartridge, cartridgeTableView,
+                                                utilizedTable, summaryTable, log));
                                         setGraphic(delete);
                                         setText(null);
                                     }
@@ -297,6 +336,32 @@ public class UIpainter {
             table.getColumns().add(colorColumn);
             colorColumn.setMaxWidth(30);
 
+            colorColumn.setCellFactory(column -> {
+                return new TableCell<Summary, Integer>() {
+                    @Override
+                    protected void updateItem(Integer item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (item == null || empty) {
+                            setText(null);
+                            setStyle("");
+                        } else {
+                            Summary summary = getTableView().getItems().get(getIndex());
+                            if (summary.getCount() <= 3) {
+                                setTextFill(Color.CHOCOLATE);
+                                setStyle("-fx-background-color: green");
+                            } else if (summary.getCount() > 3 && summary.getCount() < 9) {
+                                setTextFill(Color.CHOCOLATE);
+                                setStyle("-fx-background-color: yellow");
+                            } else if (summary.getCount() >= 9) {
+                                setTextFill(Color.CHOCOLATE);
+                                setStyle("-fx-background-color: red");
+                            }
+                        }
+                    }
+                };
+            });
+
             return table;
         } else {
             ObservableList<Utilized> cartridges = FXCollections.observableArrayList((ArrayList<Utilized>) list);
@@ -329,51 +394,4 @@ public class UIpainter {
             return table;
         }
     }
-
-//    public Node createButtons(int numberOfRows, String str, TableView<Cartridge> tabCartridge,
-//                              TableView<Utilized> tabUtilized,
-//                              TableView<Summary> tabSummary) {
-//        Cartridge cartridge;
-//        Utilized utilized;
-//        vBoxForEditAndDeleteButtons = new VBox();
-//        HBox hBox;
-//        Button buttonEdit;
-//        Button buttonDelete;
-//        InputStream inputEdit = getClass().getResourceAsStream("edit.png");
-//        InputStream inputDelete = getClass().getResourceAsStream("delete.png");
-//        Image imageEdit;
-//        Image imageDelete;
-//        ImageView imageViewEdit;
-//        ImageView imageViewDelete;
-//
-//        InputStream inputBlock = getClass().getResourceAsStream("");
-//        Image imageBlock = new Image(inputBlock);
-//        ImageView imageViewBlock = new ImageView(imageBlock);
-//        hBox = new HBox();
-//        Button buttonBlock = new Button("", imageViewBlock);
-//        buttonBlock.setMinSize(58, 10);
-//        hBox.getChildren().addAll(buttonBlock);
-//        vBoxForEditAndDeleteButtons.getChildren().addAll(hBox);
-//        for (int i = 0; i < numberOfRows; i++) {
-//            cartridge = contentStore.getCartridgesMap().get("q_" + str).get(i);
-//            utilized = new Utilized();
-//            utilized.setId(cartridge.getId());
-//            hBox = new HBox();
-//
-//            imageEdit = new Image(inputEdit);
-//            imageDelete = new Image(inputDelete);
-//            imageViewEdit = new ImageView(imageEdit);
-//            imageViewDelete = new ImageView(imageDelete);
-//            buttonEdit = new Button("", imageViewEdit);
-//            buttonDelete = new Button("", imageViewDelete);
-//            hBox.getChildren().addAll(buttonEdit, buttonDelete);
-//            vBoxForEditAndDeleteButtons.getChildren().addAll(hBox);
-//
-//            buttonEdit.setOnAction(new EditButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary, utilized.getId()));
-//            buttonDelete.setOnAction(new RemoveButtonHandler(i, str, tabCartridge, tabUtilized, tabSummary,
-//                    vBoxForEditAndDeleteButtons, cartridge));
-//        }
-//        return vBoxForEditAndDeleteButtons;
-//    }
-
 }

@@ -5,12 +5,22 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Cartridge implements Serializable {
+    String color = "";
     double id;
-    String number ;// = "ercf";
-    String status;// = "wdc";
-    LocalDate date;// = new Date(10000);
-    String location;// = "rhygef";
-    String notice;// = "wdfcvef";
+    String number ;
+    String status;
+    LocalDate date;
+    String location;
+    String notice;
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
 
     public Cartridge() {
 
