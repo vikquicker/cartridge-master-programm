@@ -6,8 +6,10 @@ import models.Utilized;
 import util.handlers.EditButtonHandler;
 import util.handlers.RemoveButtonHandler;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -126,6 +128,17 @@ public class ContentStore implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void saveLog(String text) throws IOException {
+        String[] array = text.split("  ");
+
+        String root = Paths.get("").toAbsolutePath().toString();
+        FileWriter fileWriter = new FileWriter(root + ".txt",true);
+        for (int i = 0; i < array.length; i++) {
+            fileWriter.write(array[i]+"\r\n");
+        }
+        fileWriter.close();
     }
 
     public static Object readContent(String listName) {

@@ -12,6 +12,7 @@ import models.Summary;
 import models.Utilized;
 import util.ContentStore;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -97,7 +98,13 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
 
                 Date date = new Date();
                 DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,new Locale("ru"));
-                log.appendText("\n" + dateFormat.format(date) + " : Элемент аннигилирован на атомы...");
+                log.appendText("\n" + dateFormat.format(date) + " : Элемент аннигилирован на атомы  ");
+
+                try {
+                    contentStore.saveLog(log.getText().substring(log.getLength() - 65));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 contentStore.saveContent();
                 newWindow.close();

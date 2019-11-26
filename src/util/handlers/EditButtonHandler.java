@@ -14,6 +14,7 @@ import models.Summary;
 import models.Utilized;
 import util.ContentStore;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -203,7 +204,13 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
 
                 Date date = new Date();
                 DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,new Locale("ru"));
-                log.appendText("\n" + dateFormat.format(date) + " : Элемент эволюционировал в новую форму...");
+                log.appendText("\n" + dateFormat.format(date) + " : Элемент эволюционировал в новую форму  ");
+
+                try {
+                    contentStore.saveLog(log.getText().substring(log.getLength() - 72));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 contentStore.saveContent();
 

@@ -43,7 +43,7 @@ public class UIpainter {
     public void createUI(Stage primaryStage) {
         VBox root = new VBox();
         List<String> list = contentStore.getTabList();
-        String logText = ("Добро пожаловать в программу - Cartridge Master 4000....");
+        String logText = ("Добро пожаловать в программу - Cartridge Master 4000  ");
         TextArea log = new TextArea(logText);
         log.setEditable(false);
         log.setMaxHeight(100);

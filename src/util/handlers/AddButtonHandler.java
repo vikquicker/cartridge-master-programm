@@ -20,6 +20,7 @@ import models.Utilized;
 import util.ContentStore;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.time.LocalDate;
 import java.util.*;
@@ -147,9 +148,6 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     Summary summaryNew;
 
                     double idToCartridgeAndUtil = Math.random();
-
-                    //cartridgeToAdd
-                    //cartridgeToAdd.setColor("");
                     cartridgeToAdd.setId(idToCartridgeAndUtil);
                     cartridgeToAdd.setNumber(numberField.getText());
                     cartridgeToAdd.setStatus(statusField.getValue());
@@ -192,9 +190,14 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     }
 
                     Date date = new Date();
-                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,new Locale("ru"));
-                    log.appendText("\n" + dateFormat.format(date) + " : Элемент добавлен...");
+                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+                    log.appendText("\n" + dateFormat.format(date) + " : Элемент добавлен  ");
 
+                    try {
+                        contentStore.saveLog(log.getText().substring(log.getLength() - 51));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     contentStore.saveContent();
 
                     newWindow.close();
@@ -217,8 +220,14 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     mediaPlayer.play();
 
                     Date date = new Date();
-                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,new Locale("ru"));
-                    log.appendText("\n" + dateFormat.format(date) + " : Жизнь за Нерзула!!!");
+                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+                    log.appendText("\n" + dateFormat.format(date) + " : Жизнь за Нерзула!!!  ");
+
+                    try {
+                        contentStore.saveLog(log.getText().substring(log.getLength() - 54));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     PauseTransition delay = new PauseTransition(Duration.seconds(6));   // заставка запустится на 3 секунды
                     delay.setOnFinished(new EventHandler<ActionEvent>() {
