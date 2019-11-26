@@ -3,6 +3,7 @@ package models;
 import java.io.Serializable;
 
 public class Summary implements Serializable {
+    String color;
     String opsLocation;
     int count;
 

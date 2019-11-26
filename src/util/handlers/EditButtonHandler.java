@@ -14,7 +14,10 @@ import models.Summary;
 import models.Utilized;
 import util.ContentStore;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class EditButtonHandler implements EventHandler<ActionEvent> {
@@ -26,11 +29,12 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
 
     double cartridgeForEdit;
     Cartridge cartridgeFromContent;
+    TextArea log;
 
     public EditButtonHandler(String str, double cartridgeForEdit,
                              TableView<Cartridge> tabCartridge,
                              TableView<Utilized> tabUtilized,
-                             TableView<Summary> tabSummary, Cartridge cartridgeFromContent) {
+                             TableView<Summary> tabSummary, Cartridge cartridgeFromContent,TextArea log) {
         this.tabCartridge = tabCartridge;
         this.tabUtilized = tabUtilized;
         this.tabSummary = tabSummary;
@@ -38,6 +42,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         tabNameFromEditButtonns = str;
         tabNameFromEditButtonns = "q_" + tabNameFromEditButtonns;
         this.cartridgeFromContent = cartridgeFromContent;
+        this.log = log;
     }
 
     @Override
@@ -194,6 +199,10 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                         }
                     }
                 }
+
+                Date date = new Date();
+                DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,new Locale("ru"));
+                log.appendText("\n" + dateFormat.format(date) + " : Элемент эволюционировал в новую форму...");
 
                 contentStore.saveContent();
 

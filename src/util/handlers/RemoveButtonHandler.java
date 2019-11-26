@@ -12,7 +12,10 @@ import models.Summary;
 import models.Utilized;
 import util.ContentStore;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -23,14 +26,16 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
     private TableView<Cartridge> tabCartridge;
     private TableView<Utilized> tabUtilized;
     private TableView<Summary> tabSummary;
+    TextArea log;
 
     public RemoveButtonHandler(String str, Cartridge cartridgeForRemove,TableView<Cartridge> tabCartridge,
-                               TableView<Utilized> tabUtilized,TableView<Summary> tabSummary) {
+                               TableView<Utilized> tabUtilized,TableView<Summary> tabSummary,TextArea log) {
         this.tabCartridge = tabCartridge;
         this.tabUtilized = tabUtilized;
         this.tabSummary = tabSummary;
         tabName = str;
         this.cartridgeForRemove = cartridgeForRemove;
+        this.log = log;
     }
 
     @Override
@@ -89,6 +94,10 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
                         }
                     }
                 }
+
+                Date date = new Date();
+                DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,new Locale("ru"));
+                log.appendText("\n" + dateFormat.format(date) + " : Элемент аннигилирован на атомы...");
 
                 contentStore.saveContent();
                 newWindow.close();

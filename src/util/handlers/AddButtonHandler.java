@@ -20,6 +20,7 @@ import models.Utilized;
 import util.ContentStore;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -29,14 +30,16 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
     private TableView<Cartridge> tabCartridge;
     private TableView<Utilized> tabUtilized;
     private TableView<Summary> tabSummary;
+    TextArea log;
 
     public AddButtonHandler(String str, TableView<Cartridge> tabCartridge,
                             TableView<Utilized> tabUtilized,
-                            TableView<Summary> tabSummary) {
+                            TableView<Summary> tabSummary, TextArea log) {
         this.tabCartridge = tabCartridge;
         this.tabUtilized = tabUtilized;
         this.tabSummary = tabSummary;
         tabName = str;
+        this.log = log;
     }
 
     public void handle(ActionEvent event) {
@@ -187,10 +190,14 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                         tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
                     }
 
+                    Date date = new Date();
+                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,new Locale("ru"));
+                    log.appendText("\n" + dateFormat.format(date) + " : Элемент добавлен...");
+
                     contentStore.saveContent();
 
                     newWindow.close();
-                }else {
+                } else {
                     newWindow.close();
                     Pane pane = new Pane();
                     Stage window = new Stage();
@@ -208,6 +215,10 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     pane.getChildren().add(mediaView);
                     mediaPlayer.play();
 
+                    Date date = new Date();
+                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,new Locale("ru"));
+                    log.appendText("\n" + dateFormat.format(date) + " : Жизнь за Нерзула!!!");
+
                     PauseTransition delay = new PauseTransition(Duration.seconds(6));   // заставка запустится на 3 секунды
                     delay.setOnFinished(new EventHandler<ActionEvent>() {
                         @Override
@@ -219,6 +230,5 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                 }
             }
         });
-
     }
 }

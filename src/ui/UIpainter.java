@@ -28,8 +28,6 @@ import java.util.List;
 
 public class UIpainter {
     ContentStore contentStore = ContentStore.getContentStore();
-    VBox vBoxForEditAndDeleteButtons;
-
     private static UIpainter uIpainter;
 
     public static UIpainter getUIpainter() {
@@ -45,19 +43,21 @@ public class UIpainter {
     public void createUI(Stage primaryStage) {
         VBox root = new VBox();
         List<String> list = contentStore.getTabList();
-        ScrollPane scrollPaneLog = new ScrollPane();
-        Text logText = new Text("log....");
-        root.getChildren().addAll(initialTabPane(list),scrollPaneLog);
+        String logText = ("Добро пожаловать в программу - Cartridge Master 4000....");
+        TextArea log = new TextArea(logText);
+        log.setMaxHeight(100);
+        log.setMinHeight(100);
+        root.getChildren().addAll(initialTabPane(list,log),log);
         primaryStage.setTitle("Cartridge Master 4000");
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(1200);
-        primaryStage.setMinHeight(700);
+        primaryStage.setMaxHeight(720);
         primaryStage.setResizable(false);
         primaryStage.show();
     }
 
-    public TabPane initialTabPane(List<String> listTabs) {
+    public TabPane initialTabPane(List<String> listTabs,TextArea log) {
         TabPane tabPane = new TabPane();
         Tab tableTab;
         Tab tableTabUtilized = new Tab();
@@ -66,7 +66,6 @@ public class UIpainter {
         TableView<Cartridge> tableViewCartridge = new TableView<>();
         TableView<Utilized> tableViewUtilized = new TableView<>();
         TableView<Summary> tableViewSummary = new TableView<>();
-        VBox vBoxForEditAndDeleteButtonsUtilize = new VBox();
 
         for (int i = 0; i < listTabs.size(); i++) {
             if (listTabs.get(i).startsWith("q_")) {
@@ -86,13 +85,13 @@ public class UIpainter {
                 if (listFromMap != null) {
                     arrayList.addAll(listFromMap);
                     hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass(),presentedTabName,
-                            tableViewCartridge, tableViewUtilized, tableViewSummary));
+                            tableViewCartridge, tableViewUtilized, tableViewSummary, log));
                 } else {
                     hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass(),presentedTabName,
-                            tableViewCartridge, tableViewUtilized, tableViewSummary));
+                            tableViewCartridge, tableViewUtilized, tableViewSummary, log));
                 }
                 addItem.setOnAction(new AddButtonHandler(presentedTabName, tableViewCartridge, tableViewUtilized,
-                        tableViewSummary));
+                        tableViewSummary,log));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -104,8 +103,6 @@ public class UIpainter {
                 String presentedTabNameSummary = listTabs.get(i);
                 tableTab = new Tab(presentedTabNameSummary);
 
-                Button addItem = new Button("Добавить");
-
                 Summary summary = new Summary();
                 ArrayList<Summary> summaryArrayList = new ArrayList<>();
                 ArrayList<Summary> secondListFromMap = contentStore.getSummaryArrayList();
@@ -114,13 +111,11 @@ public class UIpainter {
                 if (secondListFromMap != null) {
                     summaryArrayList.addAll(secondListFromMap);
                     hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass(),presentedTabNameSummary,
-                            tableViewCartridge, tableViewUtilized, tableViewSummary));
+                            tableViewCartridge, tableViewUtilized, tableViewSummary, log));
                 } else {
                     hBox.getChildren().addAll(tableViewSummary = initiateTable(summaryArrayList, summary.getClass(),presentedTabNameSummary,
-                            tableViewCartridge, tableViewUtilized, tableViewSummary));
+                            tableViewCartridge, tableViewUtilized, tableViewSummary, log));
                 }
-                addItem.setOnAction(new AddButtonHandler(presentedTabNameSummary, tableViewCartridge, tableViewUtilized,
-                        tableViewSummary));
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -137,18 +132,17 @@ public class UIpainter {
                 scrollPaneTable = new ScrollPane();
                 HBox hBox = new HBox();
                 tableViewCartridge = initiateTable(utilizedArrayList, utilizedArrayList.getClass(),presentedTabNameUtilized,
-                        tableViewCartridge, tableViewUtilized, tableViewSummary);
+                        tableViewCartridge, tableViewUtilized, tableViewSummary, log);
                 if (thirdListFromMap != null) {
                     utilizedArrayList.addAll(thirdListFromMap);
                     hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass(),presentedTabNameUtilized,
-                            tableViewCartridge, tableViewUtilized, tableViewSummary),
+                            tableViewCartridge, tableViewUtilized, tableViewSummary, log),
                             new Pane());
                 } else {
                     hBox.getChildren().addAll(tableViewUtilized = initiateTable(utilizedArrayList, utilizedArrayList.getClass(),presentedTabNameUtilized,
-                            tableViewCartridge, tableViewUtilized, tableViewSummary),
+                            tableViewCartridge, tableViewUtilized, tableViewSummary, log),
                             new Pane());
                 }
-                vBoxForEditAndDeleteButtonsUtilize = vBoxForEditAndDeleteButtons;
 
                 scrollPaneTable.setContent(hBox);
                 vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
@@ -164,7 +158,8 @@ public class UIpainter {
 
 
     private TableView initiateTable(Object list, Class className,String tabName,
-                                    TableView<Cartridge> cartridgeTable, TableView<Utilized> utilizedTable, TableView<Summary> summaryTable) {
+                                    TableView<Cartridge> cartridgeTable, TableView<Utilized> utilizedTable, TableView<Summary> summaryTable,
+                                    TextArea log) {
         Cartridge cartridge = new Cartridge();
         Summary summary = new Summary();
         if (className.equals(cartridge.getClass())) {
@@ -172,7 +167,7 @@ public class UIpainter {
             TableView<Cartridge> table = new TableView<Cartridge>(cartridges);
             table.setEditable(true);
             table.setPrefWidth(1200);
-            table.setPrefHeight(700);
+            table.setPrefHeight(440);
 
 // столбец для вывода имени
             TableColumn<Cartridge, String> numberColumn = new TableColumn<Cartridge, String>("Номер");
@@ -228,7 +223,7 @@ public class UIpainter {
                                         Cartridge cartridge = getTableView().getItems().get(getIndex());
                                         TableView<Cartridge> cartridgeTableView = getTableView();
                                         edit.setOnAction(new EditButtonHandler(tabName, cartridge.getId(),cartridgeTableView,
-                                                utilizedTable,summaryTable,cartridge));
+                                                utilizedTable,summaryTable,cartridge,log));
                                         setGraphic(edit);
                                         setText(null);
                                     }
@@ -263,7 +258,7 @@ public class UIpainter {
                                         Cartridge cartridge = getTableView().getItems().get(getIndex());
                                         TableView<Cartridge> cartridgeTableView = getTableView();
                                         delete.setOnAction(new RemoveButtonHandler(tabName, cartridge,cartridgeTableView,
-                                                utilizedTable,summaryTable));
+                                                utilizedTable,summaryTable,log));
                                         setGraphic(delete);
                                         setText(null);
                                     }
@@ -284,7 +279,7 @@ public class UIpainter {
             TableView<Summary> table = new TableView<Summary>(cartridges);
             table.setEditable(true);
             table.setPrefWidth(1200);
-            table.setPrefHeight(700);
+            table.setPrefHeight(465);
 
 // столбец для вывода имени
             TableColumn<Summary, String> numberColumn = new TableColumn<>("ОПС");
@@ -297,13 +292,18 @@ public class UIpainter {
             table.getColumns().add(locationColumn);
             locationColumn.setMinWidth(200);
 
+            TableColumn<Summary, Integer> colorColumn = new TableColumn<Summary, Integer>("Col");
+            colorColumn.setCellValueFactory(new PropertyValueFactory<Summary, Integer>("color"));
+            table.getColumns().add(colorColumn);
+            colorColumn.setMaxWidth(30);
+
             return table;
         } else {
             ObservableList<Utilized> cartridges = FXCollections.observableArrayList((ArrayList<Utilized>) list);
             TableView<Utilized> table = new TableView<Utilized>(cartridges);
             table.setEditable(true);
             table.setPrefWidth(1200);
-            table.setPrefHeight(700);
+            table.setPrefHeight(465);
 
 // столбец для вывода имени
             TableColumn<Utilized, String> numberColumn = new TableColumn<Utilized, String>("Номер");
@@ -324,7 +324,7 @@ public class UIpainter {
             TableColumn<Utilized, String> noticeColumn = new TableColumn<Utilized, String>("Примечание");
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("notice"));
             table.getColumns().add(noticeColumn);
-            noticeColumn.setMinWidth(899);
+            noticeColumn.setMinWidth(897);
 
             return table;
         }
