@@ -14,7 +14,8 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class ContentStore implements Serializable {
-    private final static String START_FILE = "start.res";
+    //private final static String START_FILE = "start.res";
+    static String START_FILE = Paths.get("").toAbsolutePath().toString();
     private static ContentStore contentStore;
 
     Map<String, ArrayList<Cartridge>> cartridgesMap;
@@ -31,7 +32,7 @@ public class ContentStore implements Serializable {
         if (contentStore != null) {
             return contentStore;
         }
-        contentStore = (ContentStore) readContent(START_FILE);
+        contentStore = (ContentStore) readContent(START_FILE + ".res");
         if (contentStore == null) {
             contentStore = new ContentStore();
         }
@@ -121,7 +122,8 @@ public class ContentStore implements Serializable {
 
     public void saveContent() {
         try {
-            FileOutputStream writeInFile = new FileOutputStream(START_FILE);
+            String root = Paths.get("").toAbsolutePath().toString();
+            FileOutputStream writeInFile = new FileOutputStream(root + ".res");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(writeInFile);
             objectOutputStream.writeObject(this);
             objectOutputStream.close();
@@ -132,11 +134,10 @@ public class ContentStore implements Serializable {
 
     public void saveLog(String text) throws IOException {
         String[] array = text.split("  ");
-
         String root = Paths.get("").toAbsolutePath().toString();
-        FileWriter fileWriter = new FileWriter(root + ".txt",true);
+        FileWriter fileWriter = new FileWriter(root + ".txt", true);
         for (int i = 0; i < array.length; i++) {
-            fileWriter.write(array[i]+"\r\n");
+            fileWriter.write(array[i] + "\r\n");
         }
         fileWriter.close();
     }

@@ -21,6 +21,7 @@ import util.handlers.AddButtonHandler;
 import util.handlers.EditButtonHandler;
 import util.handlers.RemoveButtonHandler;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,7 +45,7 @@ public class UIpainter {
         VBox root = new VBox();
         List<String> list = contentStore.getTabList();
         String logText = ("Добро пожаловать в программу - Cartridge Master 4000  ");
-        TextArea log = new TextArea(logText);
+        TextArea log = new TextArea(logText+"\r\n");
         log.setEditable(false);
         log.setMaxHeight(100);
         log.setMinHeight(100);
@@ -59,6 +60,11 @@ public class UIpainter {
     }
 
     public TabPane initialTabPane(List<String> listTabs, TextArea log) {
+        try {
+            contentStore.saveLog(log.getText());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         TabPane tabPane = new TabPane();
         Tab tableTab;
         Tab tableTabUtilized = new Tab();
@@ -197,10 +203,14 @@ public class UIpainter {
             table.getColumns().add(locationColumn);
             locationColumn.setMinWidth(100);
 
+            //table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
             TableColumn<Cartridge, String> noticeColumn = new TableColumn<Cartridge, String>("Примечание");
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("notice"));
             table.getColumns().add(noticeColumn);
             noticeColumn.setMinWidth(683);
+
+
 
             TableColumn actionColEdit = new TableColumn("Edit");
             actionColEdit.setMaxWidth(35);
