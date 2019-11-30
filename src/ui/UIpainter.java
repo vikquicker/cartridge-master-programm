@@ -2,15 +2,18 @@ package ui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import models.Cartridge;
@@ -52,6 +55,7 @@ public class UIpainter {
         root.getChildren().addAll(initialTabPane(list, log), log);
         primaryStage.setTitle("Cartridge Master 4000");
         Scene scene = new Scene(root);
+        scene.getStylesheets().add("/resources/css/main.css");
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(1200);
         primaryStage.setMaxHeight(720);
@@ -83,6 +87,7 @@ public class UIpainter {
                 tableTab = new Tab(presentedTabName);
 
                 Button addItem = new Button("Добавить");
+                addItem.getStyleClass().add("addButton");
                 vBoxForButtonAndScroll.getChildren().add(addItem);
 
                 ArrayList<Cartridge> arrayList = new ArrayList<>();
@@ -203,13 +208,12 @@ public class UIpainter {
             table.getColumns().add(locationColumn);
             locationColumn.setMinWidth(100);
 
-            //table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
 
             TableColumn<Cartridge, String> noticeColumn = new TableColumn<Cartridge, String>("Примечание");
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("notice"));
             table.getColumns().add(noticeColumn);
             noticeColumn.setMinWidth(683);
-
 
 
             TableColumn actionColEdit = new TableColumn("Edit");
@@ -317,6 +321,37 @@ public class UIpainter {
                         }
                     };
 
+            table.setEditable(false);
+            Callback<TableColumn<Cartridge, String>, TableCell<Cartridge, String>> showNoticeFactory =
+                    new Callback<TableColumn, TableCell>() {
+                        public TableCell call(TableColumn p) {
+                            TableCell cell = new TableCell<Cartridge, String>() {
+                                @Override
+                                public void updateItem(String item, boolean empty) {
+                                    super.updateItem(item, empty);
+                                    setText(empty ? null : getString());
+                                    setGraphic(null);
+                                }
+
+                                private String getString() {
+                                    return getItem() == null ? "" : getItem().toString();
+                                }
+                            };
+
+                            cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                                @Override
+                                public void handle(MouseEvent event) {
+                                    if (event.getClickCount() > 1) {
+                                        textToShow(cell.getText());
+                                    }
+                                }
+                            });
+                            return cell;
+                        }
+                    };
+
+            noticeColumn.setCellFactory(showNoticeFactory);
+
             actionColEdit.setCellFactory(cellFactoryEdit);
             table.getColumns().add(actionColEdit);
 
@@ -404,4 +439,13 @@ public class UIpainter {
             return table;
         }
     }
+
+    public String textToShow(String str){
+        Stage newWindow = new Stage();
+
+        newWindow.initModality(Modality.APPLICATION_MODAL);
+        newWindow.setResizable(false);
+        return str;
+    }
+
 }
