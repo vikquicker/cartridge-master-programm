@@ -95,8 +95,26 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         deleteLocation.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                String cartridgeLocation = cartridgeFromContent.getLocation();
                 contentStore.getLocationList().remove(locationField.getValue());
                 cartridgeFromContent.setLocation("");
+
+                for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
+                    if (contentStore.getSummaryArrayList().get(i).getOpsLocation().equals(cartridgeLocation)) {
+                        contentStore.getSummaryArrayList().remove(i);
+                    }
+                }
+                tabSummary.getItems().clear();
+                HashMap<String, Integer> summaryCount = contentStore.summuryCount();
+                Summary summaryNew;
+                contentStore.getSummaryArrayList().clear();
+                for (Map.Entry<String, Integer> countAndLocation : summaryCount.entrySet()) {
+                    summaryNew = new Summary();
+                    summaryNew.setOpsLocation(countAndLocation.getKey());
+                    summaryNew.setCount(countAndLocation.getValue());
+                    contentStore.getSummaryArrayList().add(summaryNew);
+                }
+                tabSummary.getItems().addAll(contentStore.getSummaryArrayList());
 
                 contentStore.saveContent();
 
