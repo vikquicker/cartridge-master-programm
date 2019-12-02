@@ -5,10 +5,10 @@ import java.time.LocalDate;
 
 public class Utilized implements Serializable {
     double id;
-    String number;// = "ercf";
-    String status;// = "wdc";
-    LocalDate date;// = new Date(10000);
-    String notice;// = "wdfcvef";
+    String number;
+    String status;
+    LocalDate date;
+    String notice;
 
     public String getNumber() {
         return number;

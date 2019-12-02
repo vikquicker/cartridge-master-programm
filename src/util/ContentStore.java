@@ -3,18 +3,12 @@ package util;
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
-import util.handlers.EditButtonHandler;
-import util.handlers.RemoveButtonHandler;
-
-import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
 public class ContentStore implements Serializable {
-    //private final static String START_FILE = "start.res";
     static String START_FILE = Paths.get("").toAbsolutePath().toString();
     private static ContentStore contentStore;
 
@@ -32,7 +26,7 @@ public class ContentStore implements Serializable {
         if (contentStore != null) {
             return contentStore;
         }
-        contentStore = (ContentStore) readContent(START_FILE + ".res");
+        contentStore = (ContentStore) readContent(START_FILE + "backUp.res");
         if (contentStore == null) {
             contentStore = new ContentStore();
         }
@@ -123,7 +117,7 @@ public class ContentStore implements Serializable {
     public void saveContent() {
         try {
             String root = Paths.get("").toAbsolutePath().toString();
-            FileOutputStream writeInFile = new FileOutputStream(root + ".res");
+            FileOutputStream writeInFile = new FileOutputStream(root + "backUp.res");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(writeInFile);
             objectOutputStream.writeObject(this);
             objectOutputStream.close();
@@ -135,7 +129,7 @@ public class ContentStore implements Serializable {
     public void saveLog(String text) throws IOException {
         String[] array = text.split("  ");
         String root = Paths.get("").toAbsolutePath().toString();
-        FileWriter fileWriter = new FileWriter(root + ".txt", true);
+        FileWriter fileWriter = new FileWriter(root + "log.txt", true);
         for (int i = 0; i < array.length; i++) {
             fileWriter.write(array[i] + "\r\n");
         }

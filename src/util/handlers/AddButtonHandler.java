@@ -21,6 +21,7 @@ import util.ContentStore;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.time.LocalDate;
 import java.util.*;
@@ -212,8 +213,10 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     window.setScene(sceneWithLabels1);
                     window.show();
 
-                    String str = new File("src/ui/video.mp4").getAbsolutePath();
+                    String str = new File("src/util/handlers/video.mp4").getAbsolutePath();
                     Media media = new Media(new File(str).toURI().toString());
+
+
                     MediaPlayer mediaPlayer = new MediaPlayer(media);
                     MediaView mediaView = new MediaView(mediaPlayer);
                     pane.getChildren().add(mediaView);

@@ -2,6 +2,7 @@ package ui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -48,7 +49,7 @@ public class UIpainter {
         VBox root = new VBox();
         List<String> list = contentStore.getTabList();
         String logText = ("Добро пожаловать в программу - Cartridge Master 4000  ");
-        TextArea log = new TextArea(logText+"\r\n");
+        TextArea log = new TextArea(logText + "\r\n");
         log.setEditable(false);
         log.setMaxHeight(100);
         log.setMinHeight(100);
@@ -209,7 +210,6 @@ public class UIpainter {
             locationColumn.setMinWidth(100);
 
 
-
             TableColumn<Cartridge, String> noticeColumn = new TableColumn<Cartridge, String>("Примечание");
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("notice"));
             table.getColumns().add(noticeColumn);
@@ -243,10 +243,10 @@ public class UIpainter {
                             } else if (cartridge.getStatus().equals("Списан")) {
                                 setTextFill(Color.CHOCOLATE);
                                 setStyle("-fx-background-color: red");
-                            }else if (cartridge.getStatus().equals("На заправке 1") || cartridge.getStatus().equals("На заправке 2")) {
+                            } else if (cartridge.getStatus().equals("На заправке 1") || cartridge.getStatus().equals("На заправке 2")) {
                                 setTextFill(Color.CHOCOLATE);
                                 setStyle("-fx-background-color: blue");
-                            }else if (cartridge.getStatus().equals("На отделении")) {
+                            } else if (cartridge.getStatus().equals("На отделении")) {
                                 setTextFill(Color.CHOCOLATE);
                                 setStyle("-fx-background-color: orange");
                             }
@@ -323,7 +323,7 @@ public class UIpainter {
 
             table.setEditable(false);
             Callback<TableColumn<Cartridge, String>, TableCell<Cartridge, String>> showNoticeFactory =
-                    new Callback<TableColumn, TableCell>() {
+                    new Callback<TableColumn<Cartridge, String>, TableCell<Cartridge, String>>() {
                         public TableCell call(TableColumn p) {
                             TableCell cell = new TableCell<Cartridge, String>() {
                                 @Override
@@ -341,9 +341,7 @@ public class UIpainter {
                             cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                                 @Override
                                 public void handle(MouseEvent event) {
-                                    if (event.getClickCount() > 1) {
                                         textToShow(cell.getText());
-                                    }
                                 }
                             });
                             return cell;
@@ -436,15 +434,66 @@ public class UIpainter {
             table.getColumns().add(noticeColumn);
             noticeColumn.setMinWidth(897);
 
+            table.setEditable(false);
+            Callback<TableColumn<Utilized, String>, TableCell<Utilized, String>> showNoticeFactory =
+                    new Callback<TableColumn<Utilized, String>, TableCell<Utilized, String>>() {
+                        public TableCell call(TableColumn p) {
+                            TableCell cell = new TableCell<Cartridge, String>() {
+                                @Override
+                                public void updateItem(String item, boolean empty) {
+                                    super.updateItem(item, empty);
+                                    setText(empty ? null : getString());
+                                    setGraphic(null);
+                                }
+
+                                private String getString() {
+                                    return getItem() == null ? "" : getItem().toString();
+                                }
+                            };
+
+                            cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                                @Override
+                                public void handle(MouseEvent event) {
+                                    textToShow(cell.getText());
+                                }
+                            });
+                            return cell;
+                        }
+                    };
+
+            noticeColumn.setCellFactory(showNoticeFactory);
+
             return table;
         }
     }
 
-    public String textToShow(String str){
+    public String textToShow(String str) {
+        Pane pane = new Pane();
         Stage newWindow = new Stage();
-
         newWindow.initModality(Modality.APPLICATION_MODAL);
         newWindow.setResizable(false);
+
+        Scene sceneWithLabels1 = new Scene(pane, 600, 215);
+        TextArea textArea = new TextArea();
+        textArea.setMinWidth(610);
+        textArea.setText(str);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+
+        Button ok = new Button("Ok");
+        ok.getStyleClass().add("ok");
+        ok.setLayoutX(280);
+        ok.setLayoutY(190);
+        ok.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                newWindow.close();
+            }
+        });
+        pane.getChildren().addAll(textArea,ok);
+
+        newWindow.setScene(sceneWithLabels1);
+        newWindow.show();
         return str;
     }
 
