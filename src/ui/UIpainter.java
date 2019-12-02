@@ -46,6 +46,9 @@ public class UIpainter {
     }
 
     public void createUI(Stage primaryStage) {
+        InputStream inputStreamIco = getClass().getResourceAsStream("cat.png");
+        primaryStage.getIcons().add(new Image(inputStreamIco));
+
         VBox root = new VBox();
         List<String> list = contentStore.getTabList();
         String logText = ("Добро пожаловать в программу - Cartridge Master 4000  ");
