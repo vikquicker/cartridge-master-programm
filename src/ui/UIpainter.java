@@ -27,6 +27,7 @@ import util.handlers.RemoveButtonHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,7 +48,10 @@ public class UIpainter {
     private UIpainter() {
     }
 
+
+
     public void createUI(Stage primaryStage) {
+
         InputStream inputStreamIco = getClass().getResourceAsStream("cat.png");
         primaryStage.getIcons().add(new Image(inputStreamIco));
 

@@ -3,6 +3,7 @@ package util;
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -134,6 +135,22 @@ public class ContentStore implements Serializable {
         }
         fileWriter.close();
     }
+
+//    public void protectTwoAplicationSave(String str) throws IOException {
+//        String root = Paths.get("").toAbsolutePath().toString();
+//        FileWriter fileWriter = new FileWriter(root + "protectTwoAplicationSave.txt");
+//        fileWriter.write(str);
+//        fileWriter.close();
+//    }
+//
+//    public String protectTwoAplicationread() throws IOException, ClassNotFoundException {
+//        String root = Paths.get("" + "protectTwoAplicationSave.txt").toAbsolutePath().toString();
+//        FileInputStream readFile = new FileInputStream(root);
+//        ObjectInputStream inputStream = new ObjectInputStream(readFile);
+//        String list = (String) inputStream.readObject();
+//        inputStream.close();
+//        return list;
+//    }
 
     public static Object readContent(String listName) {
         if (!Files.exists(Paths.get(listName))) {
