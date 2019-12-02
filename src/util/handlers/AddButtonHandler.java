@@ -19,6 +19,7 @@ import models.Summary;
 import models.Utilized;
 import util.ContentStore;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,7 +76,8 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         statusField.setValue("Пустой");
 
         DatePicker dateField = new DatePicker();
-        dateField.setValue(LocalDate.of(2016, 1, 1));
+        Date date = new Date();
+        dateField.setValue(LocalDate.now());
         dateField.setShowWeekNumbers(true);
         dateField.setMaxWidth(100);
 
