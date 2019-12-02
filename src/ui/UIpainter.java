@@ -48,7 +48,6 @@ public class UIpainter {
     }
 
     public void createUI(Stage primaryStage) {
-        socket.set
         InputStream inputStreamIco = getClass().getResourceAsStream("cat.png");
         primaryStage.getIcons().add(new Image(inputStreamIco));
 
