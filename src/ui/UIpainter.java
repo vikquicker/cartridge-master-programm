@@ -88,7 +88,6 @@ public class UIpainter {
                 tableTab = new Tab(presentedTabName);
 
                 Button addItem = new Button("Добавить");
-                addItem.getStyleClass().add("addButton");
                 vBoxForButtonAndScroll.getChildren().add(addItem);
 
                 ArrayList<Cartridge> arrayList = new ArrayList<>();

@@ -91,6 +91,23 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         TextField locationFieldNew = new TextField();
         locationFieldNew.setMaxWidth(100);
 
+        Button deleteLocation = new Button("Удалить");
+        deleteLocation.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                contentStore.getLocationList().remove(locationField.getValue());
+                cartridgeFromContent.setLocation("");
+
+                contentStore.saveContent();
+
+                tabCartridge.refresh();
+                tabSummary.refresh();
+                tabUtilized.refresh();
+
+                newWindow.close();
+            }
+        });
+
         TextArea textAreaField = new TextArea();
         textAreaField.setMaxSize(215, 70);
         textAreaField.setText(cartridgeFromContent.getNotice());
@@ -229,6 +246,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         dateField.setLayoutY(40);
         textAreaField.setLayoutY(25);
         locationField.setLayoutY(25);
+        deleteLocation.setLayoutY(25);
         locationFieldNew.setLayoutY(70);
         add.setLayoutY(29);
 
@@ -236,17 +254,18 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         numberLabel.setLayoutX(40);
         statusLabel.setLayoutX(165);
         dataLabel.setLayoutX(298);
-        locationLabel.setLayoutX(430);
+        locationLabel.setLayoutX(390);
         noticeLabel.setLayoutX(650);
-        locationLabelNew.setLayoutX(425);
+        locationLabelNew.setLayoutX(385);
 
         //Position FieldX
         numberField.setLayoutX(20);
         statusField.setLayoutX(120);
         dateField.setLayoutX(262);
         textAreaField.setLayoutX(580);
-        locationField.setLayoutX(420);
-        locationFieldNew.setLayoutX(420);
+        locationField.setLayoutX(380);
+        deleteLocation.setLayoutX(500);
+        locationFieldNew.setLayoutX(380);
         add.setLayoutX(815);
 
         pane.getChildren().addAll(numberLabel, statusLabel, dataLabel, locationLabel, noticeLabel,
@@ -257,7 +276,8 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                 locationField,
                 locationFieldNew,
                 locationLabelNew,
-                add);
+                add,
+                deleteLocation);
         Scene sceneWithLabels1 = new Scene(pane, 945, 90);
         newWindow.setScene(sceneWithLabels1);
         newWindow.show();

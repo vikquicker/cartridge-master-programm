@@ -22,6 +22,7 @@ import util.ContentStore;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.text.DateFormat;
 import java.time.LocalDate;
 import java.util.*;
@@ -80,7 +81,12 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
 
         ObservableList<String> locationList = FXCollections.observableArrayList(contentStore.getLocationList());
         ComboBox<String> locationField = new ComboBox<>(locationList);
-        locationField.setValue(locationList.get(0));
+        try{
+            locationField.setValue(locationList.get(0));
+        }catch (Exception e){
+
+        }
+
         locationField.setMinWidth(100);
 
         TextField locationFieldNew = new TextField();
@@ -213,9 +219,8 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     window.setScene(sceneWithLabels1);
                     window.show();
 
-                    String str = new File("src/util/handlers/video.mp4").getAbsolutePath();
-                    Media media = new Media(new File(str).toURI().toString());
-
+                    URL str = getClass().getResource("video.mp4");
+                    Media media = new Media(str.toString());
 
                     MediaPlayer mediaPlayer = new MediaPlayer(media);
                     MediaView mediaView = new MediaView(mediaPlayer);

@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class ContentStore implements Serializable {
-    static String START_FILE = Paths.get("").toAbsolutePath().toString();
+    static String START_FILE = System.getProperty("user.dir");
     private static ContentStore contentStore;
 
     Map<String, ArrayList<Cartridge>> cartridgesMap;
@@ -68,7 +68,6 @@ public class ContentStore implements Serializable {
         tabList.add("q_115");
         tabList.add("q_226");
         locationList.add("356542");
-        locationList.add("356532");
     }
 
 
