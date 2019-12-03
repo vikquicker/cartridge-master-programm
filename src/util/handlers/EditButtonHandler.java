@@ -69,6 +69,8 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         ObservableList<String> statusList = FXCollections.observableArrayList("На отделении",
                 "На заправке 1",
                 "На заправке 2",
+                "На заправке 3",
+                "До выяснения",
                 "Списан",
                 "Заправлен",
                 "Пустой");
@@ -143,6 +145,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
             @Override
             public void handle(ActionEvent event) {
                 String previosStatus = cartridgeFromContent.getStatus();
+                int previosLocation = cartridgeFromContent.getLocation();
                 Integer cartridgeLocation = cartridgeFromContent.getLocation();
 
                 cartridgeFromContent.setNumber(numberField.getText());
@@ -239,14 +242,56 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                     }
                 }
 
-                Date date = new Date();
-                DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
-                log.appendText("\n" + dateFormat.format(date) + " : Элемент эволюционировал в новую форму  ");
+                if (previosLocation != cartridgeFromContent.getLocation() && !previosStatus.equals(cartridgeFromContent.getStatus())) {
+                    Date date = new Date();
+                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
+                            " Переехал с: " + previosLocation + " на: " + cartridgeFromContent.getLocation() + " статус: " +
+                            previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + "  ");
 
-                try {
-                    contentStore.saveLog(log.getText().substring(log.getLength() - 72));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    String str = log.getText();
+                    try {
+                        contentStore.saveLog(str);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (!previosStatus.equals(cartridgeFromContent.getStatus())) {
+                    Date date = new Date();
+                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
+                            " Статус: " + previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + " Расположение: " +
+                            cartridgeFromContent.getLocation() + "  ");
+
+                    String str = log.getText();
+                    try {
+                        contentStore.saveLog(str);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (previosLocation != cartridgeFromContent.getLocation()) {
+                    Date date = new Date();
+                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
+                            " Переехал с: " + previosLocation + " на: " + cartridgeFromContent.getLocation() + " статус: " +
+                            cartridgeFromContent.getStatus() + "  ");
+
+                    String str = log.getText();
+                    try {
+                        contentStore.saveLog(str);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Date date = new Date();
+                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() + " изменён  ");
+
+                    String str = log.getText();
+                    try {
+                        contentStore.saveLog(str);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 contentStore.saveContent();

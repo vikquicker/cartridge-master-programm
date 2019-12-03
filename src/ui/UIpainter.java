@@ -49,7 +49,6 @@ public class UIpainter {
     }
 
 
-
     public void createUI(Stage primaryStage) {
 
         InputStream inputStreamIco = getClass().getResourceAsStream("cat.png");
@@ -251,12 +250,21 @@ public class UIpainter {
                             } else if (cartridge.getStatus().equals("Списан")) {
                                 setTextFill(Color.CHOCOLATE);
                                 setStyle("-fx-background-color: red");
-                            } else if (cartridge.getStatus().equals("На заправке 1") || cartridge.getStatus().equals("На заправке 2")) {
+                            } else if (cartridge.getStatus().equals("На заправке 1")) {
                                 setTextFill(Color.CHOCOLATE);
                                 setStyle("-fx-background-color: blue");
                             } else if (cartridge.getStatus().equals("На отделении")) {
                                 setTextFill(Color.CHOCOLATE);
                                 setStyle("-fx-background-color: orange");
+                            } else if (cartridge.getStatus().equals("До выяснения")) {
+                                setTextFill(Color.CHOCOLATE);
+                                setStyle("-fx-background-color: grey");
+                            } else if (cartridge.getStatus().equals("На заправке 2")) {
+                                setTextFill(Color.CHOCOLATE);
+                                setStyle("-fx-background-color: turquoise");
+                            } else if (cartridge.getStatus().equals("На заправке 3")) {
+                                setTextFill(Color.CHOCOLATE);
+                                setStyle("-fx-background-color: purple");
                             }
                         }
                     }
@@ -349,7 +357,7 @@ public class UIpainter {
                             cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                                 @Override
                                 public void handle(MouseEvent event) {
-                                        textToShow(cell.getText());
+                                    textToShow(cell.getText());
                                 }
                             });
                             return cell;
@@ -498,7 +506,7 @@ public class UIpainter {
                 newWindow.close();
             }
         });
-        pane.getChildren().addAll(textArea,ok);
+        pane.getChildren().addAll(textArea, ok);
 
         newWindow.setScene(sceneWithLabels1);
         newWindow.show();

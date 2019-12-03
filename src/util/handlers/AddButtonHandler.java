@@ -67,6 +67,8 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         ObservableList<String> statusList = FXCollections.observableArrayList("На отделении",
                 "На заправке 1",
                 "На заправке 2",
+                "На заправке 3",
+                "До выяснения",
                 "Списан",
                 "Заправлен");
         ComboBox<String> statusField = new ComboBox<>(statusList);
@@ -79,9 +81,9 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
 
         ObservableList<Integer> locationList = FXCollections.observableArrayList(contentStore.getLocationList());
         ComboBox<Integer> locationField = new ComboBox<>(locationList);
-        try{
+        try {
             locationField.setValue(null);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -196,10 +198,12 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
 
                     Date date = new Date();
                     DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
-                    log.appendText("\n" + dateFormat.format(date) + " : Элемент добавлен  ");
+                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeToAdd.getNumber() + " добавлен на отделение " +
+                            cartridgeToAdd.getLocation() + " статус : " + cartridgeToAdd.getStatus() + "  ");
 
+                    String str = log.getText();
                     try {
-                        contentStore.saveLog(log.getText().substring(log.getLength() - 51));
+                        contentStore.saveLog(str);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -229,8 +233,9 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
                     log.appendText("\n" + dateFormat.format(date) + " : Жизнь за Нерзула!!!  ");
 
+                    String str1 = log.getText();
                     try {
-                        contentStore.saveLog(log.getText().substring(log.getLength() - 54));
+                        contentStore.saveLog(str1);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

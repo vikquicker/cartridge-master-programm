@@ -29,8 +29,8 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
     private TableView<Summary> tabSummary;
     TextArea log;
 
-    public RemoveButtonHandler(String str, Cartridge cartridgeForRemove,TableView<Cartridge> tabCartridge,
-                               TableView<Utilized> tabUtilized,TableView<Summary> tabSummary,TextArea log) {
+    public RemoveButtonHandler(String str, Cartridge cartridgeForRemove, TableView<Cartridge> tabCartridge,
+                               TableView<Utilized> tabUtilized, TableView<Summary> tabSummary, TextArea log) {
         this.tabCartridge = tabCartridge;
         this.tabUtilized = tabUtilized;
         this.tabSummary = tabSummary;
@@ -97,11 +97,12 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
                 }
 
                 Date date = new Date();
-                DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,new Locale("ru"));
-                log.appendText("\n" + dateFormat.format(date) + " : Элемент аннигилирован на атомы  ");
+                DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+                log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeForRemove.getNumber() + " аннигилирован на атомы  ");
 
+                String str = log.getText();
                 try {
-                    contentStore.saveLog(log.getText().substring(log.getLength() - 65));
+                    contentStore.saveLog(str);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
