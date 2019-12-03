@@ -83,8 +83,8 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         dateField.setShowWeekNumbers(true);
         dateField.setMaxWidth(100);
 
-        ObservableList<String> locationList = FXCollections.observableArrayList(contentStore.getLocationList());
-        ComboBox<String> locationField = new ComboBox<>(locationList);
+        ObservableList<Integer> locationList = FXCollections.observableArrayList(contentStore.getLocationList());
+        ComboBox<Integer> locationField = new ComboBox<>(locationList);
         locationField.setValue(cartridgeFromContent.getLocation());
         locationField.setMinWidth(100);
 
@@ -95,9 +95,9 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         deleteLocation.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                String cartridgeLocation = cartridgeFromContent.getLocation();
+                Integer cartridgeLocation = cartridgeFromContent.getLocation();
                 contentStore.getLocationList().remove(locationField.getValue());
-                cartridgeFromContent.setLocation("");
+                cartridgeFromContent.setLocation(null);
 
                 for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
                     if (contentStore.getSummaryArrayList().get(i).getOpsLocation().equals(cartridgeLocation)) {
@@ -145,14 +145,14 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
             @Override
             public void handle(ActionEvent event) {
                 String previosStatus = cartridgeFromContent.getStatus();
-                String cartridgeLocation = cartridgeFromContent.getLocation();
+                Integer cartridgeLocation = cartridgeFromContent.getLocation();
 
                 cartridgeFromContent.setNumber(numberField.getText());
                 cartridgeFromContent.setStatus(statusField.getValue());
                 cartridgeFromContent.setDate(dateField.getValue());
                 if (locationFieldNew.getLength() > 0) {
-                    contentStore.getLocationList().add(locationFieldNew.getText());
-                    cartridgeFromContent.setLocation(locationFieldNew.getText());
+                    contentStore.getLocationList().add(Integer.valueOf(locationFieldNew.getText()));
+                    cartridgeFromContent.setLocation(Integer.valueOf(locationFieldNew.getText()));
                 } else {
                     cartridgeFromContent.setLocation(locationField.getValue());
                 }

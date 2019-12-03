@@ -10,7 +10,7 @@ public class Cartridge implements Serializable {
     String number ;
     String status;
     LocalDate date;
-    String location;
+    Integer location;
     String notice;
 
     public String getColor() {
@@ -62,11 +62,11 @@ public class Cartridge implements Serializable {
         this.date = date;
     }
 
-    public String getLocation() {
+    public Integer getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Integer location) {
         this.location = location;
     }
 

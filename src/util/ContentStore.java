@@ -17,9 +17,9 @@ public class ContentStore implements Serializable {
     private ArrayList<Summary> summaryArrayList;
     private ArrayList<Utilized> utilizedArrayList;
     ArrayList<String> tabList;
-    private Set<String> locationList;
+    private SortedSet<Integer> locationList;
 
-    public Set<String> getLocationList() {
+    public SortedSet<Integer> getLocationList() {
         return locationList;
     }
 
@@ -59,7 +59,7 @@ public class ContentStore implements Serializable {
         summaryArrayList = new ArrayList<>();
         utilizedArrayList = new ArrayList<>();
         tabList = new ArrayList<>();
-        locationList = new HashSet<String>();
+        locationList = new TreeSet<>();
         this.getCartridgesMap().put("q_111", new ArrayList<Cartridge>());
         this.getCartridgesMap().put("q_115", new ArrayList<Cartridge>());
         this.getCartridgesMap().put("q_226", new ArrayList<Cartridge>());
@@ -68,7 +68,7 @@ public class ContentStore implements Serializable {
         tabList.add("q_111");
         tabList.add("q_115");
         tabList.add("q_226");
-        locationList.add("356542");
+        //locationList.add("356542");
     }
 
 
@@ -76,24 +76,24 @@ public class ContentStore implements Serializable {
         ArrayList<String> arrayListCount = new ArrayList<>();
         HashMap<String, Integer> numberOfCartridges = new HashMap<>();
         for (int i = 0; i < contentStore.getCartridgesMap().get("q_111").size(); i++) {
-            String location111 = contentStore.getCartridgesMap().get("q_111").get(i).getLocation();
+            Integer location111 = contentStore.getCartridgesMap().get("q_111").get(i).getLocation();
             String status111 = contentStore.getCartridgesMap().get("q_111").get(i).getStatus();
             if (status111.equals("На отделении")) {
-                arrayListCount.add(location111);
+                arrayListCount.add(String.valueOf(location111));
             }
         }
         for (int i = 0; i < contentStore.getCartridgesMap().get("q_115").size(); i++) {
-            String location115 = contentStore.getCartridgesMap().get("q_115").get(i).getLocation();
+            Integer location115 = contentStore.getCartridgesMap().get("q_115").get(i).getLocation();
             String status115 = contentStore.getCartridgesMap().get("q_115").get(i).getStatus();
             if (status115.equals("На отделении")) {
-                arrayListCount.add(location115);
+                arrayListCount.add(String.valueOf(location115));
             }
         }
         for (int i = 0; i < contentStore.getCartridgesMap().get("q_226").size(); i++) {
-            String location226 = contentStore.getCartridgesMap().get("q_226").get(i).getLocation();
+            Integer location226 = contentStore.getCartridgesMap().get("q_226").get(i).getLocation();
             String status226 = contentStore.getCartridgesMap().get("q_226").get(i).getStatus();
             if (status226.equals("На отделении")) {
-                arrayListCount.add(location226);
+                arrayListCount.add(String.valueOf(location226));
             }
         }
 
@@ -136,21 +136,6 @@ public class ContentStore implements Serializable {
         fileWriter.close();
     }
 
-//    public void protectTwoAplicationSave(String str) throws IOException {
-//        String root = Paths.get("").toAbsolutePath().toString();
-//        FileWriter fileWriter = new FileWriter(root + "protectTwoAplicationSave.txt");
-//        fileWriter.write(str);
-//        fileWriter.close();
-//    }
-//
-//    public String protectTwoAplicationread() throws IOException, ClassNotFoundException {
-//        String root = Paths.get("" + "protectTwoAplicationSave.txt").toAbsolutePath().toString();
-//        FileInputStream readFile = new FileInputStream(root);
-//        ObjectInputStream inputStream = new ObjectInputStream(readFile);
-//        String list = (String) inputStream.readObject();
-//        inputStream.close();
-//        return list;
-//    }
 
     public static Object readContent(String listName) {
         if (!Files.exists(Paths.get(listName))) {

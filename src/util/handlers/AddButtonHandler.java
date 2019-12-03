@@ -76,15 +76,14 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         statusField.setValue("Пустой");
 
         DatePicker dateField = new DatePicker();
-        Date date = new Date();
         dateField.setValue(LocalDate.now());
         dateField.setShowWeekNumbers(true);
         dateField.setMaxWidth(100);
 
-        ObservableList<String> locationList = FXCollections.observableArrayList(contentStore.getLocationList());
-        ComboBox<String> locationField = new ComboBox<>(locationList);
+        ObservableList<Integer> locationList = FXCollections.observableArrayList(contentStore.getLocationList());
+        ComboBox<Integer> locationField = new ComboBox<>(locationList);
         try{
-            locationField.setValue(locationList.get(0));
+            locationField.setValue((locationList.get(0)));
         }catch (Exception e){
 
         }
@@ -163,8 +162,8 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     cartridgeToAdd.setDate(dateField.getValue());
                     //TODO Validation
                     if (locationFieldNew.getLength() > 0) {
-                        contentStore.getLocationList().add(locationFieldNew.getText());
-                        cartridgeToAdd.setLocation(locationFieldNew.getText());
+                        contentStore.getLocationList().add(Integer.valueOf(locationFieldNew.getText()));
+                        cartridgeToAdd.setLocation(Integer.valueOf(locationFieldNew.getText()));
                     } else {
                         cartridgeToAdd.setLocation(locationField.getValue());
                     }

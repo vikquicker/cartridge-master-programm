@@ -61,7 +61,7 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
             @Override
             public void handle(ActionEvent event) {
                 String cartridgeStatus = cartridgeForRemove.getStatus();
-                String cartridgeLocation = cartridgeForRemove.getLocation();
+                Integer cartridgeLocation = cartridgeForRemove.getLocation();
                 contentStore.getCartridgesMap().get("q_" + tabName).remove(cartridgeForRemove);
                 tabCartridge.getItems().remove(cartridgeForRemove);
                 tabCartridge.refresh();
