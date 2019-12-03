@@ -19,10 +19,7 @@ import models.Summary;
 import models.Utilized;
 import util.ContentStore;
 
-import javax.xml.crypto.Data;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.text.DateFormat;
 import java.time.LocalDate;
@@ -83,7 +80,7 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         ObservableList<Integer> locationList = FXCollections.observableArrayList(contentStore.getLocationList());
         ComboBox<Integer> locationField = new ComboBox<>(locationList);
         try{
-            locationField.setValue((locationList.get(0)));
+            locationField.setValue(null);
         }catch (Exception e){
 
         }

@@ -16,10 +16,7 @@ import util.ContentStore;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class EditButtonHandler implements EventHandler<ActionEvent> {
     ContentStore contentStore = ContentStore.getContentStore();
@@ -35,7 +32,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
     public EditButtonHandler(String str, double cartridgeForEdit,
                              TableView<Cartridge> tabCartridge,
                              TableView<Utilized> tabUtilized,
-                             TableView<Summary> tabSummary, Cartridge cartridgeFromContent,TextArea log) {
+                             TableView<Summary> tabSummary, Cartridge cartridgeFromContent, TextArea log) {
         this.tabCartridge = tabCartridge;
         this.tabUtilized = tabUtilized;
         this.tabSummary = tabSummary;
@@ -91,6 +88,14 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         TextField locationFieldNew = new TextField();
         locationFieldNew.setMaxWidth(100);
 
+        ArrayList<String> locationArrayListNull = new ArrayList<>();
+        locationArrayListNull.add("Пустое");
+        locationArrayListNull.add("Есть");
+        ObservableList<String> locationListNull = FXCollections.observableArrayList(locationArrayListNull);
+        ComboBox<String> locationFieldNull = new ComboBox<>(locationListNull);
+        locationFieldNull.setValue(locationArrayListNull.get(1));
+        locationFieldNull.setMaxWidth(85);
+
         Button deleteLocation = new Button("Удалить");
         deleteLocation.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -131,13 +136,6 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         textAreaField.setText(cartridgeFromContent.getNotice());
         textAreaField.setWrapText(true);
 
-        //Position LabelY
-        statusLabel.setLayoutY(5);
-        numberLabel.setLayoutY(5);
-        dataLabel.setLayoutY(5);
-        locationLabel.setLayoutY(5);
-        noticeLabel.setLayoutY(5);
-        locationLabelNew.setLayoutY(50);
 
         Button add = new Button("Модифицировать!!!");
         add.setMinSize(80, 60);
@@ -155,6 +153,10 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                     cartridgeFromContent.setLocation(Integer.valueOf(locationFieldNew.getText()));
                 } else {
                     cartridgeFromContent.setLocation(locationField.getValue());
+                }
+
+                if (locationFieldNull.getValue().equals("Пустое")) {
+                    cartridgeFromContent.setLocation(null);
                 }
                 cartridgeFromContent.setNotice(textAreaField.getText());
 
@@ -238,7 +240,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                 }
 
                 Date date = new Date();
-                DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,new Locale("ru"));
+                DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
                 log.appendText("\n" + dateFormat.format(date) + " : Элемент эволюционировал в новую форму  ");
 
                 try {
@@ -258,6 +260,22 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         });
 
 
+        //Position LabelY
+        statusLabel.setLayoutY(5);
+        numberLabel.setLayoutY(5);
+        dataLabel.setLayoutY(5);
+        locationLabel.setLayoutY(5);
+        noticeLabel.setLayoutY(5);
+        locationLabelNew.setLayoutY(50);
+
+        //Position LabelX
+        numberLabel.setLayoutX(40);
+        statusLabel.setLayoutX(165);
+        dataLabel.setLayoutX(298);
+        locationLabel.setLayoutX(390);
+        noticeLabel.setLayoutX(650);
+        locationLabelNew.setLayoutX(385);
+
         //Position FieldY
         numberField.setLayoutY(40);
         statusField.setLayoutY(40);
@@ -267,14 +285,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         deleteLocation.setLayoutY(25);
         locationFieldNew.setLayoutY(70);
         add.setLayoutY(29);
-
-        //Position LabelX
-        numberLabel.setLayoutX(40);
-        statusLabel.setLayoutX(165);
-        dataLabel.setLayoutX(298);
-        locationLabel.setLayoutX(390);
-        noticeLabel.setLayoutX(650);
-        locationLabelNew.setLayoutX(385);
+        locationFieldNull.setLayoutY(70);
 
         //Position FieldX
         numberField.setLayoutX(20);
@@ -285,6 +296,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         deleteLocation.setLayoutX(500);
         locationFieldNew.setLayoutX(380);
         add.setLayoutX(815);
+        locationFieldNull.setLayoutX(488);
 
         pane.getChildren().addAll(numberLabel, statusLabel, dataLabel, locationLabel, noticeLabel,
                 numberField,
@@ -295,7 +307,8 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                 locationFieldNew,
                 locationLabelNew,
                 add,
-                deleteLocation);
+                deleteLocation,
+                locationFieldNull);
         Scene sceneWithLabels1 = new Scene(pane, 945, 90);
         newWindow.setScene(sceneWithLabels1);
         newWindow.show();
