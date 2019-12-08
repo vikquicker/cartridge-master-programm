@@ -63,6 +63,13 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
                 String cartridgeStatus = cartridgeForRemove.getStatus();
                 Integer cartridgeLocation = cartridgeForRemove.getLocation();
                 contentStore.getCartridgesMap().get("q_" + tabName).remove(cartridgeForRemove);
+
+                if(tabName.equals("111")){
+                    for (int i = 0; i < contentStore.getCartridgesMap().get("q_111").size(); i++) {
+                        contentStore.getCartridgesMap().get("q_111").get(i).setIdTable(i+1);
+                    }
+                }
+
                 tabCartridge.getItems().remove(cartridgeForRemove);
                 tabCartridge.refresh();
                 if (cartridgeStatus.equals("На отделении")) {
@@ -98,7 +105,12 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
 
                 Date date = new Date();
                 DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
-                log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeForRemove.getNumber() + " аннигилирован на атомы  ");
+
+                if (tabName.equals("111")){
+                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeForRemove.getIdTable() + " аннигилирован на атомы  ");
+                }else{
+                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeForRemove.getNumber() + " аннигилирован на атомы  ");
+                }
 
                 String str = log.getText();
                 try {

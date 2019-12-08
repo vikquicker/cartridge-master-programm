@@ -41,6 +41,19 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         this.tabSummary = tabSummary;
         tabName = str;
         this.log = log;
+
+        if (tabName.equals("111") && contentStore.getLocationList111().size() == 0) {
+            contentStore.getLocationList111().addAll(Arrays.asList(356500,
+                    356501, 356503, 356504, 356505, 356506, 356507, 356511,
+                    356517, 356518, 356520, 356521, 356522, 356524, 356525,
+                    356526, 356527, 356530, 356531, 356532, 356533, 356534,
+                    356535, 356540, 356542, 356543, 356544, 356545, 356550,
+                    356551, 356552, 356554, 356555, 356556, 356557));
+        }else if (tabName.equals("115") && contentStore.getLocationList115().size() == 0){
+            contentStore.getLocationList115().addAll(Arrays.asList("356523", "356537", "356546", "Учебный"));
+        }else if (tabName.equals("226") && contentStore.getLocationList226().size() == 0){
+            contentStore.getLocationList226().addAll(Arrays.asList("Автоколонна", "Начальник", "Зам.начальника", "Бухгалтерия"));
+        }
     }
 
     public void handle(ActionEvent event) {
@@ -79,15 +92,35 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         dateField.setShowWeekNumbers(true);
         dateField.setMaxWidth(100);
 
-        ObservableList<Integer> locationList = FXCollections.observableArrayList(contentStore.getLocationList());
-        ComboBox<Integer> locationField = new ComboBox<>(locationList);
+        //1st location
+        ObservableList<Integer> locationList111= FXCollections.observableArrayList(contentStore.getLocationList111());
+        ComboBox<Integer> locationField111 = new ComboBox<>(locationList111);
+        locationField111.setMinWidth(100);
         try {
-            locationField.setValue(null);
+            locationField111.setValue(null);
         } catch (Exception e) {
 
         }
 
-        locationField.setMinWidth(100);
+        //2rd location
+        ObservableList<String> locationList115= FXCollections.observableArrayList(contentStore.getLocationList115());
+        ComboBox<String> locationField115 = new ComboBox<>(locationList115);
+        locationField115.setMinWidth(100);
+        try {
+            locationField115.setValue(null);
+        } catch (Exception e) {
+
+        }
+
+        //3rd location
+        ObservableList<String> locationList226= FXCollections.observableArrayList(contentStore.getLocationList226());
+        ComboBox<String> locationField226 = new ComboBox<>(locationList226);
+        locationField226.setMinWidth(100);
+        try {
+            locationField226.setValue(null);
+        } catch (Exception e) {
+
+        }
 
         TextField locationFieldNew = new TextField();
         locationFieldNew.setMaxWidth(100);
@@ -104,18 +137,6 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         noticeLabel.setLayoutY(5);
         locationLabelNew.setLayoutY(50);
 
-        Button add = new Button("Добавить");
-        add.setMinSize(80, 60);
-
-        //Position FieldY
-        numberField.setLayoutY(40);
-        statusField.setLayoutY(40);
-        dateField.setLayoutY(40);
-        textAreaField.setLayoutY(25);
-        locationField.setLayoutY(25);
-        locationFieldNew.setLayoutY(70);
-        add.setLayoutY(29);
-
         //Position LabelX
         numberLabel.setLayoutX(40);
         statusLabel.setLayoutX(165);
@@ -124,24 +145,63 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
         noticeLabel.setLayoutX(650);
         locationLabelNew.setLayoutX(425);
 
+        Button add = new Button("Добавить");
+        add.setMinSize(80, 60);
+
+        //Position FieldY
+        numberField.setLayoutY(40);
+        statusField.setLayoutY(40);
+        dateField.setLayoutY(40);
+        textAreaField.setLayoutY(25);
+        locationField111.setLayoutY(25);
+        locationField115.setLayoutY(25);
+        locationField226.setLayoutY(25);
+        locationFieldNew.setLayoutY(70);
+        add.setLayoutY(29);
+
+
         //Position FieldX
         numberField.setLayoutX(20);
         statusField.setLayoutX(120);
         dateField.setLayoutX(262);
         textAreaField.setLayoutX(580);
-        locationField.setLayoutX(420);
+        locationField111.setLayoutX(420);
+        locationField115.setLayoutX(420);
+        locationField226.setLayoutX(420);
         locationFieldNew.setLayoutX(420);
         add.setLayoutX(815);
 
-        pane.getChildren().addAll(numberLabel, statusLabel, dataLabel, locationLabel, noticeLabel,
-                numberField,
-                statusField,
-                dateField,
-                textAreaField,
-                locationField,
-                locationFieldNew,
-                locationLabelNew,
-                add);
+        if (tabName.equals("111")){
+            pane.getChildren().addAll(numberLabel, statusLabel, dataLabel, locationLabel, noticeLabel,
+                    numberField,
+                    statusField,
+                    dateField,
+                    textAreaField,
+                    locationField111,
+                    locationFieldNew,
+                    locationLabelNew,
+                    add);
+        }else if (tabName.equals("115")){
+            pane.getChildren().addAll(numberLabel, statusLabel, dataLabel, locationLabel, noticeLabel,
+                    numberField,
+                    statusField,
+                    dateField,
+                    textAreaField,
+                    locationField115,
+                    locationFieldNew,
+                    locationLabelNew,
+                    add);
+        }else if (tabName.equals("226")){
+            pane.getChildren().addAll(numberLabel, statusLabel, dataLabel, locationLabel, noticeLabel,
+                    numberField,
+                    statusField,
+                    dateField,
+                    textAreaField,
+                    locationField226,
+                    locationFieldNew,
+                    locationLabelNew,
+                    add);
+        }
         Scene sceneWithLabels1 = new Scene(pane, 900, 90);
         newWindow.setScene(sceneWithLabels1);
         newWindow.show();
@@ -154,6 +214,12 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     Cartridge cartridgeToAdd = new Cartridge();
                     Summary summaryNew;
 
+                    if (contentStore.getCartridgesMap().get("q_111").size() == 0) {
+                        cartridgeToAdd.setIdTable(1);
+                    } else {
+                        cartridgeToAdd.setIdTable(contentStore.getCartridgesMap().get("q_111").
+                                get(contentStore.getCartridgesMap().get("q_111").size() - 1).getIdTable() + 1);
+                    }
                     double idToCartridgeAndUtil = Math.random();
                     cartridgeToAdd.setId(idToCartridgeAndUtil);
                     cartridgeToAdd.setNumber(numberField.getText());
@@ -161,10 +227,25 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     cartridgeToAdd.setDate(dateField.getValue());
                     //TODO Validation
                     if (locationFieldNew.getLength() > 0) {
-                        contentStore.getLocationList().add(Integer.valueOf(locationFieldNew.getText()));
-                        cartridgeToAdd.setLocation(Integer.valueOf(locationFieldNew.getText()));
+                        if (tabName.equals("111")){
+                            contentStore.getLocationList111().add(Integer.valueOf(locationFieldNew.getText()));
+                            cartridgeToAdd.setLocation(Integer.valueOf(locationFieldNew.getText()));
+                        }else if(tabName.equals("115")){
+                            contentStore.getLocationList115().add(locationFieldNew.getText());
+                            cartridgeToAdd.setLocationString(locationFieldNew.getText());
+                        }else if(tabName.equals("226")){
+                            contentStore.getLocationList226().add(locationFieldNew.getText());
+                            cartridgeToAdd.setLocationString(locationFieldNew.getText());
+                        }
                     } else {
-                        cartridgeToAdd.setLocation(locationField.getValue());
+                        if (tabName.equals("111")){
+                            cartridgeToAdd.setLocation(locationField111.getValue());
+                        }else if(tabName.equals("115")){
+                            cartridgeToAdd.setLocationString(locationField115.getValue());
+                        }else if(tabName.equals("226")){
+                            cartridgeToAdd.setLocationString(locationField226.getValue());
+                        }
+
                     }
                     cartridgeToAdd.setNotice(textAreaField.getText());
                     contentStore.getCartridgesMap().get("q_" + tabName).add(cartridgeToAdd);
@@ -174,7 +255,11 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                         Utilized utilizedToAdd = new Utilized();
 
                         utilizedToAdd.setId(idToCartridgeAndUtil);
-                        utilizedToAdd.setNumber(numberField.getText());
+                        if (tabName.equals("111")) {
+                            utilizedToAdd.setNumber(String.valueOf(cartridgeToAdd.getIdTable()));
+                        } else {
+                            utilizedToAdd.setNumber(numberField.getText());
+                        }
                         utilizedToAdd.setStatus(statusField.getValue());
                         utilizedToAdd.setDate(dateField.getValue());
                         utilizedToAdd.setNotice(textAreaField.getText());
@@ -198,8 +283,18 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
 
                     Date date = new Date();
                     DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
-                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeToAdd.getNumber() + " добавлен на отделение " +
-                            cartridgeToAdd.getLocation() + " статус : " + cartridgeToAdd.getStatus() + "  ");
+
+                    if (tabName.equals("111")) {
+                        log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeToAdd.getIdTable() + " добавлен на отделение " +
+                                cartridgeToAdd.getLocation() + " статус : " + cartridgeToAdd.getStatus() + "  ");
+                    } else if(tabName.equals("115")){
+                        log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeToAdd.getNumber() + " добавлен на отделение " +
+                                cartridgeToAdd.getLocationString() + " статус : " + cartridgeToAdd.getStatus() + "  ");
+                    }else if(tabName.equals("226")){
+                        log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeToAdd.getNumber() + " добавлен на отделение " +
+                                cartridgeToAdd.getLocationString() + " статус : " + cartridgeToAdd.getStatus() + "  ");
+                    }
+
 
                     String str = log.getText();
                     try {

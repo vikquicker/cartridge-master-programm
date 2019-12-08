@@ -10,6 +10,11 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class ContentStore implements Serializable {
+    private static final long serialVersionUID = 1L;
+    String root = Paths.get("").toAbsolutePath().toString();
+    String saveContent = root + "backUp.res";
+    String saveLog= root + "log.txt";
+
     static String START_FILE = System.getProperty("user.dir");
     private static ContentStore contentStore;
 
@@ -17,11 +22,20 @@ public class ContentStore implements Serializable {
     private ArrayList<Summary> summaryArrayList;
     private ArrayList<Utilized> utilizedArrayList;
     ArrayList<String> tabList;
-    private SortedSet<Integer> locationList;
-
-    public SortedSet<Integer> getLocationList() {
-        return locationList;
+    private SortedSet<Integer> locationList111;
+    private SortedSet<String> locationList115;
+    private SortedSet<String> locationList226;
+    public SortedSet<Integer> getLocationList111() {
+        return locationList111;
     }
+    public SortedSet<String> getLocationList115() {
+        return locationList115;
+    }
+    public SortedSet<String> getLocationList226() {
+        return locationList226;
+    }
+
+
 
     public static ContentStore getContentStore() {
         if (contentStore != null) {
@@ -59,16 +73,18 @@ public class ContentStore implements Serializable {
         summaryArrayList = new ArrayList<>();
         utilizedArrayList = new ArrayList<>();
         tabList = new ArrayList<>();
-        locationList = new TreeSet<>();
+        locationList111 = new TreeSet<>();
+        locationList115 = new TreeSet<>();
+        locationList226 = new TreeSet<>();
         this.getCartridgesMap().put("q_111", new ArrayList<Cartridge>());
         this.getCartridgesMap().put("q_115", new ArrayList<Cartridge>());
         this.getCartridgesMap().put("q_226", new ArrayList<Cartridge>());
+        tabList.add("Путь к базе");
         tabList.add("Списанные");
         tabList.add("Сводная");
         tabList.add("q_111");
         tabList.add("q_115");
         tabList.add("q_226");
-        //locationList.add(null);
     }
 
 
@@ -116,8 +132,7 @@ public class ContentStore implements Serializable {
 
     public void saveContent() {
         try {
-            String root = Paths.get("").toAbsolutePath().toString();
-            FileOutputStream writeInFile = new FileOutputStream(root + "backUp.res");
+            FileOutputStream writeInFile = new FileOutputStream(saveContent);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(writeInFile);
             objectOutputStream.writeObject(this);
             objectOutputStream.close();
@@ -128,8 +143,7 @@ public class ContentStore implements Serializable {
 
     public void saveLog(String text) throws IOException {
         String[] array = text.split("  ");
-        String root = Paths.get("").toAbsolutePath().toString();
-        FileWriter fileWriter = new FileWriter(root + "log.txt", true);
+        FileWriter fileWriter = new FileWriter(saveLog, true);
         for (int i = 0; i < array.length; i++) {
             fileWriter.write(array[i] + "\r\n");
         }

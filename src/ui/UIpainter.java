@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -24,11 +25,10 @@ import util.ContentStore;
 import util.handlers.AddButtonHandler;
 import util.handlers.EditButtonHandler;
 import util.handlers.RemoveButtonHandler;
+import util.handlers.UrlButtonHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +36,6 @@ import java.util.List;
 public class UIpainter {
     ContentStore contentStore = ContentStore.getContentStore();
     private static UIpainter uIpainter;
-    Socket socket = new Socket();
 
     public static UIpainter getUIpainter() {
         if (uIpainter == null) {
@@ -82,6 +81,7 @@ public class UIpainter {
         Tab tableTab;
         Tab tableTabUtilized = new Tab();
         Tab tableTabSummary = new Tab();
+        Tab tableURL = new Tab();
         ScrollPane scrollPaneTable;
         TableView<Cartridge> tableViewCartridge = new TableView<>();
         TableView<Utilized> tableViewUtilized = new TableView<>();
@@ -169,10 +169,31 @@ public class UIpainter {
                 tableTab.setContent(vBoxForButtonAndScroll);
                 tableTabUtilized = tableTab;
                 tableTab.setClosable(false);
+            }else if(listTabs.get(i).equals("Путь к базе")){
+//                Pane paneURL = new Pane();
+//                tableTab = new Tab("Путь к базе");
+//                tableTab.setContent(paneURL);
+//                tableURL = tableTab;
+//                tableTab.setClosable(false);
+//
+//                TextField URL = new TextField();
+//                paneURL.getChildren().add(URL);
+//                URL.setLayoutY(200);
+//                URL.setLayoutX(190);
+//                URL.setMinWidth(800);
+//
+//                Button ok = new Button("Ок");
+//                paneURL.getChildren().add(ok);
+//                ok.setLayoutY(199);
+//                ok.setLayoutX(1000);
+//
+//                ok.setOnAction(new UrlButtonHandler(URL));
             }
         }
+
         tabPane.getTabs().add(tableTabSummary);
         tabPane.getTabs().add(tableTabUtilized);
+//        tabPane.getTabs().add(tableURL);
         return tabPane;
     }
 
@@ -190,10 +211,20 @@ public class UIpainter {
             table.setPrefHeight(440);
 
 // столбец для вывода имени
-            TableColumn<Cartridge, String> numberColumn = new TableColumn<Cartridge, String>("Номер");
-            numberColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("number"));
-            table.getColumns().add(numberColumn);
-            numberColumn.setMinWidth(100);
+
+            if (tabName.equals("111")){
+                TableColumn<Cartridge, Integer> IDTableColumn = new TableColumn<Cartridge, Integer>("Номер");
+                IDTableColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, Integer>("idTable"));
+                table.getColumns().add(IDTableColumn);
+                IDTableColumn.setMinWidth(100);
+            }
+
+            if (!tabName.equals("111")){
+                TableColumn<Cartridge, String> numberColumn = new TableColumn<Cartridge, String>("Номер");
+                numberColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("number"));
+                table.getColumns().add(numberColumn);
+                numberColumn.setMinWidth(100);
+            }
 
             TableColumn<Cartridge, String> colorColumn = new TableColumn<Cartridge, String>("Col");
             colorColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("color"));
@@ -211,10 +242,22 @@ public class UIpainter {
             table.getColumns().add(dateColumn);
             dateColumn.setMinWidth(100);
 
-            TableColumn<Cartridge, String> locationColumn = new TableColumn<Cartridge, String>("Расположение");
-            locationColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("location"));
-            table.getColumns().add(locationColumn);
-            locationColumn.setMinWidth(100);
+            if (tabName.equals("111")){
+                TableColumn<Cartridge, Integer> locationColumn = new TableColumn<Cartridge, Integer>("Расположение");
+                locationColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, Integer>("location"));
+                table.getColumns().add(locationColumn);
+                locationColumn.setMinWidth(100);
+            }else if (tabName.equals("115")){
+                TableColumn<Cartridge, String> locationColumn = new TableColumn<Cartridge, String>("Расположение");
+                locationColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("locationString"));
+                table.getColumns().add(locationColumn);
+                locationColumn.setMinWidth(100);
+            }else if (tabName.equals("226")){
+                TableColumn<Cartridge, String> locationColumn = new TableColumn<Cartridge, String>("Расположение");
+                locationColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("locationString"));
+                table.getColumns().add(locationColumn);
+                locationColumn.setMinWidth(100);
+            }
 
 
             TableColumn<Cartridge, String> noticeColumn = new TableColumn<Cartridge, String>("Примечание");

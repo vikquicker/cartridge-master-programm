@@ -5,12 +5,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Cartridge implements Serializable {
+    int idTable;
     String color = "";
     double id;
     String number ;
     String status;
     LocalDate date;
     Integer location;
+    String locationString;
     String notice;
 
     public String getColor() {
@@ -28,6 +30,22 @@ public class Cartridge implements Serializable {
 
     public Cartridge(String str) {
 
+    }
+
+    public String getLocationString() {
+        return locationString;
+    }
+
+    public void setLocationString(String locationString) {
+        this.locationString = locationString;
+    }
+
+    public int getIdTable() {
+        return idTable;
+    }
+
+    public void setIdTable(int idTable) {
+        this.idTable = idTable;
     }
 
     public double getId() {

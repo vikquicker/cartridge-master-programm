@@ -82,10 +82,24 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         dateField.setShowWeekNumbers(true);
         dateField.setMaxWidth(100);
 
-        ObservableList<Integer> locationList = FXCollections.observableArrayList(contentStore.getLocationList());
-        ComboBox<Integer> locationField = new ComboBox<>(locationList);
-        locationField.setValue(cartridgeFromContent.getLocation());
-        locationField.setMinWidth(100);
+        //1st location
+        ObservableList<Integer> locationList111 = FXCollections.observableArrayList(contentStore.getLocationList111());
+        ComboBox<Integer> locationField111 = new ComboBox<>(locationList111);
+        locationField111.setValue(cartridgeFromContent.getLocation());
+        locationField111.setMinWidth(100);
+
+        //2rd location
+        ObservableList<String> locationList115 = FXCollections.observableArrayList(contentStore.getLocationList115());
+        ComboBox<String> locationField115 = new ComboBox<>(locationList115);
+        locationField115.setValue(cartridgeFromContent.getLocationString());
+        locationField115.setMinWidth(100);
+
+        //3rd location
+        ObservableList<String> locationList226 = FXCollections.observableArrayList(contentStore.getLocationList226());
+        ComboBox<String> locationField226 = new ComboBox<>(locationList226);
+        locationField226.setValue(cartridgeFromContent.getLocationString());
+        locationField226.setMinWidth(100);
+
 
         TextField locationFieldNew = new TextField();
         locationFieldNew.setMaxWidth(100);
@@ -103,8 +117,16 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
             @Override
             public void handle(ActionEvent event) {
                 Integer cartridgeLocation = cartridgeFromContent.getLocation();
-                contentStore.getLocationList().remove(locationField.getValue());
-                cartridgeFromContent.setLocation(null);
+                if (tabNameFromEditButtonns.equals("q_111")) {
+                    contentStore.getLocationList111().remove(locationField111.getValue());
+                    cartridgeFromContent.setLocation(null);
+                } else if (tabNameFromEditButtonns.equals("q_115")) {
+                    contentStore.getLocationList115().remove(locationField115.getValue());
+                    cartridgeFromContent.setLocationString(null);
+                } else if (tabNameFromEditButtonns.equals("q_226")) {
+                    contentStore.getLocationList226().remove(locationField226.getValue());
+                    cartridgeFromContent.setLocationString(null);
+                }
 
                 for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
                     if (contentStore.getSummaryArrayList().get(i).getOpsLocation().equals(cartridgeLocation)) {
@@ -145,21 +167,53 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
             @Override
             public void handle(ActionEvent event) {
                 String previosStatus = cartridgeFromContent.getStatus();
-                int previosLocation = cartridgeFromContent.getLocation();
+                ArrayList<Integer> previosLocation = new ArrayList();
+                ArrayList<String> previosLocationString = new ArrayList<>();
+                if (cartridgeFromContent.getLocationString() == null) {
+                    previosLocationString.add("");
+                } else {
+                    previosLocationString.add(cartridgeFromContent.getLocationString());
+                }
+                if (cartridgeFromContent.getLocation() == null) {
+                    previosLocation.add(0);
+                } else {
+                    previosLocation.add(cartridgeFromContent.getLocation());
+                }
                 Integer cartridgeLocation = cartridgeFromContent.getLocation();
 
                 cartridgeFromContent.setNumber(numberField.getText());
                 cartridgeFromContent.setStatus(statusField.getValue());
                 cartridgeFromContent.setDate(dateField.getValue());
                 if (locationFieldNew.getLength() > 0) {
-                    contentStore.getLocationList().add(Integer.valueOf(locationFieldNew.getText()));
-                    cartridgeFromContent.setLocation(Integer.valueOf(locationFieldNew.getText()));
+                    if (tabNameFromEditButtonns.equals("q_111")) {
+                        contentStore.getLocationList111().add(Integer.valueOf(locationFieldNew.getText()));
+                        cartridgeFromContent.setLocation(Integer.valueOf(locationFieldNew.getText()));
+                        ;
+                    } else if (tabNameFromEditButtonns.equals("q_115")) {
+                        contentStore.getLocationList115().add(locationFieldNew.getText());
+                        cartridgeFromContent.setLocationString(locationFieldNew.getText());
+                    } else if (tabNameFromEditButtonns.equals("q_226")) {
+                        contentStore.getLocationList226().add(locationFieldNew.getText());
+                        cartridgeFromContent.setLocationString(locationFieldNew.getText());
+                    }
                 } else {
-                    cartridgeFromContent.setLocation(locationField.getValue());
+                    if (tabNameFromEditButtonns.equals("q_111")) {
+                        cartridgeFromContent.setLocation(locationField111.getValue());
+                    } else if (tabNameFromEditButtonns.equals("q_115")) {
+                        cartridgeFromContent.setLocationString(locationField115.getValue());
+                    } else if (tabNameFromEditButtonns.equals("q_226")) {
+                        cartridgeFromContent.setLocationString(locationField226.getValue());
+                    }
                 }
 
                 if (locationFieldNull.getValue().equals("Пустое")) {
-                    cartridgeFromContent.setLocation(null);
+                    if (tabNameFromEditButtonns.equals("q_111")) {
+                        cartridgeFromContent.setLocation(null);
+                    } else if (tabNameFromEditButtonns.equals("q_115")) {
+                        cartridgeFromContent.setLocationString(null);
+                    } else if (tabNameFromEditButtonns.equals("q_226")) {
+                        cartridgeFromContent.setLocationString(null);
+                    }
                 }
                 cartridgeFromContent.setNotice(textAreaField.getText());
 
@@ -208,7 +262,11 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                 if (previosStatus.equals("Списан") && cartridgeFromContent.getStatus().equals("Списан")) {
                     Utilized utilized = new Utilized();
                     utilized.setId(cartridgeForEdit);
-                    utilized.setNumber(numberField.getText());
+                    if (tabNameFromEditButtonns.equals("q_111")) {
+                        utilized.setNumber(String.valueOf(cartridgeFromContent.getIdTable()));
+                    } else {
+                        utilized.setNumber(numberField.getText());
+                    }
                     utilized.setStatus(statusField.getValue());
                     utilized.setDate(dateField.getValue());
                     utilized.setNotice(textAreaField.getText());
@@ -224,7 +282,11 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                 if (!previosStatus.equals("Списан") && cartridgeFromContent.getStatus().equals("Списан")) {
                     Utilized utilized = new Utilized();
                     utilized.setId(cartridgeForEdit);
-                    utilized.setNumber(numberField.getText());
+                    if (tabNameFromEditButtonns.equals("q_111")) {
+                        utilized.setNumber(String.valueOf(cartridgeFromContent.getIdTable()));
+                    } else {
+                        utilized.setNumber(numberField.getText());
+                    }
                     utilized.setStatus(statusField.getValue());
                     utilized.setDate(dateField.getValue());
                     utilized.setNotice(textAreaField.getText());
@@ -242,57 +304,145 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                     }
                 }
 
-                if (previosLocation != cartridgeFromContent.getLocation() && !previosStatus.equals(cartridgeFromContent.getStatus())) {
-                    Date date = new Date();
-                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
-                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
-                            " Переехал с: " + previosLocation + " на: " + cartridgeFromContent.getLocation() + " статус: " +
-                            previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + "  ");
+                //LOG!!!
+                if (tabNameFromEditButtonns.equals("q_111")) {
+                    if (previosLocation.get(0) != cartridgeFromContent.getLocation() && !previosStatus.equals(cartridgeFromContent.getStatus())) {
+                        Date date = new Date();
+                        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
 
-                    String str = log.getText();
-                    try {
-                        contentStore.saveLog(str);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (!previosStatus.equals(cartridgeFromContent.getStatus())) {
-                    Date date = new Date();
-                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
-                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
-                            " Статус: " + previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + " Расположение: " +
-                            cartridgeFromContent.getLocation() + "  ");
+                        if (tabNameFromEditButtonns.equals("q_111")) {
+                            log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getIdTable() +
+                                    " Переехал с: " + previosLocation + " на: " + cartridgeFromContent.getLocation() + " статус: " +
+                                    previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + "  ");
+                        } else {
+                            log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
+                                    " Переехал с: " + previosLocation + " на: " + cartridgeFromContent.getLocation() + " статус: " +
+                                    previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + "  ");
+                        }
 
-                    String str = log.getText();
-                    try {
-                        contentStore.saveLog(str);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (previosLocation != cartridgeFromContent.getLocation()) {
-                    Date date = new Date();
-                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
-                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
-                            " Переехал с: " + previosLocation + " на: " + cartridgeFromContent.getLocation() + " статус: " +
-                            cartridgeFromContent.getStatus() + "  ");
+                        String str = log.getText();
+                        try {
+                            contentStore.saveLog(str);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (!previosStatus.equals(cartridgeFromContent.getStatus())) {
+                        Date date = new Date();
+                        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
 
-                    String str = log.getText();
-                    try {
-                        contentStore.saveLog(str);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        if (tabNameFromEditButtonns.equals("q_111")) {
+                            log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getIdTable() +
+                                    " Статус: " + previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + " Расположение: " +
+                                    cartridgeFromContent.getLocation() + "  ");
+                        } else {
+                            log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
+                                    " Статус: " + previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + " Расположение: " +
+                                    cartridgeFromContent.getLocation() + "  ");
+                        }
+
+                        String str = log.getText();
+                        try {
+                            contentStore.saveLog(str);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (previosLocation.get(0) != cartridgeFromContent.getLocation()) {
+                        Date date = new Date();
+                        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+
+                        if (tabNameFromEditButtonns.equals("q_111")) {
+                            log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getIdTable() +
+                                    " Переехал с: " + previosLocation + " на: " + cartridgeFromContent.getLocation() + " статус: " +
+                                    cartridgeFromContent.getStatus() + "  ");
+                        } else {
+                            log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
+                                    " Переехал с: " + previosLocation + " на: " + cartridgeFromContent.getLocation() + " статус: " +
+                                    cartridgeFromContent.getStatus() + "  ");
+                        }
+
+                        String str = log.getText();
+                        try {
+                            contentStore.saveLog(str);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Date date = new Date();
+                        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+
+                        if (tabNameFromEditButtonns.equals("q_111")) {
+                            log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getIdTable() + " изменён  ");
+                        } else {
+                            log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() + " изменён  ");
+                        }
+
+                        String str = log.getText();
+                        try {
+                            contentStore.saveLog(str);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else {
-                    Date date = new Date();
-                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
-                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() + " изменён  ");
+                    if (previosLocationString.get(0) != cartridgeFromContent.getLocationString() && !previosStatus.equals(cartridgeFromContent.getStatus())) {
+                        Date date = new Date();
+                        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+                            log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
+                                    " Переехал с: " + previosLocationString + " на: " + cartridgeFromContent.getLocationString() + " статус: " +
+                                    previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + "  ");
 
-                    String str = log.getText();
-                    try {
-                        contentStore.saveLog(str);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        String str = log.getText();
+                        try {
+                            contentStore.saveLog(str);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (!previosStatus.equals(cartridgeFromContent.getStatus())) {
+                        Date date = new Date();
+                        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+                        log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
+                                " Статус: " + previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + " Расположение: " +
+                                cartridgeFromContent.getLocationString() + "  ");
+
+                        String str = log.getText();
+                        try {
+                            contentStore.saveLog(str);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (!previosLocationString.get(0).equals(cartridgeFromContent.getLocationString())) {
+                        Date date = new Date();
+                        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+                        log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
+                                " Переехал с: " + previosLocationString + " на: " + cartridgeFromContent.getLocationString() + " статус: " +
+                                cartridgeFromContent.getStatus() + "  ");
+
+
+                        String str = log.getText();
+                        try {
+                            contentStore.saveLog(str);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Date date = new Date();
+                        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+
+                        if (tabNameFromEditButtonns.equals("q_111")) {
+                            log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getIdTable() + " изменён  ");
+                        } else {
+                            log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() + " изменён  ");
+                        }
+
+                        String str = log.getText();
+                        try {
+                            contentStore.saveLog(str);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+
 
                 contentStore.saveContent();
 
@@ -326,34 +476,65 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         statusField.setLayoutY(40);
         dateField.setLayoutY(40);
         textAreaField.setLayoutY(25);
-        locationField.setLayoutY(25);
+        locationField111.setLayoutY(25);
         deleteLocation.setLayoutY(25);
         locationFieldNew.setLayoutY(70);
         add.setLayoutY(29);
         locationFieldNull.setLayoutY(70);
+        locationField115.setLayoutY(25);
+        locationField226.setLayoutY(25);
 
         //Position FieldX
         numberField.setLayoutX(20);
         statusField.setLayoutX(120);
         dateField.setLayoutX(262);
         textAreaField.setLayoutX(580);
-        locationField.setLayoutX(380);
+        locationField111.setLayoutX(380);
         deleteLocation.setLayoutX(500);
         locationFieldNew.setLayoutX(380);
         add.setLayoutX(815);
         locationFieldNull.setLayoutX(488);
+        locationField115.setLayoutX(380);
+        locationField226.setLayoutX(380);
 
-        pane.getChildren().addAll(numberLabel, statusLabel, dataLabel, locationLabel, noticeLabel,
-                numberField,
-                statusField,
-                dateField,
-                textAreaField,
-                locationField,
-                locationFieldNew,
-                locationLabelNew,
-                add,
-                deleteLocation,
-                locationFieldNull);
+        if (tabNameFromEditButtonns.equals("q_111")) {
+            pane.getChildren().addAll(numberLabel, statusLabel, dataLabel, locationLabel, noticeLabel,
+                    numberField,
+                    statusField,
+                    dateField,
+                    textAreaField,
+                    locationField111,
+                    locationFieldNew,
+                    locationLabelNew,
+                    add,
+                    deleteLocation,
+                    locationFieldNull);
+        } else if (tabNameFromEditButtonns.equals("q_115")) {
+            pane.getChildren().addAll(numberLabel, statusLabel, dataLabel, locationLabel, noticeLabel,
+                    numberField,
+                    statusField,
+                    dateField,
+                    textAreaField,
+                    locationField115,
+                    locationFieldNew,
+                    locationLabelNew,
+                    add,
+                    deleteLocation,
+                    locationFieldNull);
+        } else if (tabNameFromEditButtonns.equals("q_226")) {
+            pane.getChildren().addAll(numberLabel, statusLabel, dataLabel, locationLabel, noticeLabel,
+                    numberField,
+                    statusField,
+                    dateField,
+                    textAreaField,
+                    locationField226,
+                    locationFieldNew,
+                    locationLabelNew,
+                    add,
+                    deleteLocation,
+                    locationFieldNull);
+        }
+
         Scene sceneWithLabels1 = new Scene(pane, 945, 90);
         newWindow.setScene(sceneWithLabels1);
         newWindow.show();
