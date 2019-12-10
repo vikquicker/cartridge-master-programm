@@ -93,15 +93,15 @@ public class RemoveButtonHandler implements EventHandler<ActionEvent> {
                 }
 
                 int x = contentStore.getUtilizedArrayList().size();
-                if (cartridgeStatus.equals("Списан")) {
-                    for (int i = 0; i < x; i++) {
-                        if (cartridgeForRemove.getId() == contentStore.getUtilizedArrayList().get(i).getId()) {
-                            contentStore.getUtilizedArrayList().remove(i);
-                            tabUtilized.getItems().remove(i);
-                            break;
-                        }
-                    }
-                }
+//                if (cartridgeStatus.equals("Списан")) {
+//                    for (int i = 0; i < x; i++) {
+//                        if (cartridgeForRemove.getId() == contentStore.getUtilizedArrayList().get(i).getId()) {
+//                            contentStore.getUtilizedArrayList().remove(i);
+//                            tabUtilized.getItems().remove(i);
+//                            break;
+//                        }
+//                    }
+//                }
 
                 Date date = new Date();
                 DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));

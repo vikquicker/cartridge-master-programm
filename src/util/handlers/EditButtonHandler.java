@@ -259,26 +259,26 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                 }
 
                 //TODO think about observer
-                if (previosStatus.equals("Списан") && cartridgeFromContent.getStatus().equals("Списан")) {
-                    Utilized utilized = new Utilized();
-                    utilized.setId(cartridgeForEdit);
-                    if (tabNameFromEditButtonns.equals("q_111")) {
-                        utilized.setNumber(String.valueOf(cartridgeFromContent.getIdTable()));
-                    } else {
-                        utilized.setNumber(numberField.getText());
-                    }
-                    utilized.setStatus(statusField.getValue());
-                    utilized.setDate(dateField.getValue());
-                    utilized.setNotice(textAreaField.getText());
-
-                    for (int i = 0; i < contentStore.getUtilizedArrayList().size(); i++) {
-                        if (cartridgeFromContent.getId() == contentStore.getUtilizedArrayList().get(i).getId()) {
-                            contentStore.getUtilizedArrayList().set(i, utilized);
-                        }
-                    }
-                    tabUtilized.getItems().clear();
-                    tabUtilized.getItems().addAll(contentStore.getUtilizedArrayList());
-                }
+//                if (previosStatus.equals("Списан") && cartridgeFromContent.getStatus().equals("Списан")) {
+//                    Utilized utilized = new Utilized();
+//                    utilized.setId(cartridgeForEdit);
+//                    if (tabNameFromEditButtonns.equals("q_111")) {
+//                        utilized.setNumber(String.valueOf(cartridgeFromContent.getIdTable()));
+//                    } else {
+//                        utilized.setNumber(numberField.getText());
+//                    }
+//                    utilized.setStatus(statusField.getValue());
+//                    utilized.setDate(dateField.getValue());
+//                    utilized.setNotice(textAreaField.getText());
+//
+//                    for (int i = 0; i < contentStore.getUtilizedArrayList().size(); i++) {
+//                        if (cartridgeFromContent.getId() == contentStore.getUtilizedArrayList().get(i).getId()) {
+//                            contentStore.getUtilizedArrayList().set(i, utilized);
+//                        }
+//                    }
+//                    tabUtilized.getItems().clear();
+//                    tabUtilized.getItems().addAll(contentStore.getUtilizedArrayList());
+//                }
                 if (!previosStatus.equals("Списан") && cartridgeFromContent.getStatus().equals("Списан")) {
                     Utilized utilized = new Utilized();
                     utilized.setId(cartridgeForEdit);
@@ -295,14 +295,14 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                     contentStore.getUtilizedArrayList().add(utilized);
                 }
 
-                if (previosStatus.equals("Списан") && !cartridgeFromContent.getStatus().equals("Списан")) {
-                    for (int i = 0; i < contentStore.getUtilizedArrayList().size(); i++) {
-                        if (cartridgeForEdit == contentStore.getUtilizedArrayList().get(i).getId()) {
-                            contentStore.getUtilizedArrayList().remove(i);
-                            tabUtilized.getItems().remove(i);
-                        }
-                    }
-                }
+//                if (previosStatus.equals("Списан") && !cartridgeFromContent.getStatus().equals("Списан")) {
+//                    for (int i = 0; i < contentStore.getUtilizedArrayList().size(); i++) {
+//                        if (cartridgeForEdit == contentStore.getUtilizedArrayList().get(i).getId()) {
+//                            contentStore.getUtilizedArrayList().remove(i);
+//                            tabUtilized.getItems().remove(i);
+//                        }
+//                    }
+//                }
 
                 //LOG!!!
                 if (tabNameFromEditButtonns.equals("q_111")) {

@@ -99,14 +99,14 @@ public class ContentStore implements Serializable {
             }
         }
         for (int i = 0; i < contentStore.getCartridgesMap().get("q_115").size(); i++) {
-            Integer location115 = contentStore.getCartridgesMap().get("q_115").get(i).getLocation();
+            String location115 = contentStore.getCartridgesMap().get("q_115").get(i).getLocationString();
             String status115 = contentStore.getCartridgesMap().get("q_115").get(i).getStatus();
             if (status115.equals("На отделении")) {
                 arrayListCount.add(String.valueOf(location115));
             }
         }
         for (int i = 0; i < contentStore.getCartridgesMap().get("q_226").size(); i++) {
-            Integer location226 = contentStore.getCartridgesMap().get("q_226").get(i).getLocation();
+            String location226 = contentStore.getCartridgesMap().get("q_226").get(i).getLocationString();
             String status226 = contentStore.getCartridgesMap().get("q_226").get(i).getStatus();
             if (status226.equals("На отделении")) {
                 arrayListCount.add(String.valueOf(location226));

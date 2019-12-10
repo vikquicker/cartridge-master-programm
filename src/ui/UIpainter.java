@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -29,6 +30,7 @@ import util.handlers.UrlButtonHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -468,15 +470,27 @@ public class UIpainter {
         } else {
             ObservableList<Utilized> cartridges = FXCollections.observableArrayList((ArrayList<Utilized>) list);
             TableView<Utilized> table = new TableView<Utilized>(cartridges);
-            table.setEditable(true);
             table.setPrefWidth(1200);
             table.setPrefHeight(465);
 
+            table.setEditable(true);
 // столбец для вывода имени
             TableColumn<Utilized, String> numberColumn = new TableColumn<Utilized, String>("Номер");
             numberColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("number"));
             table.getColumns().add(numberColumn);
             numberColumn.setMinWidth(100);
+
+            numberColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            numberColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Utilized, String>>() {
+                        @Override
+                        public void handle(TableColumn.CellEditEvent<Utilized, String> t) {
+                            ((Utilized) t.getTableView().getItems().get(
+                                    t.getTablePosition().getRow())
+                            ).setNumber(t.getNewValue());
+                        }
+                    }
+            );
+
 
             TableColumn<Utilized, String> statusColumn = new TableColumn<Utilized, String>("Статус");
             statusColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("status"));
@@ -488,39 +502,50 @@ public class UIpainter {
             table.getColumns().add(dateColumn);
             dateColumn.setMinWidth(100);
 
+
             TableColumn<Utilized, String> noticeColumn = new TableColumn<Utilized, String>("Примечание");
             noticeColumn.setCellValueFactory(new PropertyValueFactory<Utilized, String>("notice"));
             table.getColumns().add(noticeColumn);
             noticeColumn.setMinWidth(897);
 
-            table.setEditable(false);
-            Callback<TableColumn<Utilized, String>, TableCell<Utilized, String>> showNoticeFactory =
-                    new Callback<TableColumn<Utilized, String>, TableCell<Utilized, String>>() {
-                        public TableCell call(TableColumn p) {
-                            TableCell cell = new TableCell<Cartridge, String>() {
-                                @Override
-                                public void updateItem(String item, boolean empty) {
-                                    super.updateItem(item, empty);
-                                    setText(empty ? null : getString());
-                                    setGraphic(null);
-                                }
+            noticeColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            noticeColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Utilized, String>>() {
+                                             @Override
+                                             public void handle(TableColumn.CellEditEvent<Utilized, String> t) {
+                                                 ((Utilized) t.getTableView().getItems().get(
+                                                         t.getTablePosition().getRow())
+                                                 ).setNotice(t.getNewValue());
+                                             }
+                                         }
+            );
 
-                                private String getString() {
-                                    return getItem() == null ? "" : getItem().toString();
-                                }
-                            };
+//            Callback<TableColumn<Utilized, String>, TableCell<Utilized, String>> showNoticeFactory =
+//                    new Callback<TableColumn<Utilized, String>, TableCell<Utilized, String>>() {
+//                        public TableCell call(TableColumn p) {
+//                            TableCell cell = new TableCell<Cartridge, String>() {
+//                                @Override
+//                                public void updateItem(String item, boolean empty) {
+//                                    super.updateItem(item, empty);
+//                                    setText(empty ? null : getString());
+//                                    setGraphic(null);
+//                                }
+//
+//                                private String getString() {
+//                                    return getItem() == null ? "" : getItem().toString();
+//                                }
+//                            };
+//
+//                            cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+//                                @Override
+//                                public void handle(MouseEvent event) {
+//                                    textToShow(cell.getText());
+//                                }
+//                            });
+//                            return cell;
+//                        }
+//                    };
 
-                            cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-                                @Override
-                                public void handle(MouseEvent event) {
-                                    textToShow(cell.getText());
-                                }
-                            });
-                            return cell;
-                        }
-                    };
-
-            noticeColumn.setCellFactory(showNoticeFactory);
+//            noticeColumn.setCellFactory(showNoticeFactory);
 
             return table;
         }

@@ -251,22 +251,22 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     contentStore.getCartridgesMap().get("q_" + tabName).add(cartridgeToAdd);
                     tabCartridge.getItems().add(cartridgeToAdd);
 
-                    if (statusField.getValue().equals("Списан")) {
-                        Utilized utilizedToAdd = new Utilized();
-
-                        utilizedToAdd.setId(idToCartridgeAndUtil);
-                        if (tabName.equals("111")) {
-                            utilizedToAdd.setNumber(String.valueOf(cartridgeToAdd.getIdTable()));
-                        } else {
-                            utilizedToAdd.setNumber(numberField.getText());
-                        }
-                        utilizedToAdd.setStatus(statusField.getValue());
-                        utilizedToAdd.setDate(dateField.getValue());
-                        utilizedToAdd.setNotice(textAreaField.getText());
-
-                        contentStore.getUtilizedArrayList().add(utilizedToAdd);
-                        tabUtilized.getItems().add(utilizedToAdd);
-                    }
+//                    if (statusField.getValue().equals("Списан")) {
+//                        Utilized utilizedToAdd = new Utilized();
+//
+//                        utilizedToAdd.setId(idToCartridgeAndUtil);
+//                        if (tabName.equals("111")) {
+//                            utilizedToAdd.setNumber(String.valueOf(cartridgeToAdd.getIdTable()));
+//                        } else {
+//                            utilizedToAdd.setNumber(numberField.getText());
+//                        }
+//                        utilizedToAdd.setStatus(statusField.getValue());
+//                        utilizedToAdd.setDate(dateField.getValue());
+//                        utilizedToAdd.setNotice(textAreaField.getText());
+//
+//                        contentStore.getUtilizedArrayList().add(utilizedToAdd);
+//                        tabUtilized.getItems().add(utilizedToAdd);
+//                    }
 
                     if (statusField.getValue().equals("На отделении")) {
                         tabSummary.getItems().clear();
