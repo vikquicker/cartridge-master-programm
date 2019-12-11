@@ -5,22 +5,32 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.print.*;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.transform.Scale;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import util.ContentStore;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.time.LocalDate;
 import java.util.*;
@@ -303,6 +313,18 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                         e.printStackTrace();
                     }
                     contentStore.saveContent();
+
+
+
+//                    Printer printer = Printer.getDefaultPrinter();
+//                    PageLayout pageLayout = printer.createPageLayout(Paper.A4, PageOrientation.LANDSCAPE, Printer.MarginType.DEFAULT);
+//                    double scaleX = pageLayout.getPrintableWidth() / tabCartridge.getBoundsInParent().getWidth();
+//                    double scaleY = pageLayout.getPrintableHeight() / tabCartridge.getBoundsInParent().getHeight();
+//                    //tabCartridge.getTransforms().add(new Scale(scaleX, scaleY));
+//
+//                    javafx.print.PrinterJob printerJob = PrinterJob.createPrinterJob(printer);
+//                    printerJob.printPage(pageLayout, (Node) tabCartridge.getItems());
+//                    printerJob.endJob();
 
                     newWindow.close();
                 } else {

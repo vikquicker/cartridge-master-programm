@@ -11,9 +11,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -22,14 +20,17 @@ import javafx.util.Callback;
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import util.ContentStore;
-import util.handlers.AddButtonHandler;
-import util.handlers.EditButtonHandler;
-import util.handlers.RemoveButtonHandler;
-import util.handlers.UrlButtonHandler;
+import util.handlers.*;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,7 +51,7 @@ public class UIpainter {
     }
 
 
-    public void createUI(Stage primaryStage) {
+    public void createUI(Stage primaryStage) throws IOException {
 
         InputStream inputStreamIco = getClass().getResourceAsStream("cat.png");
         primaryStage.getIcons().add(new Image(inputStreamIco));
@@ -63,7 +64,7 @@ public class UIpainter {
         log.setMaxHeight(100);
         log.setMinHeight(100);
         root.getChildren().addAll(initialTabPane(list, log), log);
-        primaryStage.setTitle("Cartridge Master 4000");
+        primaryStage.setTitle("Cartridge Master 4000 Admin version");
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/resources/css/main.css");
         primaryStage.setScene(scene);
@@ -73,7 +74,7 @@ public class UIpainter {
         primaryStage.show();
     }
 
-    public TabPane initialTabPane(List<String> listTabs, TextArea log) {
+    public TabPane initialTabPane(List<String> listTabs, TextArea log) throws IOException {
         try {
             contentStore.saveLog(log.getText());
         } catch (IOException e) {
@@ -92,18 +93,22 @@ public class UIpainter {
         for (int i = 0; i < listTabs.size(); i++) {
             if (listTabs.get(i).startsWith("q_")) {
                 Cartridge cartridge = new Cartridge();
-                VBox vBoxForButtonAndScroll = new VBox();
+                //HBox hBox = new HBox();
+                Pane vBoxForButtonAndScroll = new Pane();
                 String presentedTabName = listTabs.get(i)
                         .substring("q_".length());
                 tableTab = new Tab(presentedTabName);
 
                 Button addItem = new Button("Добавить");
-                vBoxForButtonAndScroll.getChildren().add(addItem);
+                Button print = new Button("Печать");
+                //vBoxForButtonAndScroll.getChildren().addAll(addItem,print);
 
                 ArrayList<Cartridge> arrayList = new ArrayList<>();
                 ArrayList<Cartridge> listFromMap = contentStore.getCartridgesMap().get(listTabs.get(i));
                 scrollPaneTable = new ScrollPane();
+//                scrollPaneTable.setMinHeight(550);
                 HBox hBox = new HBox();
+//                hBox.setMinHeight(900);
                 if (listFromMap != null) {
                     arrayList.addAll(listFromMap);
                     hBox.getChildren().addAll(tableViewCartridge = initiateTable(arrayList, cartridge.getClass(), presentedTabName,
@@ -116,15 +121,22 @@ public class UIpainter {
                         tableViewSummary, log));
 
                 scrollPaneTable.setContent(hBox);
-                vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
+                vBoxForButtonAndScroll.getChildren().addAll(addItem,print,scrollPaneTable);
+                scrollPaneTable.setLayoutY(30);
+                print.setLayoutX(71);
+                print.setLayoutY(3);
+                addItem.setLayoutY(3);
+                addItem.setLayoutX(1);
                 tableTab.setContent(vBoxForButtonAndScroll);
                 tabPane.getTabs().add(tableTab);
+                print.setOnAction(new PrintHandler(tableViewCartridge, tableViewUtilized, tableViewSummary,presentedTabName,log));
                 tableTab.setClosable(false);
             } else if (listTabs.get(i).equals("Сводная")) {
                 VBox vBoxForButtonAndScroll = new VBox();
                 String presentedTabNameSummary = listTabs.get(i);
                 tableTab = new Tab(presentedTabNameSummary);
 
+                Button print = new Button("Печать");
                 Summary summary = new Summary();
                 ArrayList<Summary> summaryArrayList = new ArrayList<>();
                 ArrayList<Summary> secondListFromMap = contentStore.getSummaryArrayList();
@@ -140,15 +152,17 @@ public class UIpainter {
                 }
 
                 scrollPaneTable.setContent(hBox);
-                vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
+                vBoxForButtonAndScroll.getChildren().addAll(print,scrollPaneTable);
                 tableTab.setContent(vBoxForButtonAndScroll);
                 tableTabSummary = tableTab;
+                print.setOnAction(new PrintHandler(tableViewCartridge, tableViewUtilized, tableViewSummary,presentedTabNameSummary,log));
                 tableTab.setClosable(false);
             } else if (listTabs.get(i).equals("Списанные")) {
                 VBox vBoxForButtonAndScroll = new VBox();
                 String presentedTabNameUtilized = listTabs.get(i);
                 tableTab = new Tab(presentedTabNameUtilized);
 
+                Button print = new Button("Печать");
                 ArrayList<Utilized> utilizedArrayList = new ArrayList<>();
                 ArrayList<Utilized> thirdListFromMap = contentStore.getUtilizedArrayList();
                 scrollPaneTable = new ScrollPane();
@@ -167,11 +181,12 @@ public class UIpainter {
                 }
 
                 scrollPaneTable.setContent(hBox);
-                vBoxForButtonAndScroll.getChildren().add(scrollPaneTable);
+                vBoxForButtonAndScroll.getChildren().addAll(print,scrollPaneTable);
                 tableTab.setContent(vBoxForButtonAndScroll);
                 tableTabUtilized = tableTab;
+                print.setOnAction(new PrintHandler(tableViewCartridge, tableViewUtilized, tableViewSummary,presentedTabNameUtilized,log));
                 tableTab.setClosable(false);
-            }else if(listTabs.get(i).equals("Путь к базе")){
+            } else if (listTabs.get(i).equals("Путь к базе")) {
 //                Pane paneURL = new Pane();
 //                tableTab = new Tab("Путь к базе");
 //                tableTab.setContent(paneURL);
@@ -202,7 +217,7 @@ public class UIpainter {
 
     private TableView initiateTable(Object list, Class className, String tabName,
                                     TableView<Cartridge> cartridgeTable, TableView<Utilized> utilizedTable, TableView<Summary> summaryTable,
-                                    TextArea log) {
+                                    TextArea log) throws IOException {
         Cartridge cartridge = new Cartridge();
         Summary summary = new Summary();
         if (className.equals(cartridge.getClass())) {
@@ -210,18 +225,18 @@ public class UIpainter {
             TableView<Cartridge> table = new TableView<Cartridge>(cartridges);
             table.setEditable(true);
             table.setPrefWidth(1200);
-            table.setPrefHeight(440);
+            table.setPrefHeight(460);
 
 // столбец для вывода имени
 
-            if (tabName.equals("111")){
+            if (tabName.equals("111")) {
                 TableColumn<Cartridge, Integer> IDTableColumn = new TableColumn<Cartridge, Integer>("Номер");
                 IDTableColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, Integer>("idTable"));
                 table.getColumns().add(IDTableColumn);
                 IDTableColumn.setMinWidth(100);
             }
 
-            if (!tabName.equals("111")){
+            if (!tabName.equals("111")) {
                 TableColumn<Cartridge, String> numberColumn = new TableColumn<Cartridge, String>("Номер");
                 numberColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("number"));
                 table.getColumns().add(numberColumn);
@@ -244,17 +259,17 @@ public class UIpainter {
             table.getColumns().add(dateColumn);
             dateColumn.setMinWidth(100);
 
-            if (tabName.equals("111")){
+            if (tabName.equals("111")) {
                 TableColumn<Cartridge, Integer> locationColumn = new TableColumn<Cartridge, Integer>("Расположение");
                 locationColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, Integer>("location"));
                 table.getColumns().add(locationColumn);
                 locationColumn.setMinWidth(100);
-            }else if (tabName.equals("115")){
+            } else if (tabName.equals("115")) {
                 TableColumn<Cartridge, String> locationColumn = new TableColumn<Cartridge, String>("Расположение");
                 locationColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("locationString"));
                 table.getColumns().add(locationColumn);
                 locationColumn.setMinWidth(100);
-            }else if (tabName.equals("226")){
+            } else if (tabName.equals("226")) {
                 TableColumn<Cartridge, String> locationColumn = new TableColumn<Cartridge, String>("Расположение");
                 locationColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("locationString"));
                 table.getColumns().add(locationColumn);
@@ -416,6 +431,7 @@ public class UIpainter {
 
             actionColDelete.setCellFactory(cellFactoryDelete);
             table.getColumns().add(actionColDelete);
+
             return table;
         } else if (className.equals(summary.getClass())) {
             ObservableList<Summary> cartridges = FXCollections.observableArrayList((ArrayList<Summary>) list);
@@ -482,13 +498,13 @@ public class UIpainter {
 
             numberColumn.setCellFactory(TextFieldTableCell.forTableColumn());
             numberColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Utilized, String>>() {
-                        @Override
-                        public void handle(TableColumn.CellEditEvent<Utilized, String> t) {
-                            ((Utilized) t.getTableView().getItems().get(
-                                    t.getTablePosition().getRow())
-                            ).setNumber(t.getNewValue());
-                        }
-                    }
+                                             @Override
+                                             public void handle(TableColumn.CellEditEvent<Utilized, String> t) {
+                                                 ((Utilized) t.getTableView().getItems().get(
+                                                         t.getTablePosition().getRow())
+                                                 ).setNumber(t.getNewValue());
+                                             }
+                                         }
             );
 
 
