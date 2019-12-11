@@ -566,7 +566,7 @@ public class UIpainter {
             return table;
         }
     }
-
+//
     public String textToShow(String str) {
         Pane pane = new Pane();
         Stage newWindow = new Stage();
