@@ -25,6 +25,10 @@ public class ContentStore implements Serializable {
     private SortedSet<Integer> locationList111;
     private SortedSet<String> locationList115;
     private SortedSet<String> locationList226;
+    private SortedSet<String>  locationListString111;
+    public SortedSet<String> getLocationListString111() {
+        return locationListString111;
+    }
     public SortedSet<Integer> getLocationList111() {
         return locationList111;
     }
@@ -34,6 +38,7 @@ public class ContentStore implements Serializable {
     public SortedSet<String> getLocationList226() {
         return locationList226;
     }
+
 
 
 
@@ -73,6 +78,7 @@ public class ContentStore implements Serializable {
         summaryArrayList = new ArrayList<>();
         utilizedArrayList = new ArrayList<>();
         tabList = new ArrayList<>();
+        locationListString111 =  new TreeSet<>();
         locationList111 = new TreeSet<>();
         locationList115 = new TreeSet<>();
         locationList226 = new TreeSet<>();

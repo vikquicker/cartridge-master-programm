@@ -13,25 +13,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import models.Cartridge;
 import models.Summary;
 import models.Utilized;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import util.ContentStore;
 import util.handlers.*;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -260,8 +252,8 @@ public class UIpainter {
             dateColumn.setMinWidth(100);
 
             if (tabName.equals("111")) {
-                TableColumn<Cartridge, Integer> locationColumn = new TableColumn<Cartridge, Integer>("Расположение");
-                locationColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, Integer>("location"));
+                TableColumn<Cartridge, String> locationColumn = new TableColumn<Cartridge, String>("Расположение");
+                locationColumn.setCellValueFactory(new PropertyValueFactory<Cartridge, String>("locationString"));
                 table.getColumns().add(locationColumn);
                 locationColumn.setMinWidth(100);
             } else if (tabName.equals("115")) {

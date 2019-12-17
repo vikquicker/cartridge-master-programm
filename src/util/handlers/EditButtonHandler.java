@@ -83,22 +83,25 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         dateField.setMaxWidth(100);
 
         //1st location
-        ObservableList<Integer> locationList111 = FXCollections.observableArrayList(contentStore.getLocationList111());
-        ComboBox<Integer> locationField111 = new ComboBox<>(locationList111);
-        locationField111.setValue(cartridgeFromContent.getLocation());
+        ObservableList<String> locationList111 = FXCollections.observableArrayList(contentStore.getLocationListString111());
+        ComboBox<String> locationField111 = new ComboBox<>(locationList111);
+        locationField111.setValue(cartridgeFromContent.getLocationString());
         locationField111.setMinWidth(100);
+        locationField111.setMaxWidth(100);
 
         //2rd location
         ObservableList<String> locationList115 = FXCollections.observableArrayList(contentStore.getLocationList115());
         ComboBox<String> locationField115 = new ComboBox<>(locationList115);
         locationField115.setValue(cartridgeFromContent.getLocationString());
         locationField115.setMinWidth(100);
+        locationField115.setMaxWidth(100);
 
         //3rd location
         ObservableList<String> locationList226 = FXCollections.observableArrayList(contentStore.getLocationList226());
         ComboBox<String> locationField226 = new ComboBox<>(locationList226);
         locationField226.setValue(cartridgeFromContent.getLocationString());
         locationField226.setMinWidth(100);
+        locationField226.setMaxWidth(100);
 
 
         TextField locationFieldNew = new TextField();
@@ -116,10 +119,10 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
         deleteLocation.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Integer cartridgeLocation = cartridgeFromContent.getLocation();
+                String cartridgeLocation = cartridgeFromContent.getLocationString();
                 if (tabNameFromEditButtonns.equals("q_111")) {
-                    contentStore.getLocationList111().remove(locationField111.getValue());
-                    cartridgeFromContent.setLocation(null);
+                    contentStore.getLocationListString111().remove(locationField111.getValue());
+                    cartridgeFromContent.setLocationString(null);
                 } else if (tabNameFromEditButtonns.equals("q_115")) {
                     contentStore.getLocationList115().remove(locationField115.getValue());
                     cartridgeFromContent.setLocationString(null);
@@ -127,6 +130,28 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                     contentStore.getLocationList226().remove(locationField226.getValue());
                     cartridgeFromContent.setLocationString(null);
                 }
+
+                Date date = new Date();
+                DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
+
+                if (tabNameFromEditButtonns.equals("q_111")) {
+                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getIdTable() + " расположение "
+                            + locationField111.getValue() + " удалено!  ");
+                } else if (tabNameFromEditButtonns.equals("q_115")){
+                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() + " расположение  "
+                            + locationField115.getValue() + " удалено!  ");
+                }else if (tabNameFromEditButtonns.equals("q_226")){
+                    log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() + " расположение  "
+                            + locationField226.getValue() + " удалено!  ");
+                }
+
+                String str = log.getText();
+                try {
+                    contentStore.saveLog(str);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
                 for (int i = 0; i < contentStore.getSummaryArrayList().size(); i++) {
                     if (contentStore.getSummaryArrayList().get(i).getOpsLocation().equals(cartridgeLocation)) {
@@ -167,28 +192,21 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
             @Override
             public void handle(ActionEvent event) {
                 String previosStatus = cartridgeFromContent.getStatus();
-                ArrayList<Integer> previosLocation = new ArrayList();
                 ArrayList<String> previosLocationString = new ArrayList<>();
                 if (cartridgeFromContent.getLocationString() == null) {
                     previosLocationString.add("");
                 } else {
                     previosLocationString.add(cartridgeFromContent.getLocationString());
                 }
-                if (cartridgeFromContent.getLocation() == null) {
-                    previosLocation.add(0);
-                } else {
-                    previosLocation.add(cartridgeFromContent.getLocation());
-                }
-                Integer cartridgeLocation = cartridgeFromContent.getLocation();
+                String cartridgeLocation = cartridgeFromContent.getLocationString();
 
                 cartridgeFromContent.setNumber(numberField.getText());
                 cartridgeFromContent.setStatus(statusField.getValue());
                 cartridgeFromContent.setDate(dateField.getValue());
                 if (locationFieldNew.getLength() > 0) {
                     if (tabNameFromEditButtonns.equals("q_111")) {
-                        contentStore.getLocationList111().add(Integer.valueOf(locationFieldNew.getText()));
-                        cartridgeFromContent.setLocation(Integer.valueOf(locationFieldNew.getText()));
-                        ;
+                        contentStore.getLocationListString111().add(locationFieldNew.getText());
+                        cartridgeFromContent.setLocationString(locationFieldNew.getText());
                     } else if (tabNameFromEditButtonns.equals("q_115")) {
                         contentStore.getLocationList115().add(locationFieldNew.getText());
                         cartridgeFromContent.setLocationString(locationFieldNew.getText());
@@ -198,7 +216,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                     }
                 } else {
                     if (tabNameFromEditButtonns.equals("q_111")) {
-                        cartridgeFromContent.setLocation(locationField111.getValue());
+                        cartridgeFromContent.setLocationString(locationField111.getValue());
                     } else if (tabNameFromEditButtonns.equals("q_115")) {
                         cartridgeFromContent.setLocationString(locationField115.getValue());
                     } else if (tabNameFromEditButtonns.equals("q_226")) {
@@ -295,28 +313,19 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                     contentStore.getUtilizedArrayList().add(utilized);
                 }
 
-//                if (previosStatus.equals("Списан") && !cartridgeFromContent.getStatus().equals("Списан")) {
-//                    for (int i = 0; i < contentStore.getUtilizedArrayList().size(); i++) {
-//                        if (cartridgeForEdit == contentStore.getUtilizedArrayList().get(i).getId()) {
-//                            contentStore.getUtilizedArrayList().remove(i);
-//                            tabUtilized.getItems().remove(i);
-//                        }
-//                    }
-//                }
-
                 //LOG!!!
                 if (tabNameFromEditButtonns.equals("q_111")) {
-                    if (previosLocation.get(0) != cartridgeFromContent.getLocation() && !previosStatus.equals(cartridgeFromContent.getStatus())) {
+                    if (previosLocationString.get(0) != cartridgeFromContent.getLocationString() && !previosStatus.equals(cartridgeFromContent.getStatus())) {
                         Date date = new Date();
                         DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
 
                         if (tabNameFromEditButtonns.equals("q_111")) {
                             log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getIdTable() +
-                                    " Переехал с: " + previosLocation + " на: " + cartridgeFromContent.getLocation() + " статус: " +
+                                    " Переехал с: " + previosLocationString + " на: " + cartridgeFromContent.getLocationString() + " статус: " +
                                     previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + "  ");
                         } else {
                             log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
-                                    " Переехал с: " + previosLocation + " на: " + cartridgeFromContent.getLocation() + " статус: " +
+                                    " Переехал с: " + previosLocationString + " на: " + cartridgeFromContent.getLocationString() + " статус: " +
                                     previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + "  ");
                         }
 
@@ -333,11 +342,11 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                         if (tabNameFromEditButtonns.equals("q_111")) {
                             log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getIdTable() +
                                     " Статус: " + previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + " Расположение: " +
-                                    cartridgeFromContent.getLocation() + "  ");
+                                    cartridgeFromContent.getLocationString() + "  ");
                         } else {
                             log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
                                     " Статус: " + previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + " Расположение: " +
-                                    cartridgeFromContent.getLocation() + "  ");
+                                    cartridgeFromContent.getLocationString() + "  ");
                         }
 
                         String str = log.getText();
@@ -346,17 +355,17 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    } else if (previosLocation.get(0) != cartridgeFromContent.getLocation()) {
+                    } else if (previosLocationString.get(0) != cartridgeFromContent.getLocationString()) {
                         Date date = new Date();
                         DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
 
                         if (tabNameFromEditButtonns.equals("q_111")) {
                             log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getIdTable() +
-                                    " Переехал с: " + previosLocation + " на: " + cartridgeFromContent.getLocation() + " статус: " +
+                                    " Переехал с: " + previosLocationString + " на: " + cartridgeFromContent.getLocationString() + " статус: " +
                                     cartridgeFromContent.getStatus() + "  ");
                         } else {
                             log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
-                                    " Переехал с: " + previosLocation + " на: " + cartridgeFromContent.getLocation() + " статус: " +
+                                    " Переехал с: " + previosLocationString + " на: " + cartridgeFromContent.getLocationString() + " статус: " +
                                     cartridgeFromContent.getStatus() + "  ");
                         }
 
@@ -387,9 +396,9 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
                     if (previosLocationString.get(0) != cartridgeFromContent.getLocationString() && !previosStatus.equals(cartridgeFromContent.getStatus())) {
                         Date date = new Date();
                         DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, new Locale("ru"));
-                            log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
-                                    " Переехал с: " + previosLocationString + " на: " + cartridgeFromContent.getLocationString() + " статус: " +
-                                    previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + "  ");
+                        log.appendText("\n" + dateFormat.format(date) + " : Картридж " + cartridgeFromContent.getNumber() +
+                                " Переехал с: " + previosLocationString + " на: " + cartridgeFromContent.getLocationString() + " статус: " +
+                                previosStatus + " изменён на: " + cartridgeFromContent.getStatus() + "  ");
 
                         String str = log.getText();
                         try {
