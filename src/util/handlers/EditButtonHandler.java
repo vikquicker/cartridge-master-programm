@@ -226,7 +226,7 @@ public class EditButtonHandler implements EventHandler<ActionEvent> {
 
                 if (locationFieldNull.getValue().equals("Пустое")) {
                     if (tabNameFromEditButtonns.equals("q_111")) {
-                        cartridgeFromContent.setLocation(null);
+                        cartridgeFromContent.setLocationString(null);
                     } else if (tabNameFromEditButtonns.equals("q_115")) {
                         cartridgeFromContent.setLocationString(null);
                     } else if (tabNameFromEditButtonns.equals("q_226")) {

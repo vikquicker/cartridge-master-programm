@@ -424,6 +424,7 @@ public class UIpainter {
             actionColDelete.setCellFactory(cellFactoryDelete);
             table.getColumns().add(actionColDelete);
 
+//            table.setStyle("-fx-line-color: rgb(200,200,0)");
             return table;
         } else if (className.equals(summary.getClass())) {
             ObservableList<Summary> cartridges = FXCollections.observableArrayList((ArrayList<Summary>) list);

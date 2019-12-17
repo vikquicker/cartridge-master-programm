@@ -251,27 +251,6 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                     cartridgeToAdd.setStatus(statusField.getValue());
                     cartridgeToAdd.setDate(dateField.getValue());
                     //TODO Validation
-//                    if (tabName.equals("111")) {
-//                        if (locationFieldNew.getLength() > 0 && locationFieldNewString.getLength() == 0 &&
-//                                locationField111.getValue() == null && locationFieldString111.getValue() == null) {
-//                            contentStore.getLocationList111().add(Integer.valueOf(locationFieldNew.getText()));
-//                            cartridgeToAdd.setLocation(Integer.valueOf(locationFieldNew.getText()));
-//                        } else if (locationFieldNewString.getLength() > 0 && locationFieldNew.getLength() == 0 &&
-//                                locationField111.getValue() == null && locationFieldString111.getValue() == null) {
-//                            contentStore.getLocationListString111().add(locationFieldNewString.getText());
-//                            cartridgeToAdd.setLocationString(locationFieldNewString.getText());
-//                        } else if (locationFieldNewString.getLength() == 0 && locationFieldNew.getLength() == 0 &&
-//                                locationField111.getValue() != null && locationFieldString111.getValue() == null) {
-//                            cartridgeToAdd.setLocation(Integer.valueOf(locationField111.getValue()));
-//                        } else if (locationFieldNewString.getLength() == 0 && locationFieldNew.getLength() == 0 &&
-//                                locationField111.getValue() == null && locationFieldString111.getValue() != null) {
-//                            cartridgeToAdd.setLocationString(locationFieldString111.getValue());
-//                        }
-//                    } else if (tabName.equals("115")) {
-//
-//                    } else if (tabName.equals("226")) {
-//
-//                    }
                     if (locationFieldNew.getLength() > 0) {
                         if (tabName.equals("111")){
                             contentStore.getLocationListString111().add(locationFieldNew.getText());
@@ -285,7 +264,7 @@ public class AddButtonHandler implements EventHandler<ActionEvent> {
                         }
                     } else {
                         if (tabName.equals("111")){
-                            cartridgeToAdd.setLocationString(String.valueOf(locationFieldString111.getValue()));
+                            cartridgeToAdd.setLocationString(locationFieldString111.getValue());
                         }else if(tabName.equals("115")){
                             cartridgeToAdd.setLocationString(locationField115.getValue());
                         }else if(tabName.equals("226")){
